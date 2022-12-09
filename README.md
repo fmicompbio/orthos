@@ -13,6 +13,7 @@ Input:
 - `process_input`: if `TRUE` (default), the count matrix will be preprocessed (library normalized, log-transformed, NA values will be set to 0)
 - `organism`: organism of interest (default: Human)
 -  `feature_type:` Set to AUTO for automatic feature id-type detection. Alternatively specify the type of supplied id features.
+
 Output: a summarized experiment with the decomposed contrasts in the assays slots and the decomposed variance as colData.
 
 Example 1: 
