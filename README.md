@@ -34,7 +34,8 @@ Example 2:
 
 Input: 
 - `CONTRASTS`: a summarized experiment with assays containing contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS (at least one should be present). Typically the result of `decompose.var`.
-- `use`: determines if all genes or genes expressed in both query and target context will be used
+- `use`: determines if all genes (`all.genes`) or genes expressed in both query and target context (`expressed.in.both`) will be used.
+Note that the default `expressed.in.both` is more accurate but significantly slower.
 - `expr.thr`: quantile in the provided context that determines the expression value above which a gene is considered to be expressed. 
  This same value is then used for thresholding the contrast database (only applies when `use` is set to `expressed.in.both`). 
 - `organism`: organism of interest (default: Human)
