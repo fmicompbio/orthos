@@ -7,7 +7,8 @@
 testdeJUNKERenv()
 }
 \value{
-Nothing is returned
+A list indicating whether keras is available, and the version
+    of TensorFlow.
 }
 \description{
 Test conda environment
