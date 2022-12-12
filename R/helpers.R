@@ -6,8 +6,9 @@
 #'
 #' @author Panagiotis Papasaikas
 #'
+#' @importFrom stats cor
 M2Mcor <- function(M1, M2) {
     vapply(seq_len(ncol(M1)), function(i) {
-        cor(M1[, i, drop = FALSE], M2[, i, drop = FALSE] )
+        stats::cor(M1[, i, drop = FALSE], M2[, i, drop = FALSE])
     }, NA_real_)
 }
