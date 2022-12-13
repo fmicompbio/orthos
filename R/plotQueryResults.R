@@ -5,8 +5,9 @@
 #' 
 #' @param scores Numeric named vector  (typically of z-scores) to use for
 #'  visualization
-#' @param annot Annotation vector used for coloring the topn results
 #' @param topn Highlight the topn results
+#' @param annot Annotation vector used for coloring the topn results
+#'
 #' 
 #' 
 #' @return 
@@ -18,7 +19,7 @@
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
 #' 
-plotQueryResults <- function(scores,annot="", topn = 10) {
+plotQueryResults <- function(scores, topn = 10, annot="",) {
   min.score <- sort(scores, decreasing = TRUE)[topn]
   DF <- data.frame(
     idx = 1:length(scores),
