@@ -55,7 +55,7 @@ queryWithContrasts <- function(contrasts = NULL,
       }
     }
     
-    smpl.col <- seq(1, 75000, 1000)  # A sample of col indices to quickly check data integrity
+    smpl.col <- if ( ncol(target.contrasts)==75 ) 1:75 else seq(1, 75000, 1000)   # A sample of col indices to quickly check data integrity
     DBhash <- digest::digest(target.contrasts[,smpl.col], algo = "xxhash64")
     stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
 Please remove `target.contrasts` and try again." = DBhash == "99c9726494690892")
