@@ -77,22 +77,22 @@ You can make sure by generating your SE generated using `decomposeVar`"
             message(paste0("Querying contrast database with ", x, "..."))
             Thresholded.Contrast <- assays(target.contrasts)[[x]]
             Thresholded.Contrast[ set.to.NA ] <- NA
-            cor(contrasts[[x]], Thresholded.Contrast, 
+            stats::cor(contrasts[[x]], Thresholded.Contrast, 
                 use = "pairwise.complete.obs") 
             }, simplify = FALSE, USE.NAMES = TRUE
         )
     } else if (use == "all.genes") {
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
-            cor(contrasts[[x]], assays(target.contrasts)[[x]])  
+            stats::cor(contrasts[[x]], assays(target.contrasts)[[x]])  
             }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
     
-    ### Z-score and pval calculation for each decomposed component query:
+    ### Z-score calculation for each decomposed component query:
     message("Compiling query statistics...")
     zscores <- sapply(present.contrasts, function(x) {
-        t(scale(t(query.res$pearson.rhos[[x]])))
+        t(scale(t(pearson.rhos[[x]])))
     }, simplify = FALSE, USE.NAMES = TRUE
     )
     
@@ -109,7 +109,7 @@ You can make sure by generating your SE generated using `decomposeVar`"
         message("Generating plots...")
         plot.data <- zscores[[paste0(plot.contrast, "_CONTRASTS")]]
         PLOTLIST <- sapply(seq_len(nrow(plot.data)), function(i) {
-            plot.query_results(plot.data[i, ])
+            plotQueryResults(plot.data[i, ])
         }, simplify = FALSE)
         suppressWarnings({
             print(
