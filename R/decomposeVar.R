@@ -76,8 +76,8 @@ decomposeVar <- function(M, MD = NULL, treatm = NULL, cntr = NULL,
             "genes that are expressed in your context(s).")
     message("--> Increased numbers of missing expressed genes in your input ", 
             "might result in model performance decline.")
-    stopifnot("\n!!!Too many missing features (>10000).  Make certain you provide valid human
-Symbol, Ensembl or Entrez gene identifiers as rownames in your input matrix `M`.\n" = (nrow(genes) - max(ID_OLaps) <= 10000))
+    stopifnot("\n!!!Too many missing features (>10000).  Make certain you provided valid 
+Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownames in your input matrix `M`.\n" = (nrow(genes) - max(ID_OLaps) <= 10000))
     idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
     idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
     

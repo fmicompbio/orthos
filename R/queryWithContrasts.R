@@ -5,8 +5,10 @@
 #' 
 #' @param contrasts A \code{SummarizedExperiment} object with assays containing 
 #'     contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS 
-#'     (at least one should be present). This is typically generated using  
-#'     \code{decomposeVar}.
+#'     (at least one should be present) and context information in an assay 
+#'     named CONTEXT. The latter is only required when use="expressed.in.both".
+#'     This is typically generated using  
+#'     \code{decomposeVar}. 
 #' @param use Determines if all.genes or genes expressed in both query and 
 #'     target context will be used. Note that "expressed.in.both", though more 
 #'     accurate, is much slower.
@@ -62,7 +64,7 @@ Please remove `target.contrasts` and try again." = DBhash == "f9abc421d4e93c08")
     
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
-You can make sure by generating your SE generated using `decompose.var`"
+You can make sure by generating your SE generated using `decomposeVar`"
                = identical(rownames(contrasts), rownames(target.contrasts)))
     contrasts <- assays(contrasts)[present.contrasts]
     
@@ -71,12 +73,13 @@ You can make sure by generating your SE generated using `decompose.var`"
         #Set a global expression threshold according to a quantile in the query data context
         message("Thresholding genes...")
         thr <- quantile(contrasts[["CONTEXT"]], exprThr)
-        contrasts[["CONTEXT"]][contrasts[["CONTEXT"]] <= thr] <- NA
-        assays(target.contrasts)[["CONTEXT"]][assays(target.contrasts)[["CONTEXT"]] <= thr] <- NA
+        set.to.NA <- assays(target.contrasts)[["CONTEXT"]] <= thr
         
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
-            cor(contrasts[[x]], assays(target.contrasts)[[x]], 
+            Thresholded.Contrast <- assays(target.contrasts)[[x]]
+            Thresholded.Contrast[ set.to.NA ] <- NA
+            cor(contrasts[[x]], Thresholded.Contrast, 
                 use = "pairwise.complete.obs") 
             }, simplify = FALSE, USE.NAMES = TRUE
         )
