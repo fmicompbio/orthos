@@ -41,26 +41,24 @@ queryWithContrasts <- function(contrasts = NULL,
     
     plotContrast <-  match.arg(plotContrast)
     
-    smpl.col <- seq(1, 75000, 100) # A sample of row/col indexes to quickly check data integrity
-    smpl.row <- seq(1, 20000, 100)
     if (!exists ("target.contrasts")) {
-        message("Loading contrast database...")
-        target.contrasts <- readRDS("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_human_v212_uncompressed.rds")
-        ### Probably better to move to HDF5 based implementation as this will 
-        ### be both a significant speed-up in terms of loading
-        ### and much more lean on memory requirements. However this needs a 
-        ### reworked implementation using DelayedMatrices.
-        #   target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
-        #                                               prefix="human_v212")
-        if (preserveInGlobalEnv){
-            assign("target.contrasts", target.contrasts, envir = .GlobalEnv)
-        }
+      message("Loading contrast database...")
+      target.contrasts <- readRDS("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_human_v212_uncompressed.rds")
+      ### Probably better to move to HDF5 based implementation as this will 
+      ### be both a significant speed-up in terms of loading
+      ### and much more lean on memory requirements. However this needs a 
+      ### reworked implementation using DelayedMatrices.
+      #   target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
+      #                                               prefix="human_v212")
+      if (preserveInGlobalEnv){
+        assign("target.contrasts", target.contrasts, envir = .GlobalEnv)
+      }
     }
     
-    DBhash <- digest::digest(target.contrasts[smpl.row,smpl.col], algo = "xxhash64")
-    
+    smpl.col <- seq(1, 75000, 1000)  # A sample of col indices to quickly check data integrity
+    DBhash <- digest::digest(target.contrasts[,smpl.col], algo = "xxhash64")
     stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
-Please remove `target.contrasts` and try again." = DBhash == "f9abc421d4e93c08")
+Please remove `target.contrasts` and try again." = DBhash == "99c9726494690892")
     
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
