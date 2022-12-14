@@ -4,10 +4,18 @@
 \alias{plotQueryResults}
 \title{Plot query results}
 \usage{
-plotQueryResults(scores, topn = 10)
+plotQueryResults(scores, topn = 10, annot = "")
 }
 \arguments{
-\item{topn}{}
+\item{scores}{Numeric named vector (typically of z-scores) to use for
+visualization}
+
+\item{topn}{Highlight the topn results}
+
+\item{annot}{Annotation vector used for coloring the topn results}
+}
+\value{
+A plot
 }
 \description{
 Plot query results

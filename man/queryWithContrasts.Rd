@@ -17,7 +17,9 @@ queryWithContrasts(
 \arguments{
 \item{contrasts}{A \code{SummarizedExperiment} object with assays containing 
 contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS 
-(at least one should be present). This is typically generated using  
+(at least one should be present) and context information in an assay 
+named CONTEXT. The latter is only required when use="expressed.in.both".
+This is typically generated using  
 \code{decomposeVar}.}
 
 \item{use}{Determines if all.genes or genes expressed in both query and 

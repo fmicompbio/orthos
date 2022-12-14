@@ -2,20 +2,20 @@ reticulate::use_virtualenv("/tungstenfs/groups/gbioinfo/sharedSoft/virtualenvs/r
 Sys.setenv("CUDA_VISIBLE_DEVICES" = "3" ) # Define visible  GPU devices
 ngpus=length(strsplit(Sys.getenv("CUDA_VISIBLE_DEVICES"),",")[[1]])
 reticulate::py_config()
-library(keras)
-K <- backend()
-library(tensorflow)
-library(dplyr)
-library(Matrix)
-library(HDF5Array)
-library(SummarizedExperiment)
-library(coop)
-library(ggplot2)
-library(ggrastr)
-library(ggrepel)
-library(ggpubr)
-library(cowplot)
-library(digest)
+# library(keras)
+# K <- backend()
+# library(tensorflow)
+# library(dplyr)
+# library(Matrix)
+# library(HDF5Array)
+# library(SummarizedExperiment)
+# library(coop)
+# library(ggplot2)
+# library(ggrastr)
+# library(ggrepel)
+# library(ggpubr)
+# library(cowplot)
+# library(digest)
 
 
 
@@ -335,108 +335,108 @@ ngenes <- nrow(genes)
 
 ######## cVAE (conditional Variational Autoencoder for contrasts, conditioned on transcriptomic context)
 ######## Model definition:
-if (tensorflow::tf$executing_eagerly())
-    tensorflow::tf$compat$v1$disable_eager_execution()
-if(!exists ("cvae")){
-
-    # Parameters --------------------------------------------------------------
-    latentD <- 512L # Latent dimension for Delta encoder
-    latentC <- 64L  # Latent dimension for Context encoder
-    drop_rate <- 0.2 # Dropout rate
-    gene_dim <- ngenes  #Number of features (genes) in the dataset
-    epsilon_std <- 0.5  ##Standard deviation of the prior latent distribution (vanilla =1)
-    var_prior <- epsilon_std**2
-    log_var_prior <- log(var_prior)
-    kl_weight <- 0.20   #Weight for the Delta Kulllback-Leibler divergence loss (vanilla =1 )
-
-    ###  Define encoder input layers:
-    xD <- layer_input(shape = c(gene_dim),name="delta_input") #
-    cont_input <- layer_input(shape=c(latentC),name='CONTEXT')
-    all_inputs <- layer_concatenate(list(xD, cont_input  ))
-
-    #### Delta encoder definition:
-    hD <- layer_dense(all_inputs, 4 * latentD, activation = "elu")
-    hD <- layer_dropout(hD, rate = drop_rate)
-    hD <- layer_dense(hD, 2 * latentD, activation = "elu")
-    hD <- layer_dropout(hD, rate = drop_rate)
-    z_meanD <- layer_dense(hD, latentD)
-    z_log_varD <- layer_dense(hD, latentD)
-
-    # Define delta encoder
-    encoderD <- keras_model(inputs=c(xD,cont_input), outputs=z_meanD)
-
-    #### Sampling from the Delta latent space:
-    samplingD <- function(arg){
-        z_meanD <- arg[, 1:(latentD)]
-        z_log_varD <- arg[, (latentD + 1):(2 * latentD)]
-        epsilonD <- K$random_normal(
-            shape = c(K$shape(z_meanD)[[1]]),
-            mean=0.,
-            stddev=epsilon_std
-        )
-        z_meanD + K$exp(z_log_varD/2)*epsilonD
-    }
-
-    # Lambda layer for variational sampling:
-    zD <- layer_concatenate(list(z_meanD, z_log_varD)) %>%
-        layer_lambda(samplingD)
-
-    # Merge delta latent space with context latent space:
-    z_concat<- layer_concatenate(list(zD,cont_input))
-
-    # Define layers for the Delta decoder (no batch-norm. Seems to increase overfitting):
-    decoder_h1 <-  layer_dense(units=2*latentD ,activation="elu")
-    decoder_h2 <-  layer_dropout(rate = drop_rate)
-    decoder_h3 <-  layer_dense( units=4*latentD ,activation="elu")
-    decoder_h4 <-  layer_dropout(rate = drop_rate)
-
-    decoder_out <- layer_dense(units = ngenes, activation = "linear")
-
-    h_p <- decoder_h1(z_concat)
-    h_p <- decoder_h2( h_p )
-    h_p <- decoder_h3( h_p )
-    h_p <- decoder_h4( h_p )
-    outputs <- decoder_out(h_p)
-
-    # Define full cvae (Input: lcpm, deltas  Target Outputs: Decoded deltas)
-    cvae <- keras_model(inputs=c(xD,cont_input), outputs)
-
-    # Reuse decoder layers to define the generator (concatenated latent space to gene output) separately
-    d_in <- layer_input(shape = latentC+latentD)
-    d_h <- decoder_h1(d_in)
-    d_h <- decoder_h2(d_h)
-    d_h <- decoder_h3(d_h)
-    d_h <- decoder_h4(d_h)
-    d_out <- decoder_out(d_h)
-    generatorD <- keras_model(d_in, d_out)
-
-    cvae_loss <- function(x, x_decoded_mean){
-        reconstruction_loss  <-  loss_mean_squared_error(x, x_decoded_mean)
-        kl_loss <- -kl_weight*0.5*K$mean(1 + z_log_varD-log_var_prior - K$square(z_meanD)/var_prior - K$exp(z_log_varD)/var_prior, axis = -1L)  # Delta KL loss
-        reconstruction_loss + kl_loss
-    }
-
-    #### Custom correlation function to keep track of.
-    #### All mathematical operation NEED to be performed using the Keras backend (e.g K$mean):
-    cor_metric <- function(y_true, y_pred) {
-        y_true_dev <- y_true - k_mean(y_true)
-        y_pred_dev <- y_pred - k_mean(y_pred)
-        r_num <- k_sum(y_true_dev * y_pred_dev)
-        r_den <- k_sqrt(k_sum(k_square(y_true_dev)) *
-                            k_sum(keras::k_square(y_pred_dev)))
-        r_num / r_den
-    }
-
-    cvae %>% compile(
-        loss = cvae_loss,
-        optimizer = "adam",
-        metrics = custom_metric("cor",cor_metric)
-    )
-
-    ### Load model weights:
-    cvae %>% load_model_weights_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/cvae_deJUNKER_ARCHS4_v212_ftune_512_64_v1bb.hdf5")
-
-}
+# if (tensorflow::tf$executing_eagerly())
+#     tensorflow::tf$compat$v1$disable_eager_execution()
+# if(!exists ("cvae")){
+# 
+#     # Parameters --------------------------------------------------------------
+#     latentD <- 512L # Latent dimension for Delta encoder
+#     latentC <- 64L  # Latent dimension for Context encoder
+#     drop_rate <- 0.2 # Dropout rate
+#     gene_dim <- ngenes  #Number of features (genes) in the dataset
+#     epsilon_std <- 0.5  ##Standard deviation of the prior latent distribution (vanilla =1)
+#     var_prior <- epsilon_std**2
+#     log_var_prior <- log(var_prior)
+#     kl_weight <- 0.20   #Weight for the Delta Kulllback-Leibler divergence loss (vanilla =1 )
+# 
+#     ###  Define encoder input layers:
+#     xD <- layer_input(shape = c(gene_dim),name="delta_input") #
+#     cont_input <- layer_input(shape=c(latentC),name='CONTEXT')
+#     all_inputs <- layer_concatenate(list(xD, cont_input  ))
+# 
+#     #### Delta encoder definition:
+#     hD <- layer_dense(all_inputs, 4 * latentD, activation = "elu")
+#     hD <- layer_dropout(hD, rate = drop_rate)
+#     hD <- layer_dense(hD, 2 * latentD, activation = "elu")
+#     hD <- layer_dropout(hD, rate = drop_rate)
+#     z_meanD <- layer_dense(hD, latentD)
+#     z_log_varD <- layer_dense(hD, latentD)
+# 
+#     # Define delta encoder
+#     encoderD <- keras_model(inputs=c(xD,cont_input), outputs=z_meanD)
+# 
+#     #### Sampling from the Delta latent space:
+#     samplingD <- function(arg){
+#         z_meanD <- arg[, 1:(latentD)]
+#         z_log_varD <- arg[, (latentD + 1):(2 * latentD)]
+#         epsilonD <- K$random_normal(
+#             shape = c(K$shape(z_meanD)[[1]]),
+#             mean=0.,
+#             stddev=epsilon_std
+#         )
+#         z_meanD + K$exp(z_log_varD/2)*epsilonD
+#     }
+# 
+#     # Lambda layer for variational sampling:
+#     zD <- layer_concatenate(list(z_meanD, z_log_varD)) %>%
+#         layer_lambda(samplingD)
+# 
+#     # Merge delta latent space with context latent space:
+#     z_concat<- layer_concatenate(list(zD,cont_input))
+# 
+#     # Define layers for the Delta decoder (no batch-norm. Seems to increase overfitting):
+#     decoder_h1 <-  layer_dense(units=2*latentD ,activation="elu")
+#     decoder_h2 <-  layer_dropout(rate = drop_rate)
+#     decoder_h3 <-  layer_dense( units=4*latentD ,activation="elu")
+#     decoder_h4 <-  layer_dropout(rate = drop_rate)
+# 
+#     decoder_out <- layer_dense(units = ngenes, activation = "linear")
+# 
+#     h_p <- decoder_h1(z_concat)
+#     h_p <- decoder_h2( h_p )
+#     h_p <- decoder_h3( h_p )
+#     h_p <- decoder_h4( h_p )
+#     outputs <- decoder_out(h_p)
+# 
+#     # Define full cvae (Input: lcpm, deltas  Target Outputs: Decoded deltas)
+#     cvae <- keras_model(inputs=c(xD,cont_input), outputs)
+# 
+#     # Reuse decoder layers to define the generator (concatenated latent space to gene output) separately
+#     d_in <- layer_input(shape = latentC+latentD)
+#     d_h <- decoder_h1(d_in)
+#     d_h <- decoder_h2(d_h)
+#     d_h <- decoder_h3(d_h)
+#     d_h <- decoder_h4(d_h)
+#     d_out <- decoder_out(d_h)
+#     generatorD <- keras_model(d_in, d_out)
+# 
+#     cvae_loss <- function(x, x_decoded_mean){
+#         reconstruction_loss  <-  loss_mean_squared_error(x, x_decoded_mean)
+#         kl_loss <- -kl_weight*0.5*K$mean(1 + z_log_varD-log_var_prior - K$square(z_meanD)/var_prior - K$exp(z_log_varD)/var_prior, axis = -1L)  # Delta KL loss
+#         reconstruction_loss + kl_loss
+#     }
+# 
+#     #### Custom correlation function to keep track of.
+#     #### All mathematical operation NEED to be performed using the Keras backend (e.g K$mean):
+#     cor_metric <- function(y_true, y_pred) {
+#         y_true_dev <- y_true - k_mean(y_true)
+#         y_pred_dev <- y_pred - k_mean(y_pred)
+#         r_num <- k_sum(y_true_dev * y_pred_dev)
+#         r_den <- k_sqrt(k_sum(k_square(y_true_dev)) *
+#                             k_sum(keras::k_square(y_pred_dev)))
+#         r_num / r_den
+#     }
+# 
+#     cvae %>% compile(
+#         loss = cvae_loss,
+#         optimizer = "adam",
+#         metrics = custom_metric("cor",cor_metric)
+#     )
+# 
+#     ### Load model weights:
+#     cvae %>% load_model_weights_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/cvae_deJUNKER_ARCHS4_v212_ftune_512_64_v1bb.hdf5")
+# 
+# }
 
 
 
@@ -445,82 +445,82 @@ if(!exists ("cvae")){
 ######## Variational autoencoder model for context encoding:
 ######## Model definition:
 
-if(!exists ("vae")){
-    # Parameters --------------------------------------------------------------
-    neck <- 64L # Latent (bottleneck) dimension 256//64
-    drop_rate <- 0.1 #
-    gene_dim <- ngenes  #Number of features (genes) in your dataset
-    latent_dim <- neck
-    epsilon_std <- 0.5  ##Standard deviation of the prior latent distribution (vanilla =1)
-    var_prior <- epsilon_std**2
-    log_var_prior <- log(var_prior)
-    kl_weight <- 0.2   #Weight for the Kulllback-Leibler divergence loss (vanilla =1 )
-
-    # Encoder definition  (using the functional API) :
-    x <- layer_input(shape = c(gene_dim),name="gene_input") #
-    h <- layer_dense(x, 8 * neck, activation = "elu")
-    h <- layer_dropout(h, rate = drop_rate)
-    h <- layer_dense(h, 4 * neck, activation = "elu")
-    h <- layer_dropout(h, rate = drop_rate)
-
-    z_mean <- layer_dense(h, latent_dim)
-    z_log_var <- layer_dense(h, latent_dim)
-
-    #### Sampling from the latent space:
-    sampling <- function(arg){
-        z_mean <- arg[, 1:(latent_dim)]
-        z_log_var <- arg[, (latent_dim + 1):(2 * latent_dim)]
-        epsilon <- K$random_normal(
-            shape = c(K$shape(z_mean)[[1]]),
-            mean=0.,
-            stddev=epsilon_std
-        )
-        z_mean + K$exp(z_log_var/2)*epsilon
-    }
-
-    # Lambda layer for variational sampling:
-    z <- layer_concatenate(list(z_mean, z_log_var)) %>%
-        layer_lambda(sampling)
-
-
-    # we instantiate the decoder separately so as to reuse it later
-    decoder_h <- keras_model_sequential()
-    decoder_h %>%
-        layer_dense(units=4 * neck,activation="elu") %>%
-        layer_dropout(rate = drop_rate) %>%
-        layer_dense(8 * neck, activation = "elu") %>%
-        layer_dropout(rate = drop_rate)
-
-    decoder_mean <- layer_dense(units = gene_dim, activation = "relu")
-    h_decoded <- decoder_h(z)
-    x_decoded_mean <- decoder_mean(h_decoded)
-
-    # end-to-end autoencoder (again notice the use of the functional API):
-    vae <- keras_model(x, x_decoded_mean)
-
-    # encoder, from inputs to latent space, also using the functional API:
-    encoder <- keras_model(x, z_mean)
-
-    # generator, from latent space to reconstructed inputs
-    decoder_input <- layer_input(shape = latent_dim)
-    h_decoded_2 <- decoder_h(decoder_input)
-    x_decoded_mean_2 <- decoder_mean(h_decoded_2)
-    generator <- keras_model(decoder_input, x_decoded_mean_2)
-
-    vae_loss <- function(x, x_decoded_mean){
-        reconstruction_loss  <-  loss_mean_squared_error(x, x_decoded_mean)
-        kl_loss <- -kl_weight*0.5*K$mean(1 + z_log_var-log_var_prior - K$square(z_mean)/var_prior - K$exp(z_log_var)/var_prior, axis = -1L)  # More general formula
-        reconstruction_loss + kl_loss
-    }
-
-    vae %>% compile(
-        loss = vae_loss,
-        optimizer = "adam",
-        metrics = custom_metric("cor",cor_metric)
-    )
-
-    vae %>% load_model_weights_hdf5("Trained_models/vae_deJUNKER_lcpm_ARCHS_v212_64.hdf5")
-
-}
+# if(!exists ("vae")){
+#     # Parameters --------------------------------------------------------------
+#     neck <- 64L # Latent (bottleneck) dimension 256//64
+#     drop_rate <- 0.1 #
+#     gene_dim <- ngenes  #Number of features (genes) in your dataset
+#     latent_dim <- neck
+#     epsilon_std <- 0.5  ##Standard deviation of the prior latent distribution (vanilla =1)
+#     var_prior <- epsilon_std**2
+#     log_var_prior <- log(var_prior)
+#     kl_weight <- 0.2   #Weight for the Kulllback-Leibler divergence loss (vanilla =1 )
+# 
+#     # Encoder definition  (using the functional API) :
+#     x <- layer_input(shape = c(gene_dim),name="gene_input") #
+#     h <- layer_dense(x, 8 * neck, activation = "elu")
+#     h <- layer_dropout(h, rate = drop_rate)
+#     h <- layer_dense(h, 4 * neck, activation = "elu")
+#     h <- layer_dropout(h, rate = drop_rate)
+# 
+#     z_mean <- layer_dense(h, latent_dim)
+#     z_log_var <- layer_dense(h, latent_dim)
+# 
+#     #### Sampling from the latent space:
+#     sampling <- function(arg){
+#         z_mean <- arg[, 1:(latent_dim)]
+#         z_log_var <- arg[, (latent_dim + 1):(2 * latent_dim)]
+#         epsilon <- K$random_normal(
+#             shape = c(K$shape(z_mean)[[1]]),
+#             mean=0.,
+#             stddev=epsilon_std
+#         )
+#         z_mean + K$exp(z_log_var/2)*epsilon
+#     }
+# 
+#     # Lambda layer for variational sampling:
+#     z <- layer_concatenate(list(z_mean, z_log_var)) %>%
+#         layer_lambda(sampling)
+# 
+# 
+#     # we instantiate the decoder separately so as to reuse it later
+#     decoder_h <- keras_model_sequential()
+#     decoder_h %>%
+#         layer_dense(units=4 * neck,activation="elu") %>%
+#         layer_dropout(rate = drop_rate) %>%
+#         layer_dense(8 * neck, activation = "elu") %>%
+#         layer_dropout(rate = drop_rate)
+# 
+#     decoder_mean <- layer_dense(units = gene_dim, activation = "relu")
+#     h_decoded <- decoder_h(z)
+#     x_decoded_mean <- decoder_mean(h_decoded)
+# 
+#     # end-to-end autoencoder (again notice the use of the functional API):
+#     vae <- keras_model(x, x_decoded_mean)
+# 
+#     # encoder, from inputs to latent space, also using the functional API:
+#     encoder <- keras_model(x, z_mean)
+# 
+#     # generator, from latent space to reconstructed inputs
+#     decoder_input <- layer_input(shape = latent_dim)
+#     h_decoded_2 <- decoder_h(decoder_input)
+#     x_decoded_mean_2 <- decoder_mean(h_decoded_2)
+#     generator <- keras_model(decoder_input, x_decoded_mean_2)
+# 
+#     vae_loss <- function(x, x_decoded_mean){
+#         reconstruction_loss  <-  loss_mean_squared_error(x, x_decoded_mean)
+#         kl_loss <- -kl_weight*0.5*K$mean(1 + z_log_var-log_var_prior - K$square(z_mean)/var_prior - K$exp(z_log_var)/var_prior, axis = -1L)  # More general formula
+#         reconstruction_loss + kl_loss
+#     }
+# 
+#     vae %>% compile(
+#         loss = vae_loss,
+#         optimizer = "adam",
+#         metrics = custom_metric("cor",cor_metric)
+#     )
+# 
+#     vae %>% load_model_weights_hdf5("Trained_models/vae_deJUNKER_lcpm_ARCHS_v212_64.hdf5")
+# 
+# }
 
 

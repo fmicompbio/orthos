@@ -3,14 +3,12 @@
 #' @author Panagiotis Papasaikas
 #' @export
 #' 
-#' @param scores Numeric named vector  (typically of z-scores) to use for
+#' @param scores Numeric named vector (typically of z-scores) to use for
 #'  visualization
 #' @param topn Highlight the topn results
 #' @param annot Annotation vector used for coloring the topn results
 #'
-#' 
-#' 
-#' @return 
+#' @return A plot
 #' 
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
 #'     theme_bw geom_bin2d
@@ -19,7 +17,7 @@
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
 #' 
-plotQueryResults <- function(scores, topn = 10, annot="",) {
+plotQueryResults <- function(scores, topn = 10, annot = "") {
   min.score <- sort(scores, decreasing = TRUE)[topn]
   DF <- data.frame(
     idx = 1:length(scores),
