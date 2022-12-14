@@ -11,11 +11,12 @@
 #' @return A plot
 #' 
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
-#'     theme_bw geom_bin2d
+#'     theme_bw geom_bin2d ggplot
 #' @importFrom ggpubr ggdensity rotate rremove clean_theme
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
+#' @importFrom dplyr filter
 #' 
 plotQueryResults <- function(scores, topn = 10, annot = "") {
     min.score <- sort(scores, decreasing = TRUE)[topn]
@@ -46,7 +47,7 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         ggpubr::ggdensity(DF, "score", fill = "#33638DFF") + 
         ggpubr::clean_theme() +
         geom_point(
-            data = DF %>% filter(score >= min.score),
+            data = DF %>% dplyr::filter(score >= min.score),
             aes(x = score, y = 0, color = annot),
             size = 1.5,
         ) +
