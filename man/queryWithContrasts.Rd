@@ -11,7 +11,8 @@ queryWithContrasts(
   organism = "Human",
   preserveInGlobalEnv = TRUE,
   plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
-  detailTopn = 10
+  detailTopn = 10,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ accessing its metadata}
 
 \item{detailTopn}{specifies the number of top hits for which metadata will 
 be returned in the TopHits slot of the results.}
+
+\item{verbose}{Logical scalar indicating whether to print messages along 
+the way.}
 }
 \value{
 A list of PearsonRhos, Zscores against the datbase as well as 
