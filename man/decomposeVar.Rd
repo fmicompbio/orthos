@@ -12,25 +12,31 @@ decomposeVar(
   processInput = TRUE,
   organism = "Human",
   featureType = c("AUTO", "ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
-    "ARCHS4_ID")
+    "ARCHS4_ID"),
+  verbose = TRUE
 )
 }
 \arguments{
 \item{M}{Matrix of raw gene counts.}
 
-\item{treatm, cntr}{Vectors indicating column indices in M corresponding 
-to treatments and controls. If treatm and cntr are specified MD has to be 
-\code{NULL}. Alternatively (if MD is specified), M is assumed to be a 
+\item{MD}{a vector of gene deltas. If MD is specified, M is assumed to be a 
 raw gene count matrix specifying context for contrasts specified in MD.
 MD is then a matrix of gene deltas with the same dimensions as M. 
-If MD is specified treatm and cntr have to be \code{NULL}.}
+If MD is specified, \code{treatm} and \code{cntr} have to be \code{NULL}.}
+
+\item{treatm, cntr}{Vectors indicating column indices in M corresponding 
+to treatments and controls. If treatm and cntr are specified MD has to be 
+\code{NULL}.}
 
 \item{processInput}{If set to \code{TRUE} (default) the count matrix will 
 be preprocessed (library normalized, log-transformed, NA values will 
 be set to 0).}
 
-\item{featureType:}{Set to AUTO for automatic feature id-type detection. 
+\item{featureType}{Set to AUTO for automatic feature id-type detection. 
 Alternatively specify the type of supplied id features.}
+
+\item{verbose}{Logical scalar indicating whether to print messages along 
+the way.}
 }
 \value{
 A \code{SummarizedExperiment} object with the decomposed contrasts 
