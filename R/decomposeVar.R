@@ -207,7 +207,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #'     compile custom_metric loss_mean_squared_error
 #'     
 .predict_encoder <- function(gene_input) {
-    encoder <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoder_deJUNKER_lcpm_ARCHS_v212_human.hdf5")
+    encoder <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoder_deJUNKER_lcpm_ARCHS_v212_human.hdf5",compile=FALSE)
     predict(encoder, list(gene_input = gene_input))
 }
 
