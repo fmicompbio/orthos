@@ -221,9 +221,8 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' 
 .predict_encoderd <- function(delta_input, context) {
     ### Load contrast encoder and generator models:
-    encoderD <- keras::load_model_hdf5  ("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoderD_deJUNKER_ARCHS4_v212_ftune_512_64_human.hdf5")
-    generatorD <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_generatorD_deJUNKER_ARCHS4_v212_ftune_512_64_human.hdf5")
-    
+    encoderD <- keras::load_model_hdf5  ("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoderD_deJUNKER_ARCHS4_v212_ftune_512_64_human.hdf5",compile=FALSE)
+    generatorD <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_generatorD_deJUNKER_ARCHS4_v212_ftune_512_64_human.hdf5",compile=FALSE)
     ### Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input, CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
