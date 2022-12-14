@@ -202,9 +202,9 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend layer_input layer_dense layer_dropout
-#'     layer_concatenate layer_lambda keras_model_sequential keras_model
-#'     compile custom_metric loss_mean_squared_error
+#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential predict.keras.engine.training.Model
+#' 
+#' 
 #'     
 .predict_encoder <- function(gene_input) {
     encoder <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoder_deJUNKER_lcpm_ARCHS_v212_human.hdf5",compile=FALSE)
@@ -214,10 +214,9 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend layer_input layer_concatenate layer_dense
-#'     layer_dropout keras_model layer_lambda custom_metric k_mean k_sum 
-#'     k_square k_sqrt loss_mean_squared_error
-#' @importFrom tensorflow tf
+#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential predict.keras.engine.training.Model
+#'
+#'
 #' 
 .predict_encoderd <- function(delta_input, context) {
     ### Load contrast encoder and generator models:
