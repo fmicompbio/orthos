@@ -102,7 +102,6 @@ decomposeVar <- function(M, MD = NULL, treatm = NULL, cntr = NULL,
         message(nrow(genes) - max(ID_OLaps), " missing features will be set to 0.")
         message("--> Missing features corresponding to non/lowly expressed genes ", 
                 "in your context(s) are of no consequence.")
-        #message("--> A small fraction (<10%) of missing genes, expressed in your context(s), are well-tolerated.")
         message("--> The model is robust to small fractions (<10%) of missing ", 
                 "genes that are expressed in your context(s).")
         message("--> Increased numbers of missing expressed genes in your input ", 
@@ -163,7 +162,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
         message("Encoding context...")
     }
     LATC <- basiliskRun(env = dejunkerenv, fun = .predict_encoder, 
-                        gene_input = C, ngenes = ngenes)
+                        gene_input = C )
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
@@ -207,100 +206,8 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #'     layer_concatenate layer_lambda keras_model_sequential keras_model
 #'     compile custom_metric loss_mean_squared_error
 #'     
-.predict_encoder <- function(gene_input, ngenes) {
-    K <- keras::backend()
-    
-    # Parameters --------------------------------------------------------------
-    neck <- 64L # Latent (bottleneck) dimension 256//64
-    drop_rate <- 0.1
-    gene_dim <- ngenes # Number of features (genes) in your dataset
-    latent_dim <- neck
-    epsilon_std <- 0.5 # Standard deviation of the prior latent distribution (vanilla = 1)
-    var_prior <- epsilon_std**2
-    log_var_prior <- log(var_prior)
-    kl_weight <- 0.2 # Weight for the Kulllback-Leibler divergence loss (vanilla = 1)
-    
-    # Encoder definition  (using the functional API) :
-    x <- keras::layer_input(shape = c(gene_dim), name="gene_input")
-    h <- keras::layer_dense(x, 8 * neck, activation = "elu")
-    h <- keras::layer_dropout(h, rate = drop_rate)
-    h <- keras::layer_dense(h, 4 * neck, activation = "elu")
-    h <- keras::layer_dropout(h, rate = drop_rate)
-    
-    z_mean <- keras::layer_dense(h, latent_dim)
-    z_log_var <- keras::layer_dense(h, latent_dim)
-    
-    #### Sampling from the latent space:
-    sampling <- function(arg) {
-        z_mean <- arg[, seq_len(latent_dim)]
-        z_log_var <- arg[, (latent_dim + 1):(2 * latent_dim)]
-        epsilon <- K$random_normal(
-            shape = c(K$shape(z_mean)[[1]]),
-            mean = 0.,
-            stddev = epsilon_std
-        )
-        z_mean + K$exp(z_log_var/2)*epsilon
-    }
-    
-    # Lambda layer for variational sampling:
-    z <- keras::layer_concatenate(list(z_mean, z_log_var)) %>%
-        keras::layer_lambda(sampling)
-    
-    # we instantiate the decoder separately so as to reuse it later
-    decoder_h <- keras::keras_model_sequential()
-    decoder_h %>%
-        keras::layer_dense(units = 4 * neck, activation = "elu") %>%
-        keras::layer_dropout(rate = drop_rate) %>%
-        keras::layer_dense(8 * neck, activation = "elu") %>%
-        keras::layer_dropout(rate = drop_rate)
-    
-    decoder_mean <- keras::layer_dense(units = gene_dim, activation = "relu")
-    h_decoded <- decoder_h(z)
-    x_decoded_mean <- decoder_mean(h_decoded)
-    
-    # end-to-end autoencoder (again notice the use of the functional API):
-    vae <- keras::keras_model(x, x_decoded_mean)
-    
-    # encoder, from inputs to latent space, also using the functional API:
-    encoder <- keras::keras_model(x, z_mean)
-    
-    ## -------------------------------------------------------------------------
-    ## TODO: Is this part needed?
-    # generator, from latent space to reconstructed inputs
-    decoder_input <- keras::layer_input(shape = latent_dim)
-    h_decoded_2 <- decoder_h(decoder_input)
-    x_decoded_mean_2 <- decoder_mean(h_decoded_2)
-    generator <- keras::keras_model(decoder_input, x_decoded_mean_2)
-    
-    vae_loss <- function(x, x_decoded_mean) {
-        reconstruction_loss <- keras::loss_mean_squared_error(x, x_decoded_mean)
-        kl_loss <- -kl_weight * 0.5 * 
-            K$mean(1 + z_log_var - log_var_prior - K$square(z_mean) / var_prior - 
-                       K$exp(z_log_var) / var_prior, axis = -1L)  # More general formula
-        reconstruction_loss + kl_loss
-    }
-    
-    cor_metric <- function(y_true, y_pred) {
-        y_true_dev <- y_true - k_mean(y_true)
-        y_pred_dev <- y_pred - k_mean(y_pred)
-        r_num <- k_sum(y_true_dev * y_pred_dev)
-        r_den <- k_sqrt(k_sum(k_square(y_true_dev)) *
-                            k_sum(keras::k_square(y_pred_dev)))
-        r_num / r_den
-    }
-    
-    vae %>% keras::compile(
-        loss = vae_loss,
-        optimizer = "adam",
-        metrics = keras::custom_metric("cor", cor_metric)
-    )
-    
-    # vae %>% 
-    #     keras::load_model_weights_hdf5("/Users/charlottesoneson/Documents/Rpackages/deJUNKER/data/vae_deJUNKER_lcpm_ARCHS_v212_64.hdf5")
-    vae %>%
-        keras::load_model_weights_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/vae_deJUNKER_lcpm_ARCHS_v212_64.hdf5")
-    ## -------------------------------------------------------------------------
-    
+.predict_encoder <- function(gene_input) {
+    encoder <- keras::load_model_hdf5("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/Model_encoder_deJUNKER_lcpm_ARCHS_v212_human.hdf5")
     predict(encoder, list(gene_input = gene_input))
 }
 
