@@ -56,21 +56,22 @@ queryWithContrasts <- function(contrasts = NULL,
     ## -------------------------------------------------------------------------
     ## Load contrast database
     ## -------------------------------------------------------------------------
-    if (verbose) {
-        message("Loading contrast database...")
+    if (!exists ("target.contrasts")) {
+        if (verbose) {
+            message("Loading contrast database...")
+        }
+        target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,".rds") )
+        # target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,"_smpl.rds") )
+        ### Probably better to move to HDF5 based implementation as this will 
+        ### be both a significant speed-up in terms of loading
+        ### and much more lean on memory requirements. However this needs a 
+        ### reworked implementation using DelayedMatrices.
+        #   target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
+        #                                               prefix="human_v212")
+        if (preserveInGlobalEnv) {
+            assign("target.contrasts", target.contrasts, envir = .GlobalEnv)
+        }
     }
-    target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,".rds") )
-    # target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,"_smpl.rds") )
-    ### Probably better to move to HDF5 based implementation as this will 
-    ### be both a significant speed-up in terms of loading
-    ### and much more lean on memory requirements. However this needs a 
-    ### reworked implementation using DelayedMatrices.
-    #   target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
-    #                                               prefix="human_v212")
-    if (preserveInGlobalEnv) {
-        assign("target.contrasts", target.contrasts, envir = .GlobalEnv)
-    }
-    
     # A sample of col indices to quickly check data integrity
     smpl.col <- if (ncol(target.contrasts) == 72) 1:72 else seq(1, 50000, 700)
     DBhash <- digest::digest(target.contrasts[, smpl.col], algo = "xxhash64")
