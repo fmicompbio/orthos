@@ -203,7 +203,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential predict.keras.engine.training.Model
+#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
 #' 
 #' 
 #'     
@@ -217,7 +217,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential predict.keras.engine.training.Model
+#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
 #'
 #'
 #' 
