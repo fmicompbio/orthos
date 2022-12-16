@@ -29,6 +29,7 @@
 #'     detailed Metadata for the detailTopn hits.
 #' 
 #' @importFrom digest digest
+#' @importFrom SummarizedExperiment assays
 #' 
 queryWithContrasts <- function(contrasts = NULL, 
                                use = c("expressed.in.both", "all.genes"),
@@ -82,7 +83,7 @@ Please remove `target.contrasts` and try again." =
 Rownames should be the same as in the contrast database.
 You can make sure by generating your SE generated using `decomposeVar`" = 
                    identical(rownames(contrasts), rownames(target.contrasts)))
-    contrasts <- assays(contrasts)[present.contrasts]
+    contrasts <- SummarizedExperiment::assays(contrasts)[present.contrasts]
     
     ## -------------------------------------------------------------------------
     ## Calculate correlations
@@ -91,11 +92,11 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         # Set a global expression threshold according to a quantile in the query data context
         message("Thresholding genes...")
         thr <- quantile(contrasts[["CONTEXT"]], exprThr)
-        set.to.NA <- assays(target.contrasts)[["CONTEXT"]] <= thr
+        set.to.NA <- SummarizedExperiment::assays(target.contrasts)[["CONTEXT"]] <= thr
         
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
-            Thresholded.Contrast <- assays(target.contrasts)[[x]]
+            Thresholded.Contrast <- SummarizedExperiment::assays(target.contrasts)[[x]]
             Thresholded.Contrast[ set.to.NA ] <- NA
             stats::cor(contrasts[[x]], Thresholded.Contrast, 
                        use = "pairwise.complete.obs") 
@@ -104,7 +105,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     } else if (use == "all.genes") {
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
-            stats::cor(contrasts[[x]], assays(target.contrasts)[[x]])  
+            stats::cor(contrasts[[x]], SummarizedExperiment::assays(target.contrasts)[[x]])  
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
