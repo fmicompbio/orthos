@@ -10,7 +10,7 @@ decomposeVar(
   treatm = NULL,
   cntr = NULL,
   processInput = TRUE,
-  organism = "Human",
+  organism = c("Human", "Mouse"),
   featureType = c("AUTO", "ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
     "ARCHS4_ID"),
   verbose = TRUE

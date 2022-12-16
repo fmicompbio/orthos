@@ -8,7 +8,7 @@ queryWithContrasts(
   contrasts = NULL,
   use = c("expressed.in.both", "all.genes"),
   exprThr = 0.25,
-  organism = "Human",
+  organism = c("Human", "Mouse"),
   preserveInGlobalEnv = TRUE,
   plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
   detailTopn = 10,
