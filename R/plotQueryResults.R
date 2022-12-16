@@ -17,6 +17,7 @@
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
 #' @importFrom dplyr filter
+#' @importFrom usethis use_pipe
 #' 
 plotQueryResults <- function(scores, topn = 10, annot = "") {
     min.score <- sort(scores, decreasing = TRUE)[topn]
