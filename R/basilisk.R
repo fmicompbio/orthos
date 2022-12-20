@@ -1,3 +1,7 @@
+#'
+#' @author Panagiotis Papasaikas, Charlotte Soneson
+#'
+#'
 #' @importFrom basilisk BasiliskEnvironment
 dejunkerenv <- basilisk::BasiliskEnvironment(
     envname = "dejunker", pkgname = "deJUNKER",

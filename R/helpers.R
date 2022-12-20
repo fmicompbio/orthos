@@ -4,7 +4,7 @@
 #'
 #' @return Vector of length k with correlations between corresponding columns.
 #'
-#' @author Panagiotis Papasaikas
+#' @author Panagiotis Papasaikas, Charlotte Soneson
 #'
 #' @importFrom stats cor
 M2Mcor <- function(M1, M2) {
