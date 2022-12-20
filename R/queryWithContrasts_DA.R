@@ -1,7 +1,7 @@
 #' Query the contrast database with a set of contrasts
 #' 
 #' @export
-#' @author Panagiotis Papasaikas
+#' @author Panagiotis Papasaikas, Charlotte Soneson
 #' 
 #' @param contrasts A \code{SummarizedExperiment} object with assays containing 
 #'     contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS 
