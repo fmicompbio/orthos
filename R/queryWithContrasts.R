@@ -61,7 +61,8 @@ queryWithContrasts <- function(contrasts = NULL,
             message("Loading contrast database...")
         }
         target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,".rds") )
-        # target.contrasts <- readRDS(paste0("/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,"_smpl.rds") )
+        # target.contrasts <- readRDS(system.file("data", paste0("DECOMPOSED_CONTRASTS_ARCHS4_v212_",organism,"_smpl.rds"), package = "deJUNKER"))
+        
         ### Probably better to move to HDF5 based implementation as this will 
         ### be both a significant speed-up in terms of loading
         ### and much more lean on memory requirements. However this needs a 
