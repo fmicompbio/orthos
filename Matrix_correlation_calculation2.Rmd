@@ -1,0 +1,161 @@
+---
+title: "Matrix_correlation_calculations"
+author: "Panagiotis Papasaikas, Charlotte Soneson"
+date: "2022-12-21"
+output: html_document
+---
+
+
+
+## Matrix-based correlation calculation
+
+This is extending Charlotte's benchmarking for correlation calculations. After experimenting a bit with Charlotte's custom calculations and matrix sizes that are more close to what we will actually be using it looks like it might bit too slow. I think that DelayedArray algebraic/matrix operations are just not  efficient.
+Instead an approach where we use block access to the hdf5 array + (optional) parallelization seems to be very efficient + does not overload the memory
+
+
+```{r libload}
+suppressPackageStartupMessages({
+    library(parallel)
+    library(BiocParallel)
+    library(DelayedArray)
+    library(HDF5Array)
+    library(SummarizedExperiment)
+})
+```
+
+## Generate some data
+
+
+Similar to Charlotte's benchmarks but larger :-)
+
+```{r}
+set.seed(123L)
+archs4 <- matrix(rnorm(3e8), nrow = 10000)
+rownames(archs4) <- paste0("g", seq_len(nrow(archs4)))
+colnames(archs4) <- paste0("s", seq_len(ncol(archs4)))
+archs4[3, 2] <- archs4[1, 5] <- archs4[7, 2] <- NA
+query <- matrix(rnorm(20000), nrow = 10000)
+query[3, 2] <- query[11, 2] <- query[7, 1] <- NA
+rownames(query) <- paste0("g", seq_len(nrow(query)))
+colnames(query) <- paste0("q", seq_len(ncol(query)))
+
+print(object.size(archs4), units = "auto")
+
+```
+
+
+
+## Calculate correlations for later reference
+```{r}
+system.time({
+    corrs <- stats::cor(archs4, query, use = "pairwise.complete.obs")
+})
+
+### Just for comparison purposes. The results are of course different:
+system.time({
+    corrs2 <- stats::cor(archs4, query) 
+})
+```
+
+
+## Save archs4 data into hdf5 file
+```{r eval=FALSE }
+archs4file <- "archs4_2.h5" #
+writeHDF5Array(archs4, filepath = archs4file, name = "archs4",level = 6, #level 6 is default. level 0 (uncompressed) is a bit faster but not significantly.
+               with.dimnames = TRUE, chunkdim = c(nrow(archs4), 100))  # Increased the chunk size. Seem to offer small improvement.
+```
+
+
+## Load data from hdf5 file
+```{r}
+archs4file <- "archs4_2.h5" #
+archs4 <- HDF5Array(filepath =archs4file  , name = "archs4")
+print(object.size(archs4), units = "auto")
+print(utils:::format.object_size(file.size(archs4file), units = "auto"))
+```
+
+
+
+
+## Calculate correlations as per Charlotte's approach. 
+```{r eval=FALSE}
+system.time({
+    corrs_mat <- do.call(cbind, mclapply(seq_len(ncol(query)), function(i) {
+        idx <- which(!is.na(query[, i]))
+        archs4sub <- archs4[idx, ]
+        querysub <- query[idx, i, drop = FALSE]
+        n_not_na <- t(!is.na(archs4sub)) %*% matrix(1, nrow = length(idx), 
+                                                    ncol = 1)
+        query_sum_squared <- t(!is.na(archs4sub)) %*% querysub ^ 2
+        query_sum <- t(!is.na(archs4sub)) %*% querysub
+        
+        archs4sub <- scale(archs4sub, center = TRUE, scale = TRUE)
+        
+        ## Set NA values to 0
+        archs4sub[is.na(archs4sub)] <- 0
+        
+        ## Calculate correlation
+        ((t(archs4sub) %*% querysub) / (n_not_na - 1)) / 
+            (sqrt(n_not_na * query_sum_squared - (query_sum) ^ 2) / 
+                 sqrt(n_not_na * (n_not_na - 1)))
+    }, mc.cores = 2L)) #This can only be parallelized up to the number of query samples (typically very small)
+})
+```
+
+```
+##    user  system elapsed 
+## 196.016  33.525 233.471
+```
+
+## Calculate correlations using grid accessing: 
+```{r}
+grid_cor <- function(query, hdf5_path, use="pairwise.complete.obs", chunk_size=500,
+                     workers=16){
+    full_mat <- HDF5Array::HDF5Array(hdf5_path, "archs4") #Accessing the delayed array
+    full_dim <- dim(full_mat)
+    full_grid <- DelayedArray::colAutoGrid(full_mat, ncol=min(chunk_size, ncol(full_mat)))
+    ### blocks in are made of full columns 
+    nblock <- length(full_grid) 
+    resultDF <- BiocParallel::bplapply(seq_len(nblock), function(b){
+        ref_block <- DelayedArray::read_block(full_mat, full_grid[[b]])
+        cor_res <- stats::cor(query, ref_block, use=use)
+        return(cor_res)}, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+    resultDF <- do.call(cbind, resultDF)
+    return(resultDF)
+}
+
+
+
+system.time({
+res <- grid_cor(query, archs4file)
+})
+
+all.equal(corrs,t(res))
+```
+
+
+
+```
+Some benchmarking on different chunk sizes used for storage (basically different ncolumns, since we always access full columns):
++ Different chunk sizes for accessing the HDF5 (passed to DelayedArray::colAutoGrid)
+Stored grid dim2 size:10
+chunk_size#     100    500     1000     5000
+1worker         26      17     16.2     15.7
+8workers        5.6    3.1     3.1      3.3
+
+Stored grid dim2 size:100
+chunk_size#     100    500     1000     5000
+1worker          24     17     15.9     16.0
+8workers         5.5    4.4    2.9      3.3
+
+Stored grid dim2 size:1000
+chunk_size#     100    500     1000     5000
+1worker          85    29      20.7     19.9
+8workers        14.8   5.2     3.6      4.2
+
+Stored grid dim2 size:100, Compression Level: 0
+chunk_size#     100    500     1000     5000
+1worker          22    15      14.7     13.6
+8workers         4.0   2.8     2.7      3.1
+```
+
