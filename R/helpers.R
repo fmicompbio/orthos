@@ -17,15 +17,19 @@
 
 
 
-#' Calculate correlation between a numeric matrix and a (large) HDF5MAtrix/DelayedMatrix using grid access. 
-#' Both Matrices can contain NAs. If thr is specified, substitution of values<=thr with NAs will be performed 
-#' on the HDF5Matrix
+#' Calculate correlation between a numeric matrix and a (large)
+#' HDF5MAtrix/DelayedMatrix using grid access. Both Matrices can contain NAs.
+#' If \code{thr} is specified, substitution of values less than \code{thr} with
+#' \code{NA}s will be performed on the HDF5Matrix
 #'
 #' @param query Numeric matrix n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
-#' @param chunk_size column dimension for the grid used to read blocks from the HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write the data on disk.
+#' @param chunk_size column dimension for the grid used to read blocks from the
+#'   HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
+#'   the data on disk.
 #' @param workers Number of workers used for parallelization
-#' @param thr If specified, a low bound on expression. Values lower than that are substituted by NAs on the HDF5 Matrix
+#' @param thr If specified, a low bound on expression. Values lower than that
+#'   are substituted by \code{NA}s on the HDF5 Matrix
 #'
 #' @return Correlation matrix k x l
 #'
@@ -36,17 +40,18 @@
 #' @importFrom DelayedArray colAutoGrid read_block
 #' @importFrom BiocParallel bplapply MulticoreParam
 #' 
-.grid_cor_wNAs <- function(query, hdf5, chunk_size=1000,
-                           workers=16, thr=FALSE){
+#' @keywords internal
+.grid_cor_wNAs <- function(query, hdf5, chunk_size = 1000,
+                           workers = 16, thr = NULL){
     full_dim <- dim(hdf5)
-    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol=min(chunk_size, ncol(hdf5))) #grid contains entire columns
+    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
     nblock <- length(full_grid) 
     res <- BiocParallel::bplapply(seq_len(nblock), function(b){
         ref_block <- DelayedArray::read_block(hdf5, full_grid[[b]])
-        if(thr){
+        if (!is.null(thr)) {
             ref_block[ref_block <= thr] <- NA
         }
-        cor_res <- stats::cor(query, ref_block, use="pairwise.complete.obs")
+        cor_res <- stats::cor(query, ref_block, use = "pairwise.complete.obs")
         return(cor_res)}, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
     return( do.call(cbind, res) )
 }
