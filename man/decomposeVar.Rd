@@ -43,8 +43,8 @@ A \code{SummarizedExperiment} object with the decomposed contrasts
     in the assays and the decomposed variance as the \code{colData}.
 }
 \description{
-Decompose input contrasts to decode and residual fractions according to a 
-trained contrast encoder-decoder.
+Decompose input contrasts (gene expression Deltas) to decoded (generic) and residual (unique) components
+according to a contrast encoder-decoder pre-trained on a large corpus of public RNAseq experiments.
 }
 \examples{
 RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
