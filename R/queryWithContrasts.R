@@ -18,8 +18,8 @@
 #'     applies when use="expressed.in.both"
 #' @param preserveInGlobalEnv specifies whether the contrast database (stored 
 #'     as a \code{SummarizedExperiment} object in \code{target.contrasts})
-#'     should be preserved in the GlobalEnv either for future queries or for 
-#'     accessing its metadata
+#'     should be preserved in the \code{.GlobalEnv} environment either for
+#'     future queries or for accessing its metadata
 #' @param detailTopn specifies the number of top hits for which metadata will 
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along 
@@ -61,7 +61,7 @@ queryWithContrasts <- function(contrasts,
     ## -------------------------------------------------------------------------
     ## Load contrast database
     ## -------------------------------------------------------------------------
-    if (!exists ("target.contrasts")) {
+    if (!exists("target.contrasts", envir = .GlobalEnv)) {
         if (verbose) {
             message("Loading contrast database...")
         }
@@ -81,7 +81,7 @@ queryWithContrasts <- function(contrasts,
     # A sample of col indices to quickly check data integrity
     smpl.col <- if (ncol(target.contrasts) == 72) 1:72 else seq(1, 50000, 700)
     DBhash <- digest::digest(target.contrasts[, smpl.col], algo = "xxhash64")
-    hashvals <- list(Human="803df1fc71c30ba6", Mouse="ffd499bd8c1060ec" )
+    hashvals <- list(Human = "803df1fc71c30ba6", Mouse = "ffd499bd8c1060ec")
     stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
 Please remove `target.contrasts` and try again." = 
                   DBhash == hashvals[[organism]])
