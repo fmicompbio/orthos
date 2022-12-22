@@ -7,6 +7,8 @@
 #' @author Panagiotis Papasaikas, Charlotte Soneson
 #'
 #' @importFrom stats cor
+#' 
+#' @keywords internal
 .M2Mcor <- function(M1, M2) {
     vapply(seq_len(ncol(M1)), function(i) {
         stats::cor(M1[, i, drop = FALSE], M2[, i, drop = FALSE])
@@ -68,6 +70,7 @@
 #' @importFrom DelayedArray colAutoGrid read_block
 #' @importFrom BiocParallel bplapply MulticoreParam
 #' 
+#' @keywords internal
 .grid_cor_woNAs <- function(query, hdf5, chunk_size=1000,
                             workers=16){
     full_dim <- dim(hdf5)
