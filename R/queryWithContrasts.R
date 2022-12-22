@@ -33,7 +33,7 @@
 #' @importFrom cowplot plot_grid
 #' 
 #' 
-queryWithContrasts <- function(contrasts = NULL, 
+queryWithContrasts <- function(contrasts, 
                                use = c("expressed.in.both", "all.genes"),
                                exprThr = 0.25, organism = c("Human","Mouse"), 
                                preserveInGlobalEnv = TRUE,
