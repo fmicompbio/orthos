@@ -30,6 +30,9 @@
 #' 
 #' @importFrom digest digest
 #' @importFrom SummarizedExperiment assays
+#' @importFrom cowplot plot_grid
+#' @importFrom digest digest
+#' 
 #' 
 queryWithContrasts <- function(contrasts = NULL, 
                                use = c("expressed.in.both", "all.genes"),

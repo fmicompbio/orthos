@@ -182,7 +182,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
     RES <- INPUT_DLT - DEC
     dimnames(DEC) <- dimnames(RES)
     
-    VAR_DEC <- cbind(M2Mcor(INPUT_DLT, DEC)**2, M2Mcor(INPUT_DLT, RES)**2)
+    VAR_DEC <- cbind(.M2Mcor(INPUT_DLT, DEC)**2, .M2Mcor(INPUT_DLT, RES)**2)
     VAR_DEC <- cbind(VAR_DEC, rowSums(VAR_DEC) - 1)
     colnames(VAR_DEC) <- c("DECODED", "RESIDUAL", "COMMON")
     
