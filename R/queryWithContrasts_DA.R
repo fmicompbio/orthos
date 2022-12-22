@@ -32,7 +32,7 @@
 #' @importFrom SummarizedExperiment assays
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
-#' @importFrom digest digest
+#' 
 #' 
 queryWithContrasts_DA <- function(contrasts = NULL, 
                                use = c("expressed.in.both", "all.genes"),
@@ -64,10 +64,11 @@ queryWithContrasts_DA <- function(contrasts = NULL,
     if (verbose) {
         message("Loading contrast database...")
     }
-    target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",prefix="human_v212_c100")
+    target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+                                                     prefix=paste0(tolower(organism),"_v212_c100" ) )
     
     DBhash <- digest::digest(target.contrasts, algo = "xxhash64")
-    hashvals <- list(Human="4c4e2b79337b4b89", Mouse="ffd499bd8c1060ec" )
+    hashvals <- list(Human="4c4e2b79337b4b89", Mouse="c4231c455fd526c3" )
     stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
 Please remove `target.contrasts` and try again." = 
                   DBhash == hashvals[[organism]])

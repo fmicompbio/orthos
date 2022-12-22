@@ -1,7 +1,8 @@
 #' Decompose input contrasts to decoded and residual fractions
 #' 
-#' Decompose input contrasts to decode and residual fractions according to a 
-#' trained contrast encoder-decoder.
+#' Decompose input contrasts (gene expression Deltas) to decoded (generic) and residual (unique) components
+#' according to a contrast encoder-decoder pre-trained on a large corpus of public RNAseq experiments. 
+#' 
 #' 
 #' @author Panagiotis Papasaikas
 #' @export
