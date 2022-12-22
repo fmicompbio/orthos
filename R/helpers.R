@@ -10,6 +10,8 @@
 #' 
 #' @keywords internal
 .M2Mcor <- function(M1, M2) {
+    .assertVector(x = M1, type = "matrix")
+    .assertVector(x = M2, type = "matrix")
     vapply(seq_len(ncol(M1)), function(i) {
         stats::cor(M1[, i, drop = FALSE], M2[, i, drop = FALSE])
     }, NA_real_)
@@ -43,6 +45,10 @@
 #' @keywords internal
 .grid_cor_wNAs <- function(query, hdf5, chunk_size = 1000,
                            workers = 16, thr = NULL){
+    .assertVector(x = query, type = "matrix")
+    .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
+    .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
+    .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
     nblock <- length(full_grid) 
@@ -57,13 +63,15 @@
 }
 
 
-#' Calculate correlation between a numeric matrix and a (large) HDF5MAtrix/DelayedMatrix using grid access. 
-#' It is assumed that both Matrices do not contain NAs. 
-#' on the HDF5Matrix
+#' Calculate correlation between a numeric matrix and a (large)
+#' HDF5MAtrix/DelayedMatrix using grid access. It is assumed that both Matrices
+#' do not contain \code{NA}s. 
 #'
 #' @param query Numeric matrix n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
-#' @param chunk_size column dimension for the grid used to read blocks from the HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write the data on disk.
+#' @param chunk_size column dimension for the grid used to read blocks from the
+#'   HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
+#'   the data on disk.
 #' @param workers Number of workers used for parallelization
 #'
 #' @return Correlation matrix k x l
@@ -76,17 +84,22 @@
 #' @importFrom BiocParallel bplapply MulticoreParam
 #' 
 #' @keywords internal
-.grid_cor_woNAs <- function(query, hdf5, chunk_size=1000,
-                            workers=16){
+.grid_cor_woNAs <- function(query, hdf5, chunk_size = 1000,
+                            workers = 16) {
+    .assertVector(x = query, type = "matrix")
+    .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
+    .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
     full_dim <- dim(hdf5)
-    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol=min(chunk_size, ncol(hdf5))) #grid contains entire columns
+    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
     nblock <- length(full_grid) 
     res <- BiocParallel::bplapply(seq_len(nblock), function(b){
         ref_block <- DelayedArray::read_block(hdf5, full_grid[[b]])
-        cor_res <- stats::cor(query, ref_block, use="everything" )
+        cor_res <- stats::cor(query, ref_block, use = "everything" )
         return(cor_res)}, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
     return( do.call(cbind, res) )
-}#' Utility function to check validity of scalar variable values.
+}
+
+#' Utility function to check validity of scalar variable values.
 #' 
 #' This function provides a convenient way e.g. to check that provided
 #' arguments to functions satisfy required criteria. 
@@ -287,3 +300,4 @@
     }
     
     invisible(TRUE)
+}
