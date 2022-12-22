@@ -43,17 +43,20 @@ queryWithContrasts <- function(contrasts,
     ## -------------------------------------------------------------------------
     ## Check inputs
     ## -------------------------------------------------------------------------
-    stopifnot("`contrasts` should be a valid SummarizedExperiment" = 
-                  is(contrasts, "SummarizedExperiment"))
+    .assertVector(x = contrasts, type = "SummarizedExperiment")
     valid.contrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS", "RESIDUAL_CONTRASTS")
     present.contrasts <- intersect(valid.contrasts, names(assays(contrasts)))
     stopifnot("The assays slot in the provided SummarizedExperiment does not contain valid contrast names " = 
                   length(present.contrasts) > 0)
-    message(paste ("provided contrast: ", present.contrasts, collapse = "\n"))
+    message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
     
     use <- match.arg(use)
+    .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     organism <- match.arg(organism)
+    .assertScalar(x = preserveInGlobalEnv, type = "logical")
     plotContrast <- match.arg(plotContrast)
+    .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
+    .assertScalar(x = verbose, type = "logical")
     
     ## -------------------------------------------------------------------------
     ## Load contrast database
