@@ -2,9 +2,9 @@
 % Please edit documentation in R/helpers.R
 \name{.grid_cor_woNAs}
 \alias{.grid_cor_woNAs}
-\title{Calculate correlation between a numeric matrix and a (large) HDF5MAtrix/DelayedMatrix using grid access. 
-It is assumed that both Matrices do not contain NAs. 
-on the HDF5Matrix}
+\title{Calculate correlation between a numeric matrix and a (large)
+HDF5MAtrix/DelayedMatrix using grid access. It is assumed that both Matrices
+do not contain \code{NA}s.}
 \usage{
 .grid_cor_woNAs(query, hdf5, chunk_size = 1000, workers = 16)
 }
@@ -13,7 +13,9 @@ on the HDF5Matrix}
 
 \item{hdf5}{HDF5Matrix/DelayedMatrix n x l, where l is typically >> k}
 
-\item{chunk_size}{column dimension for the grid used to read blocks from the HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write the data on disk.}
+\item{chunk_size}{column dimension for the grid used to read blocks from the
+HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
+the data on disk.}
 
 \item{workers}{Number of workers used for parallelization}
 }
@@ -21,10 +23,11 @@ on the HDF5Matrix}
 Correlation matrix k x l
 }
 \description{
-Calculate correlation between a numeric matrix and a (large) HDF5MAtrix/DelayedMatrix using grid access. 
-It is assumed that both Matrices do not contain NAs. 
-on the HDF5Matrix
+Calculate correlation between a numeric matrix and a (large)
+HDF5MAtrix/DelayedMatrix using grid access. It is assumed that both Matrices
+do not contain \code{NA}s.
 }
 \author{
 Panagiotis Papasaikas
 }
+\keyword{internal}
