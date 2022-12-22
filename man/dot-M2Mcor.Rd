@@ -18,3 +18,4 @@ Calculate correlation between corresponding columns of two matrices
 \author{
 Panagiotis Papasaikas, Charlotte Soneson
 }
+\keyword{internal}
