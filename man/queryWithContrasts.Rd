@@ -5,7 +5,7 @@
 \title{Query the contrast database with a set of contrasts}
 \usage{
 queryWithContrasts(
-  contrasts = NULL,
+  contrasts,
   use = c("expressed.in.both", "all.genes"),
   exprThr = 0.25,
   organism = c("Human", "Mouse"),
@@ -34,8 +34,8 @@ applies when use="expressed.in.both"}
 
 \item{preserveInGlobalEnv}{specifies whether the contrast database (stored 
 as a \code{SummarizedExperiment} object in \code{target.contrasts})
-should be preserved in the GlobalEnv either for future queries or for 
-accessing its metadata}
+should be preserved in the \code{.GlobalEnv} environment either for
+future queries or for accessing its metadata}
 
 \item{detailTopn}{specifies the number of top hits for which metadata will 
 be returned in the TopHits slot of the results.}
