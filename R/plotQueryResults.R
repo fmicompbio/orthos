@@ -18,12 +18,13 @@
 #' 
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
 #'     theme_bw geom_bin2d ggplot
-#' @importFrom ggpubr ggdensity rotate rremove clean_theme
+#' @importFrom ggpubr ggdensity rotate clean_theme
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
 #' @importFrom dplyr filter
 #' @importFrom usethis use_pipe
+#' @importFrom rlang .data
 #' 
 plotQueryResults <- function(scores, topn = 10, annot = "") {
     min.score <- sort(scores, decreasing = TRUE)[topn]
