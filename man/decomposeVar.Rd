@@ -32,6 +32,9 @@ to treatments and controls. If treatm and cntr are specified MD has to be
 be preprocessed (library normalized, log-transformed, NA values will 
 be set to 0).}
 
+\item{organism}{Selects the autoencoder model trained on data from this
+species. One of \code{"Human"} or \code{"Mouse"}.}
+
 \item{featureType}{Set to AUTO for automatic feature id-type detection. 
 Alternatively specify the type of supplied id features.}
 

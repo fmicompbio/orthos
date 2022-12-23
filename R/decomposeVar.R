@@ -18,6 +18,8 @@
 #' @param processInput If set to \code{TRUE} (default) the count matrix will 
 #'     be preprocessed (library normalized, log-transformed, NA values will 
 #'     be set to 0).
+#' @param organism Selects the autoencoder model trained on data from this
+#'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param featureType Set to AUTO for automatic feature id-type detection. 
 #'     Alternatively specify the type of supplied id features.
 #' @param verbose Logical scalar indicating whether to print messages along 
