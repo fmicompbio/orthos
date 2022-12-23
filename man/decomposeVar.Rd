@@ -42,17 +42,20 @@ Alternatively specify the type of supplied id features.}
 the way.}
 }
 \value{
-A \code{SummarizedExperiment} object with the decomposed contrasts 
-    in the assays and the decomposed variance as the \code{colData}.
+A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+    with the decomposed contrasts in the assays and the decomposed variance
+    as the \code{\link[SummarizedExperiment]{colData}}.
 }
 \description{
 Decompose input contrasts (gene expression Deltas) to decoded (generic) and residual (unique) components
 according to a contrast encoder-decoder pre-trained on a large corpus of public RNAseq experiments.
 }
 \examples{
+\dontrun{
 RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
 RES <- decomposeVar(M = CountM, treatm = c(3, 4, 5, 6), 
                     cntr = c(1, 1, 2, 2), processInput = FALSE)
+}
 
 }
 \author{
