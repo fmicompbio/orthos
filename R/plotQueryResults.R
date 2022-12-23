@@ -64,17 +64,16 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
     dens.plot <-
         ggpubr::ggdensity(DF, "score", fill = "#33638DFF") + 
         ggpubr::clean_theme() +
-        geom_point(
-            data = DF %>% dplyr::filter(score >= min.score),
-            aes(x = score, y = 0, color = annot),
-            size = 1.5,
-        ) +
+        ggplot2::geom_point(
+            data = DF %>% dplyr::filter(.data$score >= min.score),
+            aes(x = .data$score, y = 0, color = annot),
+            size = 1.5) +
         ggpubr::rotate() +  
         ggplot2::theme(plot.margin = grid::unit(c(1, 0, 1, 0), "cm")) +
         blank.theme
     
     manh.plot <-
-        ggplot(data = DF, aes(x = idx, y = score)) + 
+        ggplot2::ggplot(data = DF, aes(x = .data$idx, y = .data$score)) + 
         ggplot2::geom_bin2d(bins = 200) +
         ggplot2::scale_fill_continuous(type = "viridis") + 
         ggplot2::theme_bw() +
@@ -85,11 +84,10 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         ) +
         ggrepel::geom_text_repel(
             data = subset(DF, score >= min.score),
-            aes(x = idx, y = score , label = ACC),
-            size = 3
-        ) +
-        ggpubr::rremove("x.ticks") + 
-        ggplot2::theme(legend.position = "none", 
+            aes(x = .data$idx, y = .data$score , label = .data$ACC),
+            size = 3) +
+        ggplot2::theme(legend.position = "none",
+                       axis.ticks.x = ggplot2::element_blank(),
                        plot.margin = grid::unit(c(1, 0, 1, 0), "cm"),
                        panel.border = ggplot2::element_blank())
     
