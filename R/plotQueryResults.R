@@ -27,6 +27,16 @@
 #' @importFrom rlang .data
 #' 
 plotQueryResults <- function(scores, topn = 10, annot = "") {
+    # validate arguments
+    .assertVector(x = scores, type = "numeric")
+    .assertScalar(x = topn, type = "numeric", rngIncl = c(1, length(scores)))
+    .assertVector(x = annot)
+    
+    # make sure scores have names
+    if (is.null(names(scores))) {
+        names(scores) <- as.character(seq_along(scores))
+    }
+    
     min.score <- sort(scores, decreasing = TRUE)[topn]
     DF <- data.frame(
         idx = 1:length(scores),
