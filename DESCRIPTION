@@ -18,8 +18,10 @@ LazyData: false
 Depends: R (>= 4.0)
 Imports: 
     basilisk,
+    BiocParallel,
     coop,
     cowplot,
+    DelayedArray,
     digest,
     dplyr,
     ggplot2,
@@ -29,13 +31,17 @@ Imports:
     HDF5Array,
     keras,
     Matrix,
+    methods,
     reticulate,
+    rlang,
     stats,
     SummarizedExperiment,
-    tensorflow
+    tensorflow,
+    usethis
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
