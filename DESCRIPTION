@@ -36,8 +36,7 @@ Imports:
     rlang,
     stats,
     SummarizedExperiment,
-    tensorflow,
-    usethis
+    tensorflow
 RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0),
