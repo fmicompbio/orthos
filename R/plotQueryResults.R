@@ -77,11 +77,11 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         ggplot2::scale_fill_continuous(type = "viridis") + 
         ggplot2::theme_bw() +
         ggplot2::geom_point(
-            data = subset(DF, score >= min.score),
+            data = DF[DF$score >= min.score, ],
             aes(color = annot),
             size = 1.5) +
         ggrepel::geom_text_repel(
-            data = subset(DF, score >= min.score),
+            data = DF[DF$score >= min.score, ],
             aes(x = .data$idx, y = .data$score , label = .data$ACC),
             size = 3) +
         ggplot2::theme(legend.position = "none",
