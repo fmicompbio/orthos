@@ -33,14 +33,13 @@
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
 #' 
-#' 
-queryWithContrasts_DA <- function(contrasts = NULL, 
-                               use = c("expressed.in.both", "all.genes"),
-                               exprThr = 0.25, organism = c("Human","Mouse"), 
-                               plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
-                               detailTopn = 10, verbose = TRUE, 
-                               workers=round(4+parallel::detectCores()/4),
-                               chunk_size= 500 ) {
+queryWithContrasts_DA <- function(contrasts,
+                                  use = c("expressed.in.both", "all.genes"),
+                                  exprThr = 0.25, organism = c("Human","Mouse"),
+                                  plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
+                                  detailTopn = 10, verbose = TRUE,
+                                  workers = round(4 + parallel::detectCores() / 4),
+                                  chunk_size = 500 ) {
     
     ## -------------------------------------------------------------------------
     ## Check inputs
