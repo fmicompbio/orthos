@@ -20,6 +20,13 @@ A plot
 \description{
 Plot query results
 }
+\examples{
+x <- rnorm(100)
+plotQueryResults(scores = x,
+                 topn = 10,
+                 annot = as.character(round(abs(x), 1)))
+
+}
 \author{
 Panagiotis Papasaikas
 }
