@@ -64,7 +64,7 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         ggpubr::ggdensity(DF, "score", fill = "#33638DFF") + 
         ggpubr::clean_theme() +
         ggplot2::geom_point(
-            data = DF %>% dplyr::filter(.data$score >= min.score),
+            data = DF |> dplyr::filter(.data$score >= min.score),
             aes(x = .data$score, y = 0, color = annot),
             size = 1.5) +
         ggpubr::rotate() +  
