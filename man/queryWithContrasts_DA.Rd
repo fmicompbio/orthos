@@ -5,7 +5,7 @@
 \title{Query the contrast database with a set of contrasts}
 \usage{
 queryWithContrasts_DA(
-  contrasts = NULL,
+  contrasts,
   use = c("expressed.in.both", "all.genes"),
   exprThr = 0.25,
   organism = c("Human", "Mouse"),
@@ -39,10 +39,12 @@ be returned in the TopHits slot of the results.}
 \item{verbose}{Logical scalar indicating whether to print messages along 
 the way.}
 
-\item{workers}{Number of workers used for parallelizetion (passed to BiocParallel::MulticoreParam).}
+\item{workers}{Number of workers used for parallelization (passed to
+\code{\link[BiocParallel]{MulticoreParam}}).}
 
-\item{chunk_size}{Column dimension for the grid used to read blocks from the HDF5 Matrix.
-Sizes between 250 and 1000 are recommended. Smaller sizes reduce memory usage.}
+\item{chunk_size}{Column dimension for the grid used to read blocks from the
+HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
+reduce memory usage.}
 }
 \value{
 A list of PearsonRhos, Zscores against the datbase as well as 
