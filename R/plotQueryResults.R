@@ -10,6 +10,12 @@
 #'
 #' @return A plot
 #' 
+#' @examples 
+#' x <- rnorm(100)
+#' plotQueryResults(scores = x,
+#'                  topn = 10,
+#'                  annot = as.character(round(abs(x), 1)))
+#' 
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
 #'     theme_bw geom_bin2d ggplot
 #' @importFrom ggpubr ggdensity rotate rremove clean_theme
