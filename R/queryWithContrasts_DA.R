@@ -39,6 +39,7 @@
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
+#' @importFrom stats quantile
 #' 
 queryWithContrasts_DA <- function(contrasts,
                                   use = c("expressed.in.both", "all.genes"),

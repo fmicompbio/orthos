@@ -36,7 +36,7 @@
 #' @importFrom digest digest
 #' @importFrom SummarizedExperiment assays
 #' @importFrom cowplot plot_grid
-#' 
+#' @importFrom stats quantile
 #' 
 queryWithContrasts <- function(contrasts, 
                                use = c("expressed.in.both", "all.genes"),
