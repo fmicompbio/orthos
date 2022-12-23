@@ -30,9 +30,12 @@
 #'     as the \code{\link[SummarizedExperiment]{colData}}.
 #' 
 #' @examples
+#' \dontrun{
 #' RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
 #' RES <- decomposeVar(M = CountM, treatm = c(3, 4, 5, 6), 
 #'                     cntr = c(1, 1, 2, 2), processInput = FALSE)
+#' }
+#' 
 #' @importFrom stats na.omit
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' 
