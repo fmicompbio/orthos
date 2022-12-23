@@ -32,6 +32,8 @@
 #' RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
 #' RES <- decomposeVar(M = CountM, treatm = c(3, 4, 5, 6), 
 #'                     cntr = c(1, 1, 2, 2), processInput = FALSE)
+#' @importFrom stats na.omit
+#' @importFrom SummarizedExperiment SummarizedExperiment
 #' 
 decomposeVar <- function(M, MD = NULL, treatm = NULL, cntr = NULL, 
                          processInput = TRUE, organism = c("Human","Mouse"),
@@ -207,8 +209,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @noRd
 #' 
 #' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
-#' 
-#' 
+#' @importFrom stats predict
 #'     
 .predict_encoder <- function(gene_input, organism) {
     encoder_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/ContextEncoder_ARCHS4_v212_"
@@ -221,8 +222,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @noRd
 #' 
 #' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
-#'
-#'
+#' @importFrom stats predict
 #' 
 .predict_encoderd <- function(delta_input, context, organism) {
     ### Load contrast encoder and generator models:
