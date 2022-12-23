@@ -46,18 +46,23 @@ queryWithContrasts_DA <- function(contrasts,
     ## -------------------------------------------------------------------------
     ## Check inputs
     ## -------------------------------------------------------------------------
-    stopifnot("`contrasts` should be a valid SummarizedExperiment" = 
-                  is(contrasts, "SummarizedExperiment"))
+    .assertVector(x = contrasts, type = "SummarizedExperiment")
     valid.contrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS", "RESIDUAL_CONTRASTS")
     present.contrasts <- intersect(valid.contrasts, names(assays(contrasts)))
     stopifnot("The assays slot in the provided SummarizedExperiment does not contain valid contrast names " = 
                   length(present.contrasts) > 0)
-    message(paste ("provided contrast: ", present.contrasts, collapse = "\n"))
+    message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
     
     use <- match.arg(use)
+    .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     organism <- match.arg(organism)
     plotContrast <- match.arg(plotContrast)
-    workers <- min( max(1,parallel::detectCores()-1), workers  )
+    .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
+    .assertScalar(x = verbose, type = "logical")
+    .assertScalar(x = workers, type = "numeric",
+                  rngIncl = c(1, parallel::detectCores() - 1))
+    .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
+    
     
     ## -------------------------------------------------------------------------
     ## Load contrast database
@@ -65,11 +70,11 @@ queryWithContrasts_DA <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    target.contrasts <- loadHDF5SummarizedExperiment(dir="/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-                                                     prefix=paste0(tolower(organism),"_v212_c100" ) )
+    target.contrasts <- loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+                                                     prefix = paste0(tolower(organism),"_v212_c100" ) )
     
     DBhash <- digest::digest(target.contrasts, algo = "xxhash64")
-    hashvals <- list(Human="4c4e2b79337b4b89", Mouse="c4231c455fd526c3" )
+    hashvals <- list(Human = "4c4e2b79337b4b89", Mouse = "c4231c455fd526c3" )
     stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
 Please remove `target.contrasts` and try again." = 
                   DBhash == hashvals[[organism]])
@@ -91,9 +96,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
             query <- contrasts[[x]]
-            query[query<=thr] <- NA
-            .grid_cor_wNAs(query, hdf5=SummarizedExperiment::assays(target.contrasts)[[x]], 
-                           thr=thr, workers=workers, chunk_size=chunk_size) 
+            query[query <= thr] <- NA
+            .grid_cor_wNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
+                           thr = thr, workers = workers, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
         
@@ -101,8 +106,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
             query <- contrasts[[x]]
-            .grid_cor_woNAs(query, hdf5=SummarizedExperiment::assays(target.contrasts)[[x]], 
-                            workers=workers, chunk_size=chunk_size) 
+            .grid_cor_woNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
+                            workers = workers, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
@@ -124,7 +129,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     TopHits <- sapply(present.contrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) { 
             N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
-            colData(target.contrasts)[N, c(3, 12, 22, 24, 29, 31, 33)]
+            SummarizedExperiment::colData(target.contrasts)[N, c(3, 12, 22, 24, 29, 31, 33)]
         })
     }, simplify = FALSE, USE.NAMES = TRUE
     )
