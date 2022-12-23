@@ -16,10 +16,15 @@
 #'     expression value above which a gene is considered to be expressed. This 
 #'     same value is then used for thresholding the contrast database. Only 
 #'     applies when use="expressed.in.both"
+#' @param organism Selects the autoencoder model trained on data from this
+#'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param preserveInGlobalEnv specifies whether the contrast database (stored 
 #'     as a \code{SummarizedExperiment} object in \code{target.contrasts})
 #'     should be preserved in the \code{.GlobalEnv} environment either for
 #'     future queries or for accessing its metadata
+#' @param plotContrast Select a contrast to be plotted, one of
+#'     \code{"RESIDUAL", "INPUT", "DECODED"} or \code{"NONE"} to suppress
+#'     the plotting.
 #' @param detailTopn specifies the number of top hits for which metadata will 
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along 

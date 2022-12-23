@@ -32,10 +32,17 @@ expression value above which a gene is considered to be expressed. This
 same value is then used for thresholding the contrast database. Only 
 applies when use="expressed.in.both"}
 
+\item{organism}{Selects the autoencoder model trained on data from this
+species. One of \code{"Human"} or \code{"Mouse"}.}
+
 \item{preserveInGlobalEnv}{specifies whether the contrast database (stored 
 as a \code{SummarizedExperiment} object in \code{target.contrasts})
 should be preserved in the \code{.GlobalEnv} environment either for
 future queries or for accessing its metadata}
+
+\item{plotContrast}{Select a contrast to be plotted, one of
+\code{"RESIDUAL", "INPUT", "DECODED"} or \code{"NONE"} to suppress
+the plotting.}
 
 \item{detailTopn}{specifies the number of top hits for which metadata will 
 be returned in the TopHits slot of the results.}
