@@ -39,7 +39,7 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
     
     min.score <- sort(scores, decreasing = TRUE)[topn]
     DF <- data.frame(
-        idx = 1:length(scores),
+        idx = seq_along(scores),
         score = scores,
         ACC = names(scores),
         annot = annot
@@ -47,18 +47,18 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
     
     blank.theme <-
         ggplot2::theme(
-            axis.line = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank(),
-            axis.ticks = element_blank(),
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
+            axis.line = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_blank(),
+            axis.text.y = ggplot2::element_blank(),
+            axis.ticks = ggplot2::element_blank(),
+            axis.title.x = ggplot2::element_blank(),
+            axis.title.y = ggplot2::element_blank(),
             legend.position = "none",
-            panel.background = element_blank(),
-            panel.border = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.background = element_blank()
+            panel.background = ggplot2::element_blank(),
+            panel.border = ggplot2::element_blank(),
+            panel.grid.major = ggplot2::element_blank(),
+            panel.grid.minor = ggplot2::element_blank(),
+            plot.background = ggplot2::element_blank()
         )
     
     dens.plot <-
@@ -80,8 +80,7 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         ggplot2::geom_point(
             data = subset(DF, score >= min.score),
             aes(color = annot),
-            size = 1.5
-        ) +
+            size = 1.5) +
         ggrepel::geom_text_repel(
             data = subset(DF, score >= min.score),
             aes(x = .data$idx, y = .data$score , label = .data$ACC),
@@ -97,8 +96,7 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         dens.plot,
         ncol = 3,
         align = "hv",
-        rel_widths = c(4, -0.2, 1)
-    )
+        rel_widths = c(4, -0.2, 1))
     
     return(P)
 }
