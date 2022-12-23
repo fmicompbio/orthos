@@ -20,10 +20,11 @@
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along 
 #'     the way.
-#' @param workers Number of workers used for parallelizetion (passed to BiocParallel::MulticoreParam).
-#' @param chunk_size Column dimension for the grid used to read blocks from the HDF5 Matrix.
-#'  Sizes between 250 and 1000 are recommended. Smaller sizes reduce memory usage.
-#'  
+#' @param workers Number of workers used for parallelization (passed to
+#'     \code{\link[BiocParallel]{MulticoreParam}}).
+#' @param chunk_size Column dimension for the grid used to read blocks from the
+#'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
+#'     reduce memory usage.
 #'
 #' @return A list of PearsonRhos, Zscores against the datbase as well as 
 #'     detailed Metadata for the detailTopn hits.
