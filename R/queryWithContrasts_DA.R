@@ -29,9 +29,10 @@
 #'     detailed Metadata for the detailTopn hits.
 #' 
 #' @importFrom digest digest
-#' @importFrom SummarizedExperiment assays
+#' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
+#' @importFrom HDF5Array loadHDF5SummarizedExperiment
 #' 
 queryWithContrasts_DA <- function(contrasts,
                                   use = c("expressed.in.both", "all.genes"),
