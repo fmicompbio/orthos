@@ -25,8 +25,9 @@
 #' @param verbose Logical scalar indicating whether to print messages along 
 #'     the way.
 #'
-#' @return A \code{SummarizedExperiment} object with the decomposed contrasts 
-#'     in the assays and the decomposed variance as the \code{colData}.
+#' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+#'     with the decomposed contrasts in the assays and the decomposed variance
+#'     as the \code{\link[SummarizedExperiment]{colData}}.
 #' 
 #' @examples
 #' RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
