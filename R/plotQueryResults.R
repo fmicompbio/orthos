@@ -23,7 +23,6 @@
 #' @importFrom cowplot plot_grid
 #' @importFrom grid unit
 #' @importFrom dplyr filter
-#' @importFrom usethis use_pipe
 #' @importFrom rlang .data
 #' 
 plotQueryResults <- function(scores, topn = 10, annot = "") {
