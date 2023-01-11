@@ -8,20 +8,23 @@
 #' @export
 #' 
 #' @param M Matrix of raw gene counts.
-#' @param MD a vector of gene deltas. If MD is specified, M is assumed to be a 
-#'     raw gene count matrix specifying context for contrasts specified in MD.
-#'     MD is then a matrix of gene deltas with the same dimensions as M. 
-#'     If MD is specified, \code{treatm} and \code{cntr} have to be \code{NULL}.
-#' @param treatm,cntr Vectors indicating column indices in M corresponding 
-#'     to treatments and controls. If treatm and cntr are specified MD has to be 
-#'     \code{NULL}. 
+#' @param MD Matrix of gene deltas (optional). If \code{MD} is specified,
+#'     \code{M} is assumed to be a raw gene count matrix specifying context for
+#'     contrasts specified in \code{MD}. \code{MD} is then a matrix of gene
+#'     deltas with the same dimensions as \code{M}. If \code{MD} is specified,
+#'     \code{treatm} and \code{cntr} have to be \code{NULL}.
+#' @param treatm,cntr Vectors indicating column indices in \code{M}
+#'     corresponding to treatments and controls. If \code{treatm} and
+#'     \code{cntr} are specified, \code{MD} has to be \code{NULL}. 
 #' @param processInput If set to \code{TRUE} (default) the count matrix will 
 #'     be preprocessed (library normalized, log-transformed, NA values will 
 #'     be set to 0).
 #' @param organism Selects the autoencoder model trained on data from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
-#' @param featureType Set to AUTO for automatic feature id-type detection. 
-#'     Alternatively specify the type of supplied id features.
+#' @param featureType Set to \code{"AUTO"} for automatic feature id-type
+#'     detection. Alternatively specify the type of supplied id features.
+#'     Current supported types are \code{"ENSEMBL_GENE_ID"},
+#'     \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"} and \code{"ARCHS4_ID"}.
 #' @param verbose Logical scalar indicating whether to print messages along 
 #'     the way.
 #'
