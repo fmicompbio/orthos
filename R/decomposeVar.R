@@ -1,3 +1,49 @@
+#' Preprocess count matrix
+#'
+#' The given count matrix \code{M} will be preprocessed by:
+#' library normalization (calculation of counts per million, using the
+#' column sums as library sizes), log2-transformed after addition of
+#' \code{pseudocount}, and \code{NA} values will be set to 0.
+#' The subset of \code{M} with row names in \code{ids} is returned.
+#' 
+#' @param M Numeric matrices with feature counts (features are in rows,
+#'     samples in columns).
+#' @param ids Character vector. Only rows of \code{M} with row names in
+#'     \code{ids} will be returned.
+#' @param verbose Logical scalar. Report on progress if \code{TRUE}.
+#' @param pseudocount Numeric scalar, added to the scaled (per million) counts
+#'     before log2-transformation.
+#'
+#' @return Scaled, log2-transformed and subset version of \code{M}.
+#'
+#' @author Panagiotis Papasaikas, Michael Stadler
+#'
+#' @keywords internal
+.preprocessInput <- function(M, ids, verbose, pseudocount = 4) {
+    if (verbose) {
+        message("Preparing input...")
+    }
+    
+    ## Manage NA values
+    NA.idx <- which(is.na(M))
+    if (length(NA.idx) > 0) {
+        if (verbose) {
+            message("!!!Matrix `M` contains ", length(NA.idx),
+                    " NA values.", " Those will be set to 0")
+        }
+        M[NA.idx] <- 0
+    }
+    
+    ## Lib normalize and log2 transform input count matrix
+    M <- sweep(M[rownames(M) %in% ids, ], 2, 
+               colSums(M), FUN = "/") * 1e+06
+    M <- log2(M + pseudocount)
+    
+    return(M)
+}
+
+
+
 #' Decompose input contrasts to decoded and residual fractions
 #' 
 #' Decompose input contrasts (gene expression Deltas) to decoded (generic) and residual (unique) components
@@ -17,14 +63,16 @@
 #'     corresponding to treatments and controls. If \code{treatm} and
 #'     \code{cntr} are specified, \code{MD} has to be \code{NULL}. 
 #' @param processInput If set to \code{TRUE} (default) the count matrix will 
-#'     be preprocessed (library normalized, log-transformed, NA values will 
-#'     be set to 0).
+#'     be preprocessed (library normalized, log2-transformed after addition of
+#'     a pseudocount, NA values will be set to 0).
 #' @param organism Selects the autoencoder model trained on data from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param featureType Set to \code{"AUTO"} for automatic feature id-type
 #'     detection. Alternatively specify the type of supplied id features.
 #'     Current supported types are \code{"ENSEMBL_GENE_ID"},
 #'     \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"} and \code{"ARCHS4_ID"}.
+#' @param pseudocount Numerical scalar, added to raw counts in \code{M} when
+#'     \code{preprocessInput = TRUE}.
 #' @param verbose Logical scalar indicating whether to print messages along 
 #'     the way.
 #'
@@ -49,7 +97,8 @@ decomposeVar <- function(M,
                          organism = c("Human","Mouse"),
                          featureType = c("AUTO", "ENSEMBL_GENE_ID",
                                          "GENE_SYMBOL", "ENTREZ_GENE_ID",
-                                         "ARCHS4_ID"), 
+                                         "ARCHS4_ID"),
+                         pseudocount = 4,
                          verbose = TRUE) {
     
     ## -------------------------------------------------------------------------
@@ -66,6 +115,7 @@ decomposeVar <- function(M,
     .assertScalar(x = processInput, type = "logical")
     organism <- match.arg(organism)
     featureType <- match.arg(featureType)
+    .assertScalar(x = pseudocount, type = "numeric", rngIncl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
     stopifnot("`specify either `MD` OR both `treatm` and `cntr`" =
                   !is.null(MD) & (!is.null(treatm) | !is.null(cntr)))
@@ -126,32 +176,18 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
     ## -------------------------------------------------------------------------
     ## Preprocess input (NAs ->0, LibNormalize, LogTransform):
     ## -------------------------------------------------------------------------
-    pc <- 4
     if (processInput) {
-        if (verbose) {
-            message("Preparing input...")
-        }
-        
-        #### Manage NA values:
-        NA.idx <- which(is.na(M))
-        if (length(NA.idx) > 0) {
-            if (verbose) {
-                message("!!!Matrix `M` contains ", length(NA.idx),
-                        " NA values.", " Those will be set to 0")
-            }
-            M[NA.idx] <- 0
-        }
-        ##### Lib normalize and log transform input count matrix:
-        M <- sweep(M[rownames(M) %in% toupper(genes[, featureType]), ], 2, 
-                   colSums(M), FUN = "/") * 1e+06
-        M <- log2(M + pc)
+        M <- .preprocessInput(M = M,
+                              ids = toupper(genes[, featureType]),
+                              verbose = verbose,
+                              pseudocount = pseudocount)
     }
     
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
     ## -------------------------------------------------------------------------
     if (is.null(MD)) {
-        C <- matrix(log2(pc), nrow = length(treatm), ncol = nrow(genes), 
+        C <- matrix(log2(pseudocount), nrow = length(treatm), ncol = nrow(genes), 
                     dimnames = list(colnames(M)[treatm], rownames(genes)), 
                     byrow = TRUE)
         D <- C * 0
@@ -161,7 +197,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
     }
     
     if (!is.null(MD)) {
-        C <- matrix(log2(pc), nrow = ncol(M), ncol = nrow(genes), 
+        C <- matrix(log2(pseudocount), nrow = ncol(M), ncol = nrow(genes), 
                     dimnames = list(colnames(M), genes[, 1]), byrow = TRUE)
         D <- C * 0
         C[, idx.commonF] <-  t(M[idx.commonR, , drop = FALSE])
