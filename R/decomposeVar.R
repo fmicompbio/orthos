@@ -42,22 +42,15 @@
 #' @importFrom stats na.omit
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' 
-decomposeVar <- function(M, MD = NULL, treatm = NULL, cntr = NULL, 
-                         processInput = TRUE, organism = c("Human","Mouse"),
+decomposeVar <- function(M,
+                         MD = NULL,
+                         treatm = NULL, cntr = NULL, 
+                         processInput = TRUE,
+                         organism = c("Human","Mouse"),
                          featureType = c("AUTO", "ENSEMBL_GENE_ID",
                                          "GENE_SYMBOL", "ENTREZ_GENE_ID",
                                          "ARCHS4_ID"), 
                          verbose = TRUE) {
-    
-    organism <- match.arg(organism)
-    featureType <- match.arg(featureType)
-    
-    ## -------------------------------------------------------------------------
-    ## Read gene information
-    ## -------------------------------------------------------------------------
-    genes <- readRDS(system.file("extdata", paste0("ARCHS4_v212_feature_genes_",organism,".rds"), 
-                                 package = "deJUNKER"))
-    ngenes <- nrow(genes)
     
     ## -------------------------------------------------------------------------
     ## Check input
@@ -65,24 +58,28 @@ decomposeVar <- function(M, MD = NULL, treatm = NULL, cntr = NULL,
     if (verbose) {
         message("Checking input...")
     }
-    stopifnot("`M` must be a (raw) count matrix with features (genes) in the rows and conditions in the columns" = 
-                  is.matrix(M) & all(M >= 0, na.rm = TRUE))
-    stopifnot("`specify either both `treatm` and `cntr` OR  `MD`" = 
-                  !is.null(MD) | (!is.null(treatm) & !is.null(cntr)))
+    .assertVector(x = M, type = "matrix", rngIncl = c(0, Inf))
+    .assertVector(x = MD, type = "matrix", allowNULL = TRUE)
+    .assertVector(x = treatm, type = "numeric", rngIncl = c(1, ncol(M)), allowNULL = TRUE)
+    .assertVector(x = cntr, type = "numeric", len = length(treatm),
+                  rngIncl = c(1, ncol(M)), allowNULL = TRUE)
+    .assertScalar(x = processInput, type = "logical")
+    organism <- match.arg(organism)
+    featureType <- match.arg(featureType)
+    .assertScalar(x = verbose, type = "logical")
+    stopifnot("`specify either `MD` OR both `treatm` and `cntr`" =
+                  !is.null(MD) & (!is.null(treatm) | !is.null(cntr)))
+    stopifnot("`rownames(M)` must be set to gene identifiers" = !is.null(rownames(M)))
+    stopifnot("`M` and `MD` matrices have to have the same dimensions and dimnames" =
+                  is.null(MD) | (identical(dimnames(M), dimnames(MD)) &
+                                 identical(dim(M), dim(MD))))
     
-    if (is.null(MD)) {
-        stopifnot("`treatm` and `cntr` vectors must have the same length" = 
-                      identical(length(treatm), length(cntr)))
-        stopifnot("`treatm` and `cntr` vectors must be numeric vectors indicating `M` column indices " = 
-                      all(c(treatm, cntr) %in% 1:ncol(M)) & !is.null(treatm))
-    }
-    
-    if (!is.null(MD)) {
-        stopifnot("`treatm` and `cntr` arguments must be NULL when `MD` is specified" = 
-                      is.null(treatm) & is.null(cntr))
-        stopifnot("`M` and `MD` matrices have to have the same dimensions and dimnames" = 
-                      identical(dimnames(M), dimnames(MD)))
-    }
+    ## -------------------------------------------------------------------------
+    ## Read gene information
+    ## -------------------------------------------------------------------------
+    genes <- readRDS(system.file("extdata", paste0("ARCHS4_v212_feature_genes_",organism,".rds"), 
+                                 package = "deJUNKER"))
+    ngenes <- nrow(genes)
     
     ## -------------------------------------------------------------------------
     ## Detect feature ID type
