@@ -207,12 +207,14 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basiliskRun(env = dejunkerenv, fun = .predict_encoder, organism=organism,
-                        gene_input = C )
+    LATC <- basiliskRun(env = dejunkerenv, fun = .predict_encoder,
+                        organism = organism,
+                        gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basiliskRun(env = dejunkerenv, fun = .predict_encoderd, organism=organism, 
+    res <- basiliskRun(env = dejunkerenv, fun = .predict_encoderd,
+                       organism = organism, 
                        delta_input = D, context = LATC)
     LATD <- res$LATD
     DEC <- res$DEC
@@ -253,8 +255,8 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #'     
 .predict_encoder <- function(gene_input, organism) {
     encoder_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/ContextEncoder_ARCHS4_v212_"
-    encoder_path <- paste0(encoder_path,organism,".hdf5")
-    encoder <- keras::load_model_hdf5(encoder_path,compile=FALSE)
+    encoder_path <- paste0(encoder_path, organism, ".hdf5")
+    encoder <- keras::load_model_hdf5(encoder_path, compile = FALSE)
     predict(encoder, list(gene_input = gene_input))
 }
 
@@ -265,16 +267,17 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
 #' @importFrom stats predict
 #' 
 .predict_encoderd <- function(delta_input, context, organism) {
-    ### Load contrast encoder and generator models:
+    ## Load contrast encoder and generator models:
     encoderD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaEncoder_FT_ARCHS4_v212_"
     generatorD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaDecoder_FT_ARCHS4_v212_"
     
-    encoderD_path <- paste0(encoderD_path,organism,".hdf5")
-    generatorD_path <- paste0(generatorD_path,organism,".hdf5")
+    encoderD_path <- paste0(encoderD_path, organism, ".hdf5")
+    generatorD_path <- paste0(generatorD_path, organism, ".hdf5")
     
-    encoderD <- keras::load_model_hdf5(encoderD_path,compile=FALSE)
-    generatorD <- keras::load_model_hdf5(generatorD_path,compile=FALSE)
-    ### Encode and decode deltas:
+    encoderD <- keras::load_model_hdf5(encoderD_path, compile = FALSE)
+    generatorD <- keras::load_model_hdf5(generatorD_path, compile = FALSE)
+    
+    ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input, CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
     
