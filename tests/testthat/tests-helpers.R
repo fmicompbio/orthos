@@ -12,7 +12,107 @@ test_that(".M2Mcor works", {
 })
 
 ## ------------------------------------------------------------------------- ##
-## Misspecified arguments
+## Checks, .grid_cor_wNAs
+## ------------------------------------------------------------------------- ##
+test_that(".grid_cor_wNAs works", {
+    # create synthetic data
+    nr <- 100L
+    ncQuery <- 20L
+    ncDBase <- 50L
+    thr <- 3.0
+    set.seed(56L)
+    mQuery <- mQueryThr <- matrix(runif(nr * ncQuery) * 12, nrow = nr, ncol = ncQuery)
+    mQueryThr[mQuery < thr] <- NA
+    mDBase <- mDBaseThr <- matrix(runif(nr * ncDBase) * 12, nrow = nr, ncol = ncDBase)
+    mDBaseThr[mDBase < thr] <- NA
+    tf <- tempfile(fileext = ".h5")
+    mDBaseHDF5 <- HDF5Array::writeHDF5Array(x = mDBase, filepath = tf)
+    tfthr <- tempfile(fileext = ".h5")
+    mDBaseThrHDF5 <- HDF5Array::writeHDF5Array(x = mDBaseThr, filepath = tfthr)
+
+    # misspecified arguments
+    expect_error(.grid_cor_wNAs(query = NULL, hdf5 = mDBaseHDF5), "NULL")
+    expect_error(.grid_cor_wNAs(query = "error", hdf5 = mDBaseHDF5), "matrix")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = NULL), "NULL")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = "error"), "HDF5Matrix")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = "error"), "numeric")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = "error"), "numeric")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = -1), "within")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, thr = "error"), "numeric")
+    
+    # correct results
+    res0 <- stats::cor(mQuery, mDBase)
+    res0thr <- stats::cor(mQueryThr, mDBaseThr, use = "pairwise.complete")
+    res1 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1, thr = 0.0)
+    res1thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5, chunk_size = 10, workers = 1, thr = thr)
+    res2 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 2, thr = 0.0)
+    res2thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5, chunk_size = 10, workers = 2, thr = thr)
+    
+    expect_type(res1, "double")
+    expect_type(res1thr, "double")
+    expect_type(res2, "double")
+    expect_type(res2thr, "double")
+    
+    expect_identical(dim(res1), c(ncQuery, ncDBase))
+    expect_identical(dim(res1thr), c(ncQuery, ncDBase))
+    expect_identical(dim(res2), c(ncQuery, ncDBase))
+    expect_identical(dim(res2thr), c(ncQuery, ncDBase))
+    
+    expect_equal(res0, res1)
+    expect_equal(res0thr, res1thr)
+    expect_equal(res0, res2)
+    expect_equal(res0thr, res2thr)
+    
+    # clean up
+    unlink(c(tf, tfthr))
+})
+
+
+## ------------------------------------------------------------------------- ##
+## Checks, .grid_cor_woNAs
+## ------------------------------------------------------------------------- ##
+test_that(".grid_cor_woNAs works", {
+    # create synthetic data
+    nr <- 100L
+    ncQuery <- 20L
+    ncDBase <- 50L
+    set.seed(57L)
+    mQuery <- mQueryThr <- matrix(runif(nr * ncQuery) * 12, nrow = nr, ncol = ncQuery)
+    mDBase <- mDBaseThr <- matrix(runif(nr * ncDBase) * 12, nrow = nr, ncol = ncDBase)
+    tf <- tempfile(fileext = ".h5")
+    mDBaseHDF5 <- HDF5Array::writeHDF5Array(x = mDBase, filepath = tf)
+
+    # misspecified arguments
+    expect_error(.grid_cor_woNAs(query = NULL, hdf5 = mDBaseHDF5), "NULL")
+    expect_error(.grid_cor_woNAs(query = "error", hdf5 = mDBaseHDF5), "matrix")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = NULL), "NULL")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = "error"), "HDF5Matrix")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = "error"), "numeric")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = "error"), "numeric")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = -1), "within")
+
+    # correct results
+    res0 <- stats::cor(mQuery, mDBase)
+    res1 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1)
+    res2 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 2)
+    res3 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1, thr = 0.0)
+    
+    expect_type(res1, "double")
+    expect_type(res2, "double")
+
+    expect_identical(dim(res1), c(ncQuery, ncDBase))
+    expect_identical(dim(res2), c(ncQuery, ncDBase))
+
+    expect_equal(res0, res1)
+    expect_equal(res0, res2)
+    expect_equal(res1, res3)
+    
+    # clean up
+    unlink(tf)
+})
+
+## ------------------------------------------------------------------------- ##
+## Misspecified arguments, .assertScalar .assertVector .assertPackagesAvailable
 ## ------------------------------------------------------------------------- ##
 expect_error(.assertScalar(1, type = TRUE))
 expect_error(.assertScalar(1, type = 1))
