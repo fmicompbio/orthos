@@ -13,6 +13,7 @@ decomposeVar(
   organism = c("Human", "Mouse"),
   featureType = c("AUTO", "ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
     "ARCHS4_ID"),
+  pseudocount = 4,
   verbose = TRUE
 )
 }
@@ -30,8 +31,8 @@ corresponding to treatments and controls. If \code{treatm} and
 \code{cntr} are specified, \code{MD} has to be \code{NULL}.}
 
 \item{processInput}{If set to \code{TRUE} (default) the count matrix will 
-be preprocessed (library normalized, log-transformed, NA values will 
-be set to 0).}
+be preprocessed (library normalized, log2-transformed after addition of
+a pseudocount, NA values will be set to 0).}
 
 \item{organism}{Selects the autoencoder model trained on data from this
 species. One of \code{"Human"} or \code{"Mouse"}.}
@@ -40,6 +41,9 @@ species. One of \code{"Human"} or \code{"Mouse"}.}
 detection. Alternatively specify the type of supplied id features.
 Current supported types are \code{"ENSEMBL_GENE_ID"},
 \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"} and \code{"ARCHS4_ID"}.}
+
+\item{pseudocount}{Numerical scalar, added to raw counts in \code{M} when
+\code{preprocessInput = TRUE}.}
 
 \item{verbose}{Logical scalar indicating whether to print messages along 
 the way.}
