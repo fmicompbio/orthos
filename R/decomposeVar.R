@@ -118,7 +118,7 @@ decomposeVar <- function(M,
     .assertScalar(x = pseudocount, type = "numeric", rngIncl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
     stopifnot("`specify either `MD` OR both `treatm` and `cntr`" =
-                  !is.null(MD) & (!is.null(treatm) | !is.null(cntr)))
+                  !is.null(MD) | (!is.null(treatm) | !is.null(cntr)))
     stopifnot("`rownames(M)` must be set to gene identifiers" = !is.null(rownames(M)))
     stopifnot("`M` and `MD` matrices have to have the same dimensions and dimnames" =
                   is.null(MD) | (identical(dimnames(M), dimnames(MD)) &
@@ -170,9 +170,7 @@ decomposeVar <- function(M,
     stopifnot("\n!!!Too many missing features (>10000).  Make certain you provided valid 
 Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownames in your input matrix `M`.\n" = 
                   (nrow(genes) - max(ID_OLaps) <= 10000))
-    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
-    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
-    
+
     ## -------------------------------------------------------------------------
     ## Preprocess input (NAs ->0, LibNormalize, LogTransform):
     ## -------------------------------------------------------------------------
@@ -182,6 +180,9 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
                               verbose = verbose,
                               pseudocount = pseudocount)
     }
+    
+    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
+    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
     
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
