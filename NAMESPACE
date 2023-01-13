@@ -3,7 +3,6 @@
 export(decomposeVar)
 export(plotQueryResults)
 export(queryWithContrasts)
-export(queryWithContrasts_DA)
 export(testdeJUNKERenv)
 importFrom(BiocParallel,MulticoreParam)
 importFrom(BiocParallel,bplapply)
