@@ -41,13 +41,13 @@
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
 #' @importFrom stats quantile
 #' 
-queryWithContrasts_DA <- function(contrasts,
-                                  use = c("expressed.in.both", "all.genes"),
-                                  exprThr = 0.25, organism = c("Human","Mouse"),
-                                  plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
-                                  detailTopn = 10, verbose = TRUE,
-                                  workers = round(4 + parallel::detectCores() / 4),
-                                  chunk_size = 500 ) {
+queryWithContrasts <- function(contrasts,
+                               use = c("expressed.in.both", "all.genes"),
+                               exprThr = 0.25, organism = c("Human","Mouse"),
+                               plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
+                               detailTopn = 10, verbose = TRUE,
+                               workers = round(4 + parallel::detectCores() / 4),
+                               chunk_size = 500 ) {
     
     ## -------------------------------------------------------------------------
     ## Check inputs
