@@ -43,6 +43,67 @@
 }
 
 
+#' Detect type of feature identifier
+#'
+#' @param featureType Character scalar, one of \code{"AUTO"},
+#'     \code{"ENSEMBL_GENE_ID"}, \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"}
+#'     or \code{"ARCHS4_ID"}.
+#' @param genes Gene annotation data frame.
+#' @param M Expression matrix (feature identifiers are in row names).
+#' @param maxMissing Numeric scalar. This function will throw an error if more
+#'     than \code{maxMissing} features in \code{genes} are not available in
+#'     \code{M}.
+#' @param verbose Logical scalar. If \code{TRUE}, report on progress.
+#'
+#' @return \code{featureType} as a character scalar.
+#' 
+#' @author Panagiotis Papasaikas, Michael Stadler
+#'
+#' @keywords internal
+.detectFeatureIdType <- function(featureType, genes, M,
+                                 maxMissing = 10000, verbose = TRUE) {
+    if (featureType == "AUTO") {
+        if (verbose) {
+            message("Detecting feature ids-type...")
+        }
+        IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID", "ARCHS4_ID")
+        ID_OLaps <- vapply(IDtypes, function(x) {  
+            sum(rownames(M) %in% toupper(genes[, x]))
+        }, FUN.VALUE = numeric(1))
+        featureType <- IDtypes[which.max(ID_OLaps)]
+        if (verbose) {
+            message("Feature ids-type detected: ", featureType)
+        }
+    } else {
+        if (verbose) {
+            message("Feature ids-type specified by user: ", featureType)
+        }
+        ID_OLaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
+    }
+    
+    if (verbose) {
+        message(max(ID_OLaps), "/", nrow(M), 
+                " provided input features mapped against a total of ", 
+                nrow(genes), " model features.\n",
+                nrow(genes) - max(ID_OLaps), " missing features will be set to 0.\n",
+                "--> Missing features corresponding to non/lowly expressed genes ", 
+                "in your context(s) are of no consequence.\n",
+                "--> The model is robust to small fractions (<10%) of missing ", 
+                "genes that are expressed in your context(s).\n",
+                "--> Increased numbers of missing expressed genes in your input ", 
+                "might result in model performance decline.")
+    }
+    
+    if (nrow(genes) - max(ID_OLaps) > maxMissing) {
+        stop("\n!!!Too many missing features (>", maxMissing, "). ",
+             "Make certain you provided valid\nSymbol, Ensembl or ",
+             "Entrez gene identifiers for the specified organism as ",
+             "rownames in your input matrix `M`.\n")
+    }
+    
+    return(featureType)
+}
+
 
 #' Decompose input contrasts to decoded and residual fractions
 #' 
@@ -136,41 +197,13 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     geneIDs <- rownames(M)
     rownames(M) <- toupper(gsub("\\.\\d.+", "", rownames(M)))
-    if (featureType == "AUTO") {
-        if (verbose) {
-            message("Detecting feature ids-type...")
-        }
-        IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID", "ARCHS4_ID")
-        ID_OLaps <- sapply(IDtypes, function(x) {  
-            sum(rownames(M) %in% toupper(genes[, x])) 
-        })
-        featureType <- IDtypes[which.max(ID_OLaps)]
-        if (verbose) {
-            message("Feature ids-type detected: ", featureType)
-        }
-    } else {
-        if (verbose) {
-            message("Feature ids-type specified by user: ", featureType)
-        }
-        ID_OLaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
-    }
-    
-    if (verbose) {
-        message(max(ID_OLaps), "/", nrow(M), 
-                " provided input features mapped against a total of ", 
-                nrow(genes), " model features.")
-        message(nrow(genes) - max(ID_OLaps), " missing features will be set to 0.")
-        message("--> Missing features corresponding to non/lowly expressed genes ", 
-                "in your context(s) are of no consequence.")
-        message("--> The model is robust to small fractions (<10%) of missing ", 
-                "genes that are expressed in your context(s).")
-        message("--> Increased numbers of missing expressed genes in your input ", 
-                "might result in model performance decline.")
-    }
-    stopifnot("\n!!!Too many missing features (>10000).  Make certain you provided valid 
-Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownames in your input matrix `M`.\n" = 
-                  (nrow(genes) - max(ID_OLaps) <= 10000))
 
+    featureType <- .detectFeatureIdType(featureType = featureType,
+                                        genes = genes,
+                                        M = M,
+                                        maxMissing = 10000,
+                                        verbose = verbose)
+    
     ## -------------------------------------------------------------------------
     ## Preprocess input (NAs ->0, LibNormalize, LogTransform):
     ## -------------------------------------------------------------------------

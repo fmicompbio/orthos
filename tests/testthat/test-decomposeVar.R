@@ -44,3 +44,75 @@ test_that(".preprocessInput works", {
     expect_equal(N0, N1)
     expect_equal(N0[rownames(N2), ], N2)
 })
+
+## ------------------------------------------------------------------------- ##
+## Checks, .detectFeatureIdType
+## ------------------------------------------------------------------------- ##
+test_that(".detectFeatureIdType works", {
+    # load annotation and create synthetic data
+    genesMouse <- readRDS(system.file("extdata",
+                                      "ARCHS4_v212_feature_genes_Mouse.rds",
+                                      package = "deJUNKER"))
+    genesHuman <- readRDS(system.file("extdata",
+                                      "ARCHS4_v212_feature_genes_Human.rds",
+                                      package = "deJUNKER"))
+    idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
+                 "ENTREZ_GENE_ID", "ARCHS4_ID")
+    nr <- 1000
+    set.seed(926L)
+    mMouse <- lapply(structure(idTypes, names = idTypes), function(idType) {
+        ids <- sample(genesMouse[,idType], nr)
+        ids[is.na(ids)] <- paste0("id_", seq.int(sum(is.na(ids))))
+        matrix(runif(2 * nr, 0, 100), nrow = nr, ncol = 2,
+               dimnames = list(ids, 1:2))
+    })
+    mHuman <- lapply(structure(idTypes, names = idTypes), function(idType) {
+        ids <- sample(genesHuman[,idType], nr)
+        ids[is.na(ids)] <- paste0("id_", seq.int(sum(is.na(ids))))
+        matrix(runif(2 * nr, 0, 100), nrow = nr, ncol = 2,
+               dimnames = list(ids, 1:2))
+    })
+
+    # verbose
+    expect_message(
+        expect_message(
+            expect_message(.detectFeatureIdType(featureType = "AUTO",
+                                                genes = genesMouse,
+                                                M = mMouse[["GENE_SYMBOL"]],
+                                                maxMissing = nrow(genesMouse),
+                                                verbose = TRUE)
+            )
+        )
+    )
+    
+    # too few matched genes
+    expect_error(.detectFeatureIdType(featureType = "AUTO",
+                                      genes = genesMouse,
+                                      M = mMouse[["GENE_SYMBOL"]],
+                                      maxMissing = 1000,
+                                      verbose = FALSE)
+    )
+
+    # result checks
+    resMouseL <- lapply(structure(c("AUTO",idTypes), names = c("AUTO",idTypes)),
+                        function(idType) {
+                            .detectFeatureIdType(featureType = idType,
+                                                 genes = genesMouse,
+                                                 M = mMouse[[idType]],
+                                                 maxMissing = nrow(genesMouse),
+                                                 verbose = FALSE)
+                   })
+    resHumanL <- lapply(structure(c("AUTO",idTypes), names = c("AUTO",idTypes)),
+                        function(idType) {
+                            .detectFeatureIdType(featureType = idType,
+                                                 genes = genesHuman,
+                                                 M = mHuman[[idType]],
+                                                 maxMissing = nrow(genesHuman),
+                                                 verbose = FALSE)
+                        })
+    resExpected <- list(AUTO = "ENSEMBL_GENE_ID", ENSEMBL_GENE_ID = "ENSEMBL_GENE_ID", 
+                        GENE_SYMBOL = "GENE_SYMBOL", ENTREZ_GENE_ID = "ENTREZ_GENE_ID", 
+                        ARCHS4_ID = "ARCHS4_ID")
+    expect_identical(resMouseL, resExpected)
+    expect_identical(resHumanL, resExpected)
+})
