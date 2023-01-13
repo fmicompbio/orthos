@@ -1,3 +1,40 @@
+#' Load contrast database
+#' 
+#' Load a pre-calculated, organism-specific contrast database and return it
+#' as a \code{SummarizedExperiment}.
+#'
+#' @param organism Character scalar selecting the organism for which to load the
+#'     contrast database. One of \code{"Human"} or \code{"Mouse"}.
+#'
+#' @return A \code{SummarizedExperiment} with pre-calculate contrasts as
+#'     assays.
+#'
+#' @author Panagiotis Papasaikas, Michael Stadler
+#'
+# #' @importFrom digest digest
+#' 
+#' @keywords internal
+.loadContrastDatabase <- function(organism = c("Human", "Mouse")) {
+    organism <- match.arg(organism)
+
+    # load SummarizedExperiment    
+    # currently, this loads a local file
+    # in the future, this will obtain the database using BiocFileCache or ExperimentHub
+    se <- loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+                                       prefix = paste0(tolower(organism),"_v212_c100"))
+    
+    # check validity
+    # DBhash <- digest::digest(se, algo = "xxhash64")
+    # hashvals <- list(Human = "87e231a6567c61e0", Mouse = "800d2113e4a41175" )
+    #    stopifnot(paste0("The contrast DB contained for ", organism,
+    #                     " has not been correctly loaded. Please remove it and try again.") = 
+    #                  DBhash == hashvals[[organism]])
+    
+    # return
+    return(se)
+}
+
+
 #' Query the contrast database with a set of contrasts
 #' 
 #' @export
@@ -34,7 +71,6 @@
 #' @return A list of PearsonRhos, Zscores against the datbase as well as 
 #'     detailed Metadata for the detailTopn hits.
 #' 
-#' @importFrom digest digest
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
@@ -76,14 +112,7 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    target.contrasts <- loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-                                                     prefix = paste0(tolower(organism),"_v212_c100" ) )
-    
-    DBhash <- digest::digest(target.contrasts, algo = "xxhash64")
-    hashvals <- list(Human = "87e231a6567c61e0", Mouse = "800d2113e4a41175" )
-#    stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
-#Please remove `target.contrasts` and try again." = 
-#                  DBhash == hashvals[[organism]])
+    target.contrasts <- .loadContrastDatabase(organism = organism)
     
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
