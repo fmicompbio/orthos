@@ -181,8 +181,8 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
                               pseudocount = pseudocount)
     }
     
-    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
-    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
+    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType]))) # Indices of input features in the model feature vector 
+    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))      # Indices of model features in the input feature vector (i.e the rownames of M) 
     
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
