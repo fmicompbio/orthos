@@ -240,7 +240,7 @@ Symbol, Ensembl or Entrez gene identifiers  for the specified organism as rownam
                                  CONTEXT = t(C))
     RESULT <- SummarizedExperiment(assays = decomposed.contrasts,
                                    colData = list(ACCOUNTED_VARIANCE = VAR_DEC))
-    rownames(RESULT) <- geneIDs
+    rownames(RESULT) <- genes[, featureType]
     if (verbose) {
         message("Done!")
     }
