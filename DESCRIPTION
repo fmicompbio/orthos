@@ -21,7 +21,6 @@ Imports:
     BiocParallel,
     cowplot,
     DelayedArray,
-    digest,
     dplyr,
     ggplot2,
     ggpubr,
