@@ -88,7 +88,7 @@
 .grid_cor_woNAs <- function(query, hdf5, chunk_size = 1000,
                             workers = 16) {
     .assertVector(x = query, type = "matrix")
-    .assertVector(x = hdf5, type = "HDF5Matrix")
+    .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
     .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
     full_dim <- dim(hdf5)
