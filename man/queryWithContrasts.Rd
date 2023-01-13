@@ -9,10 +9,11 @@ queryWithContrasts(
   use = c("expressed.in.both", "all.genes"),
   exprThr = 0.25,
   organism = c("Human", "Mouse"),
-  preserveInGlobalEnv = TRUE,
   plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
   detailTopn = 10,
-  verbose = TRUE
+  verbose = TRUE,
+  workers = round(4 + parallel::detectCores()/4),
+  chunk_size = 500
 )
 }
 \arguments{
@@ -25,7 +26,7 @@ This is typically generated using
 
 \item{use}{Determines if all.genes or genes expressed in both query and 
 target context will be used. Note that "expressed.in.both", though more 
-accurate, is much slower.}
+accurate, is slower.}
 
 \item{exprThr}{is the quantile in the provided context that determines the 
 expression value above which a gene is considered to be expressed. This 
@@ -34,11 +35,6 @@ applies when use="expressed.in.both"}
 
 \item{organism}{Selects the autoencoder model trained on data from this
 species. One of \code{"Human"} or \code{"Mouse"}.}
-
-\item{preserveInGlobalEnv}{specifies whether the contrast database (stored 
-as a \code{SummarizedExperiment} object in \code{target.contrasts})
-should be preserved in the \code{.GlobalEnv} environment either for
-future queries or for accessing its metadata}
 
 \item{plotContrast}{Select a contrast to be plotted, one of
 \code{"RESIDUAL", "INPUT", "DECODED"} or \code{"NONE"} to suppress
@@ -49,6 +45,13 @@ be returned in the TopHits slot of the results.}
 
 \item{verbose}{Logical scalar indicating whether to print messages along 
 the way.}
+
+\item{workers}{Number of workers used for parallelization (passed to
+\code{\link[BiocParallel]{MulticoreParam}}).}
+
+\item{chunk_size}{Column dimension for the grid used to read blocks from the
+HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
+reduce memory usage.}
 }
 \value{
 A list of PearsonRhos, Zscores against the datbase as well as 
