@@ -214,8 +214,10 @@ decomposeVar <- function(M,
                               pseudocount = pseudocount)
     }
     
-    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType]))) # Indices of input features in the model feature vector 
-    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))      # Indices of model features in the input feature vector (i.e the rownames of M) 
+    # Indices of input features in the model feature vector 
+    idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
+    # Indices of model features in the input feature vector (i.e the rownames of M) 
+    idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
     
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
@@ -226,8 +228,7 @@ decomposeVar <- function(M,
                     byrow = TRUE)
         D <- C * 0
         C[, idx.commonF] <- t(M[idx.commonR, cntr, drop = FALSE])
-        D[, idx.commonF] <- t(M[idx.commonR, treatm, drop = FALSE]) - 
-            t(M[idx.commonR, cntr, drop = FALSE])
+        D[, idx.commonF] <- t(M[idx.commonR, treatm, drop = FALSE]) - C
     }
     
     if (!is.null(MD)) {
@@ -284,7 +285,7 @@ decomposeVar <- function(M,
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
+#' @importFrom keras load_model_hdf5
 #' @importFrom stats predict
 #'     
 .predict_encoder <- function(gene_input, organism) {
@@ -297,7 +298,7 @@ decomposeVar <- function(M,
 #' @keywords internal
 #' @noRd
 #' 
-#' @importFrom keras backend load_model_hdf5 keras_model keras_model_sequential
+#' @importFrom keras load_model_hdf5
 #' @importFrom stats predict
 #' 
 .predict_encoderd <- function(delta_input, context, organism) {
