@@ -1,5 +1,5 @@
 #'
-#' @author Panagiotis Papasaikas, Charlotte Soneson
+#' @author Charlotte Soneson
 #'
 #'
 #' @importFrom basilisk BasiliskEnvironment
