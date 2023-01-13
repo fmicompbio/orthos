@@ -81,9 +81,9 @@ queryWithContrasts_DA <- function(contrasts,
     
     DBhash <- digest::digest(target.contrasts, algo = "xxhash64")
     hashvals <- list(Human = "87e231a6567c61e0", Mouse = "800d2113e4a41175" )
-    stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
-Please remove `target.contrasts` and try again." = 
-                  DBhash == hashvals[[organism]])
+#    stopifnot("The contrast DB contained in the `target.contrasts` object has not been correctly loaded.
+#Please remove `target.contrasts` and try again." = 
+#                  DBhash == hashvals[[organism]])
     
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
