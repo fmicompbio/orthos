@@ -39,7 +39,7 @@
 #'
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
-#' @importFrom DelayedArray colAutoGrid read_block
+#' @importFrom DelayedArray blockApply colAutoGrid
 #' @importFrom BiocParallel bplapply MulticoreParam
 #' 
 #' @keywords internal
@@ -52,14 +52,14 @@
     .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
-    nblock <- length(full_grid) 
-    res <- BiocParallel::bplapply(seq_len(nblock), function(b){
-        ref_block <- DelayedArray::read_block(hdf5, full_grid[[b]])
+
+    res <- DelayedArray::blockApply(hdf5, function(block){
         if (!is.null(thr)) {
-            ref_block[ref_block <= thr] <- NA
+            block[block <= thr] <- NA
         }
-        cor_res <- stats::cor(query, ref_block, use = "pairwise.complete.obs")
-        return(cor_res)}, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+        cor_res <- stats::cor(query, block, use = "pairwise.complete.obs")
+        return(cor_res)},grid=full_grid, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+    
     return( do.call(cbind, res) )
 }
 
@@ -81,7 +81,7 @@
 #'
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
-#' @importFrom DelayedArray colAutoGrid read_block
+#' @importFrom DelayedArray blockApply colAutoGrid
 #' @importFrom BiocParallel bplapply MulticoreParam
 #' 
 #' @keywords internal
@@ -93,11 +93,11 @@
     .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
-    nblock <- length(full_grid) 
-    res <- BiocParallel::bplapply(seq_len(nblock), function(b){
-        ref_block <- DelayedArray::read_block(hdf5, full_grid[[b]])
-        cor_res <- stats::cor(query, ref_block, use = "everything" )
-        return(cor_res)}, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+
+    res <- DelayedArray::blockApply(hdf5, function(block){
+        cor_res <- stats::cor(query, block, use = "everything" )
+        return(cor_res)},grid=full_grid, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+    
     return( do.call(cbind, res) )
 }
 
