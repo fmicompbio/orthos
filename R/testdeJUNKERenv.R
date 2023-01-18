@@ -6,14 +6,14 @@
 #' @author Charlotte Soneson
 #'
 #' @examples
-#' testdeJUNKERenv()
+#' testOrthosEnv()
 #'
 #' @export
 #'
 #' @importFrom reticulate import
 #' @importFrom basilisk basiliskStart basiliskRun basiliskStop
-testdeJUNKERenv <- function() {
-    cl <- basiliskStart(dejunkerenv)
+testOrthosEnv <- function() {
+    cl <- basiliskStart(orthosenv)
     keras_tf_version <- basiliskRun(cl, function() {
         list(keras_available = keras::is_keras_available("2.10.0"),
              tf_version = tensorflow::tf$version$VERSION)

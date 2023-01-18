@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(deJUNKER)
+library(orthos)
 
-test_check("deJUNKER")
+test_check("orthos")

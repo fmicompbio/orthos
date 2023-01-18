@@ -52,10 +52,10 @@ test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
     genesMouse <- readRDS(system.file("extdata",
                                       "ARCHS4_v212_feature_genes_Mouse.rds",
-                                      package = "deJUNKER"))
+                                      package = "orthos"))
     genesHuman <- readRDS(system.file("extdata",
                                       "ARCHS4_v212_feature_genes_Human.rds",
-                                      package = "deJUNKER"))
+                                      package = "orthos"))
     idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
                  "ENTREZ_GENE_ID", "ARCHS4_ID")
     nr <- 1000
