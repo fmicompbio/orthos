@@ -189,7 +189,7 @@ decomposeVar <- function(M,
     ## Read gene information
     ## -------------------------------------------------------------------------
     genes <- readRDS(system.file("extdata", paste0("ARCHS4_v212_feature_genes_",organism,".rds"),
-                                 package = "deJUNKER"))
+                                 package = "orthos"))
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
@@ -243,13 +243,13 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basiliskRun(env = dejunkerenv, fun = .predict_encoder,
+    LATC <- basiliskRun(env = orthosenv, fun = .predict_encoder,
                         organism = organism,
                         gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basiliskRun(env = dejunkerenv, fun = .predict_encoderd,
+    res <- basiliskRun(env = orthosenv, fun = .predict_encoderd,
                        organism = organism,
                        delta_input = D, context = LATC)
     LATD <- res$LATD

@@ -1,8 +1,8 @@
 ## ------------------------------------------------------------------------- ##
-## Checks, testdeJUNKERenv
+## Checks, testOrthosEnv
 ## ------------------------------------------------------------------------- ##
-test_that("testdeJUNKERenv works", {
-    res <- testdeJUNKERenv()
+test_that("testOrthosEnv works", {
+    res <- testOrthosEnv()
     
     expect_identical(res, list(keras_available = TRUE, tf_version = "2.10.0"))
 })

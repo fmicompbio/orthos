@@ -1,6 +1,6 @@
-# deJUNKER
+# orthos
 
-deJUNKER is an R package for variance decomposition using conditional variational auto-encoders. 
+`orthos` is an R package for variance decomposition using conditional variational auto-encoders. 
 
 ## Function `decompose.var`
 `decompose.var` is a function that decomposes input contrasts to decoded and residual fractions according to a trained contrast encoder-decoder.
@@ -51,10 +51,10 @@ Example:
 
 ## Installation
 
-deJUNKER can be installed from GitHub using:
+`orthos` can be installed from GitHub using:
 
 ```
-devtools::install_github("path/to/deJUNKER")
+devtools::install_github("fmicompbio/orthos")
 ```
 
 
