@@ -11,6 +11,7 @@
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
+#' @importFrom HDF5Array loadHDF5SummarizedExperiment
 # #' @importFrom digest digest
 #' 
 #' @keywords internal
@@ -20,7 +21,7 @@
     # load SummarizedExperiment    
     # currently, this loads a local file
     # in the future, this will obtain the database using BiocFileCache or ExperimentHub
-    se <- loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+    se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
                                        prefix = paste0(tolower(organism),"_v212_c100"))
     
     # check validity
@@ -74,7 +75,6 @@
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
 #' @importFrom cowplot plot_grid
-#' @importFrom HDF5Array loadHDF5SummarizedExperiment
 #' @importFrom stats quantile
 #' 
 queryWithContrasts <- function(contrasts,
