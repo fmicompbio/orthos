@@ -149,7 +149,7 @@
 #' }
 #'
 #' @importFrom stats na.omit
-#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom SummarizedExperiment SummarizedExperiment rowData
 #'
 decomposeVar <- function(M,
                          MD = NULL,
@@ -188,8 +188,13 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- readRDS(system.file("extdata", paste0("ARCHS4_v212_feature_genes_",organism,".rds"),
-                                 package = "orthos"))
+    genes <- SummarizedExperiment::rowData( readRDS ( paste0 (
+        "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
+        tolower(organism),"_v212_c100se.rds"
+        )  ) )
+    
+
+
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
