@@ -4,7 +4,7 @@ Title: `orthos` is an R package for variance decomposition using conditional var
 Version: 0.1.0
 Authors@R: c(
     person("Panagiotis", "Papasaikas", email = "panagiotis.papasaikas@fmi.ch",
-           role = c("aut", "cre")),
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1640-7636")),
     person("Charlotte", "Soneson", email = "charlotte.soneson@fmi.ch", 
            role = "aut", comment = c(ORCID = "0000-0003-3833-2169")),
     person("Michael", "Stadler", email = "michael.stadler@fmi.ch", 
