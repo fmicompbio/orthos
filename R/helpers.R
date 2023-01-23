@@ -29,7 +29,7 @@
 #' @param chunk_size column dimension for the grid used to read blocks from the
 #'   HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
 #'   the data on disk.
-#' @param workers Number of workers used for parallelization
+#' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed.
 #' @param thr If specified, a low bound on expression. Values lower than that
 #'   are substituted by \code{NA}s on the HDF5 Matrix
 #'
@@ -40,15 +40,14 @@
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
 #' @importFrom DelayedArray blockApply colAutoGrid
-#' @importFrom BiocParallel bplapply MulticoreParam
+#' @importFrom BiocParallel bpparam
 #' 
 #' @keywords internal
 .grid_cor_wNAs <- function(query, hdf5, chunk_size = 1000,
-                           workers = 16, thr = NULL){
+                           BPPARAM = BiocParallel::bpparam(), thr = NULL){
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
-    .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
     .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
@@ -58,7 +57,7 @@
             block[block <= thr] <- NA
         }
         cor_res <- stats::cor(query, block, use = "pairwise.complete.obs")
-        return(cor_res)},grid=full_grid, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+        return(cor_res)},grid=full_grid, BPPARAM = BPPARAM)
     
     return( do.call(cbind, res) )
 }
@@ -73,7 +72,7 @@
 #' @param chunk_size column dimension for the grid used to read blocks from the
 #'   HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
 #'   the data on disk.
-#' @param workers Number of workers used for parallelization
+#' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed.
 #'
 #' @return Correlation matrix k x l
 #'
@@ -82,21 +81,20 @@
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
 #' @importFrom DelayedArray blockApply colAutoGrid
-#' @importFrom BiocParallel bplapply MulticoreParam
+#' @importFrom BiocParallel bpparam
 #' 
 #' @keywords internal
 .grid_cor_woNAs <- function(query, hdf5, chunk_size = 1000,
-                            workers = 16) {
+                            BPPARAM = BiocParallel::bpparam() ) {
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
-    .assertScalar(x = workers, type = "numeric", rngExcl = c(0, Inf))
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
 
     res <- DelayedArray::blockApply(hdf5, function(block){
         cor_res <- stats::cor(query, block, use = "everything" )
-        return(cor_res)},grid=full_grid, BPPARAM = BiocParallel::MulticoreParam(workers = workers))
+        return(cor_res)},grid=full_grid, BPPARAM = BPPARAM )
     
     return( do.call(cbind, res) )
 }
