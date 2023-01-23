@@ -63,8 +63,8 @@
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along 
 #'     the way.
-#' @param workers Number of workers used for parallelization (passed to
-#'     \code{\link[BiocParallel]{MulticoreParam}}).
+#' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed using for e.g
+#'     \code{\link[BiocParallel]{MulticoreParam}}) or \code{\link[BiocParallel]{SnowParam}})
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 #'     reduce memory usage.
@@ -74,6 +74,7 @@
 #' 
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
+#' @importFrom BiocParallel bpparam bpisup bpstart bpstop
 #' @importFrom cowplot plot_grid
 #' @importFrom stats quantile
 #' 
@@ -82,7 +83,7 @@ queryWithContrasts <- function(contrasts,
                                exprThr = 0.25, organism = c("Human","Mouse"),
                                plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
                                detailTopn = 10, verbose = TRUE,
-                               workers = round(4 + parallel::detectCores() / 4),
+                               BPPARAM = BiocParallel::bpparam(),
                                chunk_size = 500 ) {
     
     ## -------------------------------------------------------------------------
@@ -101,10 +102,13 @@ queryWithContrasts <- function(contrasts,
     plotContrast <- match.arg(plotContrast)
     .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
-    .assertScalar(x = workers, type = "numeric",
-                  rngIncl = c(1, parallel::detectCores() - 1))
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
-    
+    stopifnot("BPPARAM must be an instance of a BiocParallelParam class e.g., MulticoreParam, SnowParam or SerialParam" =
+                identical(attr(class(BPPARAM), "package"), "BiocParallel") )
+    if ( !BiocParallel::bpisup(BPPARAM) && !is(BPPARAM, "MulticoreParam")     ) {
+      BiocParallel::bpstart(BPPARAM)
+      on.exit(BiocParallel::bpstop(BPPARAM), add=TRUE)
+    }
     
     ## -------------------------------------------------------------------------
     ## Load contrast database
@@ -133,7 +137,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             query <- contrasts[[x]]
             query[query <= thr] <- NA
             .grid_cor_wNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
-                           thr = thr, workers = workers, chunk_size = chunk_size) 
+                           thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
         
@@ -142,7 +146,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             message(paste0("Querying contrast database with ", x, "..."))
             query <- contrasts[[x]]
             .grid_cor_woNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
-                            workers = workers, chunk_size = chunk_size) 
+                            BPPARAM = BPPARAM, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
