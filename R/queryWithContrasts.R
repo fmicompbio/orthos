@@ -140,7 +140,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             query <- contrasts[[x]]
             query[query <= thr] <- NA
             .grid_cor_wNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
-                           thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size, verbose=verbose) 
+                           thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
         
@@ -149,7 +149,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             message(paste0("Querying contrast database with ", x, "..."))
             query <- contrasts[[x]]
             .grid_cor_woNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
-                            BPPARAM = BPPARAM, chunk_size = chunk_size, verbose=verbose) 
+                            BPPARAM = BPPARAM, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
