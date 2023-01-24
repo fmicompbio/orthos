@@ -12,7 +12,7 @@ queryWithContrasts(
   plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
   detailTopn = 10,
   verbose = TRUE,
-  workers = round(4 + parallel::detectCores()/4),
+  BPPARAM = BiocParallel::bpparam(),
   chunk_size = 500
 )
 }
@@ -46,8 +46,8 @@ be returned in the TopHits slot of the results.}
 \item{verbose}{Logical scalar indicating whether to print messages along 
 the way.}
 
-\item{workers}{Number of workers used for parallelization (passed to
-\code{\link[BiocParallel]{MulticoreParam}}).}
+\item{BPPARAM}{BiocParallelParam object specifying how parallelization is to be performed using for e.g
+\code{\link[BiocParallel]{MulticoreParam}}) or \code{\link[BiocParallel]{SnowParam}})}
 
 \item{chunk_size}{Column dimension for the grid used to read blocks from the
 HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
