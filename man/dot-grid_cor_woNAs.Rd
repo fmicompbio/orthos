@@ -6,7 +6,12 @@
 HDF5MAtrix/DelayedMatrix using grid access. It is assumed that both Matrices
 do not contain \code{NA}s.}
 \usage{
-.grid_cor_woNAs(query, hdf5, chunk_size = 1000, workers = 16)
+.grid_cor_woNAs(
+  query,
+  hdf5,
+  chunk_size = 1000,
+  BPPARAM = BiocParallel::bpparam()
+)
 }
 \arguments{
 \item{query}{Numeric matrix n x k.}
@@ -17,7 +22,7 @@ do not contain \code{NA}s.}
 HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
 the data on disk.}
 
-\item{workers}{Number of workers used for parallelization}
+\item{BPPARAM}{BiocParallelParam object specifying how parallelization is to be performed.}
 }
 \value{
 Correlation matrix k x l

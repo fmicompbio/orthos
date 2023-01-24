@@ -7,7 +7,13 @@ HDF5MAtrix/DelayedMatrix using grid access. Both Matrices can contain NAs.
 If \code{thr} is specified, substitution of values less than \code{thr} with
 \code{NA}s will be performed on the HDF5Matrix}
 \usage{
-.grid_cor_wNAs(query, hdf5, chunk_size = 1000, workers = 16, thr = NULL)
+.grid_cor_wNAs(
+  query,
+  hdf5,
+  chunk_size = 1000,
+  BPPARAM = BiocParallel::bpparam(),
+  thr = NULL
+)
 }
 \arguments{
 \item{query}{Numeric matrix n x k.}
@@ -18,7 +24,7 @@ If \code{thr} is specified, substitution of values less than \code{thr} with
 HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
 the data on disk.}
 
-\item{workers}{Number of workers used for parallelization}
+\item{BPPARAM}{BiocParallelParam object specifying how parallelization is to be performed.}
 
 \item{thr}{If specified, a low bound on expression. Values lower than that
 are substituted by \code{NA}s on the HDF5 Matrix}
