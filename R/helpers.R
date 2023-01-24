@@ -50,10 +50,10 @@
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
     .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
-
+    
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
-
+    
     res <- DelayedArray::blockApply(hdf5, function(block){
         if (!is.null(thr)) {
             block[block <= thr] <- NA
@@ -92,10 +92,10 @@
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
-
+    
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
-
+    
     res <- DelayedArray::blockApply(hdf5, function(block){
         cor_res <- stats::cor(query, block, use = "everything" )
         return(cor_res)},grid=full_grid, BPPARAM = BPPARAM )
