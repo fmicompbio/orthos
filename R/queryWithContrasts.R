@@ -74,7 +74,7 @@
 #' 
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
-#' @importFrom BiocParallel bpparam bpisup bpstart bpstop bpprogressbar
+#' @importFrom BiocParallel bpparam bpisup bpstart bpstop bpprogressbar bpworkers bptasks
 #' @importFrom cowplot plot_grid
 #' @importFrom stats quantile
 #' 
@@ -94,8 +94,10 @@ queryWithContrasts <- function(contrasts,
     present.contrasts <- intersect(valid.contrasts, names(assays(contrasts)))
     stopifnot("The assays slot in the provided SummarizedExperiment does not contain valid contrast names " = 
                   length(present.contrasts) > 0)
-    message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
     
+    if(verbose){
+        message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
+    }
     use <- match.arg(use)
     .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     organism <- match.arg(organism)
@@ -105,8 +107,15 @@ queryWithContrasts <- function(contrasts,
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
     stopifnot("BPPARAM must be an instance of a BiocParallelParam class e.g., MulticoreParam, SnowParam or SerialParam" =
                 identical(attr(class(BPPARAM), "package"), "BiocParallel") )
+    
+    ## ------------------------------------------------------------------------
+    ## Setup bpprogressbar, initialize cluster
+    ## ------------------------------------------------------------------------
     if(verbose){
         BiocParallel::bpprogressbar(BPPARAM) <- TRUE
+        if(BiocParallel::bpworkers(BPPARAM) < 10 ){
+            BiocParallel::bptasks(BPPARAM) <- ifelse(identical(class(BPPARAM)[[1]],"SerialParam") , 10, min(2 * BiocParallel::bpworkers(BPPARAM), 10) )    #
+        }
     }
     if ( !BiocParallel::bpisup(BPPARAM) && !is(BPPARAM, "MulticoreParam")     ) {
       BiocParallel::bpstart(BPPARAM)
@@ -132,7 +141,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## -------------------------------------------------------------------------
     if (use == "expressed.in.both") {
         # Set a global expression threshold according to a quantile in the query data context
-        message("Thresholding genes...")
+        if (verbose) {
+            message("Thresholding genes...")
+        }
         thr <- quantile(contrasts[["CONTEXT"]], exprThr)
         
         pearson.rhos <- sapply(present.contrasts, function(x) {
@@ -146,7 +157,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         
     } else if (use == "all.genes") {
         pearson.rhos <- sapply(present.contrasts, function(x) {
-            message(paste0("Querying contrast database with ", x, "..."))
+            if (verbose){
+                message(paste0("Querying contrast database with ", x, "..."))
+            }
             query <- contrasts[[x]]
             .grid_cor_woNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
                             BPPARAM = BPPARAM, chunk_size = chunk_size) 
@@ -181,7 +194,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## -------------------------------------------------------------------------
     if (plotContrast != "NONE" && 
         paste0(plotContrast, "_CONTRASTS") %in% present.contrasts) {
-        message("Generating plots...")
+        if(verbose){
+            message("Generating plots...")
+        }
         plot.data <- zscores[[paste0(plotContrast, "_CONTRASTS")]]
         PLOTLIST <- sapply(seq_len(nrow(plot.data)), function(i) {
             plotQueryResults(plot.data[i, ], annot = target.contrasts$series_id,
