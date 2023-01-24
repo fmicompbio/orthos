@@ -32,8 +32,7 @@
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed.
 #' @param thr If specified, a low bound on expression. Values lower than that
 #'   are substituted by \code{NA}s on the HDF5 Matrix
-#' @param verbose Logical scalar indicating whether to print messages along 
-#'     the way.
+#'   
 #'
 #' @return Correlation matrix k x l
 #'
@@ -46,14 +45,12 @@
 #' 
 #' @keywords internal
 .grid_cor_wNAs <- function(query, hdf5, chunk_size = 1000,
-                           BPPARAM = BiocParallel::bpparam(), thr = NULL, verbose=TRUE){
+                           BPPARAM = BiocParallel::bpparam(), thr = NULL){
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
     .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
-    if(verbose){
-        BiocParallel::bpprogressbar(BPPARAM) <- TRUE
-    }
+
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
 
@@ -78,8 +75,7 @@
 #'   HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
 #'   the data on disk.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed.
-#' @param verbose Logical scalar indicating whether to print messages along 
-#'     the way.#'
+#' 
 #'     
 #' @return Correlation matrix k x l
 #'
@@ -92,13 +88,11 @@
 #' 
 #' @keywords internal
 .grid_cor_woNAs <- function(query, hdf5, chunk_size = 1000,
-                            BPPARAM = BiocParallel::bpparam(), verbose=TRUE ) {
+                            BPPARAM = BiocParallel::bpparam() ) {
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
-    if(verbose){
-        BiocParallel::bpprogressbar(BPPARAM) <- TRUE
-    }
+
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
 
