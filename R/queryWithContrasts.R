@@ -105,6 +105,9 @@ queryWithContrasts <- function(contrasts,
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
     stopifnot("BPPARAM must be an instance of a BiocParallelParam class e.g., MulticoreParam, SnowParam or SerialParam" =
                 identical(attr(class(BPPARAM), "package"), "BiocParallel") )
+    if(verbose){
+        BiocParallel::bpprogressbar(BPPARAM) <- TRUE
+    }
     if ( !BiocParallel::bpisup(BPPARAM) && !is(BPPARAM, "MulticoreParam")     ) {
       BiocParallel::bpstart(BPPARAM)
       on.exit(BiocParallel::bpstop(BPPARAM), add=TRUE)
