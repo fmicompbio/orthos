@@ -41,7 +41,7 @@
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
 #' @importFrom DelayedArray blockApply colAutoGrid
-#' @importFrom BiocParallel bpparam bpprogressbar
+#' @importFrom BiocParallel bpparam
 #' 
 #' @keywords internal
 .grid_cor_wNAs <- function(query, hdf5, chunk_size = 1000,
@@ -84,7 +84,7 @@
 #' @importFrom stats cor
 #' @importFrom HDF5Array HDF5Array
 #' @importFrom DelayedArray blockApply colAutoGrid
-#' @importFrom BiocParallel bpparam bpprogressbar
+#' @importFrom BiocParallel bpparam
 #' 
 #' @keywords internal
 .grid_cor_woNAs <- function(query, hdf5, chunk_size = 1000,

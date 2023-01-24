@@ -74,7 +74,7 @@
 #' 
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
-#' @importFrom BiocParallel bpparam bpisup bpstart bpstop
+#' @importFrom BiocParallel bpparam bpisup bpstart bpstop bpprogressbar
 #' @importFrom cowplot plot_grid
 #' @importFrom stats quantile
 #' 
