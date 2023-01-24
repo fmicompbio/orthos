@@ -134,8 +134,9 @@ queryWithContrasts <- function(contrasts,
 Rownames should be the same as in the contrast database.
 You can make sure by generating your SE generated using `decomposeVar`" = 
                    identical(rownames(contrasts), rownames(target.contrasts)))
+    context <- SummarizedExperiment::assays(contrasts)[["CONTEXT"]]
     contrasts <- SummarizedExperiment::assays(contrasts)[present.contrasts]
-    
+
     ## -------------------------------------------------------------------------
     ## Calculate correlations
     ## -------------------------------------------------------------------------
@@ -144,13 +145,14 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         if (verbose) {
             message("Thresholding genes...")
         }
-        thr <- quantile(contrasts[["CONTEXT"]], exprThr)
+        thr <- stats::quantile(context, exprThr)
         
         pearson.rhos <- sapply(present.contrasts, function(x) {
             message(paste0("Querying contrast database with ", x, "..."))
             query <- contrasts[[x]]
-            query[query <= thr] <- NA
+            query[context <= thr] <- NA
             .grid_cor_wNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]], 
+                           hdf5_ctx = SummarizedExperiment::assays(target.contrasts)[["CONTEXT"]],
                            thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size) 
         }, simplify = FALSE, USE.NAMES = TRUE
         )
