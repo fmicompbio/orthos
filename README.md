@@ -1,6 +1,8 @@
 # orthos
+<img src="orthos.png" alt="orthos" width="200"/>
 
-`orthos` is an R package for variance decomposition using conditional variational auto-encoders. 
+The measurement of effects on transcript abundance upon cellular perturbations is the most commonly used tool for probing molecular mechanisms of action due to its simplicity and low cost. However the interpretation of these experiments is hindered by the complex and nuanced effects of such perturbations on cellular processes. `orthos` is a generative modelling based approach that can disentangle specific/direct from generic/indirect effects of gene expression perturbations. Utilizing a large corpus of gene expression contrasts compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)  database of uniformly processed RNAseq experiments and generative variational modelling we trained a model that accurately captures generic effects present in contrasts derived from RNAseq experiments while accounting for context. The model allows us to tease out specific perturbation components in the form of a contrast residual. The residual component obtained from this variance decomposition offers a more unequivocal signature of perturbations and is more closely related to the direct effects of a treatment when compared to the raw signal. `orthos` also provides a means to query the contrast database with arbitrary contrasts and identify related perturbations with similar specific effects providing among others the possibility to map treatments to mechanisms of action.
+
 
 ## Function `decompose.var`
 `decompose.var` is a function that decomposes input contrasts to decoded and residual fractions according to a trained contrast encoder-decoder.
