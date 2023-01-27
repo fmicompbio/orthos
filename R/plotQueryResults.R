@@ -1,20 +1,67 @@
-#' Plot query results
+#' Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens} 
 #' 
 #' @author Panagiotis Papasaikas
 #' @export
 #' 
-#' @param scores Numeric named vector (typically of z-scores) to use for
-#'  visualization
-#' @param topn Highlight the topn results
-#' @param annot Annotation vector used for coloring the topn results
-#'
-#' @return A plot
+#' @param query.results A list containing the results of a query performed with 
+#'  \code{queryWithContrasts}
+#' 
+#' 
+#' @return A composite manhattan/density plot for the scores of queries using different contrast fractions against the respective contrast DBs
 #' 
 #' @examples 
-#' x <- rnorm(100)
-#' plotQueryResults(scores = x,
-#'                  topn = 10,
-#'                  annot = as.character(round(abs(x), 1)))
+#' qRES <- queryWithContrasts(MyDecomposedContrasts)
+#' plotQueryResults.manh(qRES)
+#' 
+#' @importFrom cowplot plot_grid
+#' 
+plotQueryResultsManh <- function(query.results) {
+    
+    CONTRASTS <- names(query.results$TopHits)
+    DATASETS <-  names(query.results$TopHits[[1]])
+    topn <- nrow(query.results$TopHits[[1]][[1]]) 
+    TOP_META <- unique(as.data.frame(do.call(rbind, unlist(query.results$TopHits) )))
+    
+    PLOTS <- list()
+    for( dset in DATASETS){
+        DF <- data.frame(
+            idx = seq_along( query.results$zscores[[1]][1,] ),
+            ACC = names(query.results$zscores[[1]][1,]  )
+        )
+        for (contrast in CONTRASTS){
+            DF <-  cbind(DF,query.results$zscores[[contrast]][dset,])
+            PLOTS[[paste0(dset,"_",contrast)]] <- .plotManhDens(query.results$zscores[[contrast]][dset,], query.results$TopHits[[contrast]][[dset]] ) 
+        }
+    }    
+    
+    combined_plot <- cowplot::plot_grid( plotlist=PLOTS,label_size = 10,
+                                         labels = as.vector(outer(CONTRASTS, DATASETS, paste, sep="."))
+    )
+    
+    return(combined_plot)
+    
+    return(P)
+}
+
+
+
+
+
+#' Visualize query results as a composite Manhattan/Density plot
+#' 
+#' @author Panagiotis Papasaikas
+#' 
+#' @param scores Numeric named vector (typically of z-scores) to use for
+#'  visualization
+#' @param annot Annotation dataframe for the topn results to highlight
+#'
+#' @return A composite manhattan/density plot
+#' 
+#' @examples 
+#'  qRES <- queryWithContrasts(MyDecomposedContrasts)
+#' .plotManhDens(qRES$zscores[[1]][1,], qRES$TopHits[[contrast]][[dset]] ) 
+#' 
+#' 
 #' 
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
 #'     theme_bw geom_bin2d ggplot
@@ -25,10 +72,9 @@
 #' @importFrom dplyr filter
 #' @importFrom rlang .data
 #' 
-plotQueryResults <- function(scores, topn = 10, annot = "") {
+.plotManhDens <- function(scores, annot = "") {
     # validate arguments
     .assertVector(x = scores, type = "numeric")
-    .assertScalar(x = topn, type = "numeric", rngIncl = c(1, length(scores)))
     .assertVector(x = annot)
     
     # make sure scores have names
@@ -36,12 +82,12 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
         names(scores) <- as.character(seq_along(scores))
     }
     
+    topn <- nrow(annot)
     min.score <- sort(scores, decreasing = TRUE)[topn]
     DF <- data.frame(
         idx = seq_along(scores),
         score = scores,
-        ACC = names(scores),
-        annot = annot
+        ACC = names(scores)
     )
     
     blank.theme <-
@@ -60,12 +106,14 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
             plot.background = ggplot2::element_blank()
         )
     
+    expand_y <- 1.2
     dens.plot <-
         ggpubr::ggdensity(DF, "score", fill = "#33638DFF") + 
+        ggplot2::scale_x_continuous(limits=c(min(DF$score), max(DF$score)*expand_y )) +
         ggpubr::clean_theme() +
         ggplot2::geom_point(
-            data = DF |> dplyr::filter(.data$score >= min.score),
-            aes(x = .data$score, y = 0, color = annot),
+            data = DF[annot$geo_accession, ],
+            aes(x = .data$score, y = 0, color = annot$series_id),
             size = 1.5) +
         ggpubr::rotate() +  
         ggplot2::theme(plot.margin = grid::unit(c(1, 0, 1, 0), "cm")) +
@@ -73,17 +121,18 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
     
     manh.plot <-
         ggplot2::ggplot(data = DF, aes(x = .data$idx, y = .data$score)) + 
+        ggplot2::scale_y_continuous(limits=c(min(DF$score), max(DF$score)*expand_y )) +
         ggplot2::geom_bin2d(bins = 200) +
         ggplot2::scale_fill_continuous(type = "viridis") + 
         ggplot2::theme_bw() +
         ggplot2::geom_point(
-            data = DF[DF$score >= min.score, ],
-            aes(color = annot),
+            data = DF[annot$geo_accession, ],
+            aes(color = annot$series_id),
             size = 1.5) +
         ggrepel::geom_text_repel(
-            data = DF[DF$score >= min.score, ],
+            data = DF[DF$ACC %in% annot$geo_accession, ],
             aes(x = .data$idx, y = .data$score , label = .data$ACC),
-            size = 3) +
+            size = 3, max.overlaps = 10000) +
         ggplot2::theme(legend.position = "none",
                        axis.ticks.x = ggplot2::element_blank(),
                        plot.margin = grid::unit(c(1, 0, 1, 0), "cm"),
@@ -99,3 +148,94 @@ plotQueryResults <- function(scores, topn = 10, annot = "") {
     
     return(P)
 }
+
+
+
+
+
+
+#' Visualize query results as violin plots
+#' 
+#' @author Panagiotis Papasaikas
+#' @export
+#' 
+#' @param query.results A list containing the results of a query performed with 
+#'  \code{queryWithContrasts}
+#' 
+#'
+#' @return A violin plot for the scores of queries using different contrast fractions against the respective contrast DBs
+#' 
+#' @examples 
+#' qRES <- queryWithContrasts(MyDecomposedContrasts)
+#' plotQueryResults.violin(qRES)
+#' 
+#' 
+#' 
+#' @importFrom dplyr arrange group_by slice
+#' @importFrom colorspace darken
+#' @importFrom cowplot plot_grid
+#' @importFrom ggplot2 ggplot ggtitle geom_jitter geom_violin position_jitter
+#'     scale_color_manual scale_fill_manual theme theme_minimal 
+#' @importFrom ggrepel geom_text_repel
+#' @importFrom ggsci pal_jco
+#' @importFrom rlang .data
+#' @importFrom tidyr pivot_longer
+#' 
+plotQueryResultsViolin <- function(query.results) {
+    
+    CONTRASTS <- names(query.results$TopHits)
+    DATASETS <-  names(query.results$TopHits[[1]])
+    topn <- nrow(query.results$TopHits[[1]][[1]]) 
+    TOP_META <- unique(as.data.frame(do.call(rbind, unlist(query.results$TopHits) )))
+    
+    PLOTS <- list()
+    for( dset in DATASETS){
+        DF <- data.frame(
+            idx = seq_along( query.results$zscores[[1]][1,] ),
+            ACC = names(query.results$zscores[[1]][1,]  )
+        )
+        for (contrast in CONTRASTS){
+            DF <-  cbind(DF,query.results$zscores[[contrast]][dset,])
+        }
+        
+        colnames(DF)[-c(1:2)] <- gsub("_CONTRASTS","",CONTRASTS)
+        plot_df <- tidyr::pivot_longer(DF, cols = 3:ncol(DF), names_to="FRACTION", values_to = "score" )
+        plot_df$FRACTION <- factor(plot_df$FRACTION, levels=gsub("_CONTRASTS","",CONTRASTS) )
+        
+        plot_df2 <- plot_df %>%         # TopN highest values by FRACTION
+            dplyr::arrange(desc(score)) %>% 
+            dplyr::group_by(FRACTION) %>%
+            dplyr::slice(1:topn)
+        plot_df2$series <- TOP_META[plot_df2$ACC,"series_id"]    
+        
+        mycolors <- colorRampPalette( ggsci::pal_jco()(10) )( length(unique(plot_df2$series))  )
+        mycolors <- colorspace::darken(mycolors,0.25)
+        pos <- ggplot2::position_jitter(width = 0.02, height=0, seed = 2)
+        
+        PLOTS[[dset]] <-    
+            ggplot2::ggplot(plot_df, aes(FRACTION, score, fill = FRACTION)) + 
+            ggplot2::geom_violin(trim=FALSE, size=0.6 ) +  
+            ggplot2::scale_fill_manual(values=c("#8B451366","#10701044","#FF550077")) +    
+            ggplot2::theme_minimal() +  ggplot2::theme(legend.position="none")+
+            ggplot2::ggtitle(dset)+
+            
+            ggplot2::geom_jitter(
+                data = plot_df2,
+                aes(color = series),
+                size = 1.5, position=pos)+
+            
+            ggrepel::geom_text_repel(
+                data = plot_df2,
+                aes(y = .data$score , label = .data$ACC, color=series),
+                size = 3, max.overlaps=10000,
+                position=pos)+
+            ggplot2::scale_color_manual(values=mycolors)
+        
+    }
+    
+    combined_plot <- cowplot::plot_grid(
+        plotlist=PLOTS)
+    
+    return(combined_plot)
+}
+

@@ -6,7 +6,7 @@
 #' @param organism Character scalar selecting the organism for which to load the
 #'     contrast database. One of \code{"Human"} or \code{"Mouse"}.
 #'
-#' @return A \code{SummarizedExperiment} with pre-calculate contrasts as
+#' @return A \code{SummarizedExperiment} with pre-calculated contrasts as
 #'     assays.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
@@ -17,12 +17,12 @@
 #' @keywords internal
 .loadContrastDatabase <- function(organism = c("Human", "Mouse")) {
     organism <- match.arg(organism)
-
+    
     # load SummarizedExperiment    
     # currently, this loads a local file
     # in the future, this will obtain the database using BiocFileCache or ExperimentHub
     se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-                                       prefix = paste0(tolower(organism),"_v212_c100"))
+                                                  prefix = paste0(tolower(organism),"_v212_c100"))
     
     # check validity
     # DBhash <- digest::digest(se, algo = "xxhash64")
@@ -56,8 +56,8 @@
 #'     applies when use="expressed.in.both"
 #' @param organism Selects the autoencoder model trained on data from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
-#' @param plotContrast Select a contrast to be plotted, one of
-#'     \code{"RESIDUAL", "INPUT", "DECODED"} or \code{"NONE"} to suppress
+#' @param plotType Select the type of visualization for the query results
+#'     \code{"violin", "manh"} or \code{"none"} to suppress
 #'     the plotting.
 #' @param detailTopn specifies the number of top hits for which metadata will 
 #'     be returned in the TopHits slot of the results.
@@ -81,7 +81,7 @@
 queryWithContrasts <- function(contrasts,
                                use = c("expressed.in.both", "all.genes"),
                                exprThr = 0.25, organism = c("Human","Mouse"),
-                               plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
+                               plotType = c("violin", "manh", "none"),
                                detailTopn = 10, verbose = TRUE,
                                BPPARAM = BiocParallel::bpparam(),
                                chunk_size = 500 ) {
@@ -101,12 +101,12 @@ queryWithContrasts <- function(contrasts,
     use <- match.arg(use)
     .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     organism <- match.arg(organism)
-    plotContrast <- match.arg(plotContrast)
+    plotType <- match.arg(plotType)
     .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
     stopifnot("BPPARAM must be an instance of a BiocParallelParam class e.g., MulticoreParam, SnowParam or SerialParam" =
-                identical(attr(class(BPPARAM), "package"), "BiocParallel") )
+                  identical(attr(class(BPPARAM), "package"), "BiocParallel") )
     
     ## ------------------------------------------------------------------------
     ## Setup bpprogressbar, initialize cluster
@@ -118,8 +118,8 @@ queryWithContrasts <- function(contrasts,
         }
     }
     if ( !BiocParallel::bpisup(BPPARAM) && !is(BPPARAM, "MulticoreParam")     ) {
-      BiocParallel::bpstart(BPPARAM)
-      on.exit(BiocParallel::bpstop(BPPARAM), add=TRUE)
+        BiocParallel::bpstart(BPPARAM)
+        on.exit(BiocParallel::bpstop(BPPARAM), add=TRUE)
     }
     
     ## -------------------------------------------------------------------------
@@ -136,7 +136,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
                    identical(rownames(contrasts), rownames(target.contrasts)))
     context <- SummarizedExperiment::assays(contrasts)[["CONTEXT"]]
     contrasts <- SummarizedExperiment::assays(contrasts)[present.contrasts]
-
+    
     ## -------------------------------------------------------------------------
     ## Calculate correlations
     ## -------------------------------------------------------------------------
@@ -192,23 +192,30 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     )
     
     ## -------------------------------------------------------------------------
+    ## Gather results
+    ## -------------------------------------------------------------------------
+    RESULTS <- list(pearson.rhos = pearson.rhos, zscores = zscores,
+                    TopHits = TopHits)
+    
+    
+    ## -------------------------------------------------------------------------
     ## Plot
     ## -------------------------------------------------------------------------
-    if (plotContrast != "NONE" && 
-        paste0(plotContrast, "_CONTRASTS") %in% present.contrasts) {
+    if (plotType != "none") {
         if(verbose){
             message("Generating plots...")
         }
-        plot.data <- zscores[[paste0(plotContrast, "_CONTRASTS")]]
-        PLOTLIST <- sapply(seq_len(nrow(plot.data)), function(i) {
-            plotQueryResults(plot.data[i, ], annot = target.contrasts$series_id,
-                             topn = detailTopn)
-        }, simplify = FALSE)
+        
         suppressWarnings({
-            print(
-                cowplot::plot_grid(plotlist = PLOTLIST,
-                                   labels = rownames(plot.data))
-            )
+            if (plotType=="violin"){
+                print(
+                    plotQueryResultsViolin(RESULTS)
+                )
+            } else if (plotType=="manh"){
+                print (
+                    plotQueryResultsManh(RESULTS)   
+                )
+            }
         })
     }
     
@@ -216,6 +223,5 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         message("Done!")
     }
     
-    return(list(pearson.rhos = pearson.rhos, zscores = zscores,
-                TopHits = TopHits))
+    return(RESULTS)
 }

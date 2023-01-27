@@ -10,6 +10,7 @@ If \code{thr} is specified, substitution of values less than \code{thr} with
 .grid_cor_wNAs(
   query,
   hdf5,
+  hdf5_ctx,
   chunk_size = 1000,
   BPPARAM = BiocParallel::bpparam(),
   thr = NULL
