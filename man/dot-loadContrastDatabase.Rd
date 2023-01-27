@@ -11,7 +11,7 @@
 contrast database. One of \code{"Human"} or \code{"Mouse"}.}
 }
 \value{
-A \code{SummarizedExperiment} with pre-calculate contrasts as
+A \code{SummarizedExperiment} with pre-calculated contrasts as
     assays.
 }
 \description{

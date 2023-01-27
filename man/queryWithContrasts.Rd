@@ -9,7 +9,7 @@ queryWithContrasts(
   use = c("expressed.in.both", "all.genes"),
   exprThr = 0.25,
   organism = c("Human", "Mouse"),
-  plotContrast = c("RESIDUAL", "INPUT", "DECODED", "NONE"),
+  plotType = c("violin", "manh", "none"),
   detailTopn = 10,
   verbose = TRUE,
   BPPARAM = BiocParallel::bpparam(),
@@ -36,8 +36,8 @@ applies when use="expressed.in.both"}
 \item{organism}{Selects the autoencoder model trained on data from this
 species. One of \code{"Human"} or \code{"Mouse"}.}
 
-\item{plotContrast}{Select a contrast to be plotted, one of
-\code{"RESIDUAL", "INPUT", "DECODED"} or \code{"NONE"} to suppress
+\item{plotType}{Select the type of visualization for the query results
+\code{"violin", "manh"} or \code{"none"} to suppress
 the plotting.}
 
 \item{detailTopn}{specifies the number of top hits for which metadata will 
