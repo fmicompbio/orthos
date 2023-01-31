@@ -184,6 +184,13 @@ print(plotQueryResultsManh(query.res.mouse))
 
 
 
+# Accessing the model internals and other miscellaneous use cases
+
+Producing latent encodings of contrasts
+Producing latent encodings of contexts
+Morphing decoded contrasts according to a different context
+Fine-tuning the model to custom contrast datasets
+
 
 # Session information {-}
 
