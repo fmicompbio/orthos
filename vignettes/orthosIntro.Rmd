@@ -1,0 +1,94 @@
+---
+title: An Introduction to contrast decomposition and querying using orthos
+author: 
+- name: Panagiotis Papasaikas
+  affiliation: Friedrich Miescher Institute, SIB
+date: "20 January 2023"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+package: orthos
+bibliography: ref.bib
+vignette: >
+  %\VignetteIndexEntry{1. Introduction to orthos}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}    
+---
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+require(knitr)
+opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(orthos)
+```
+
+# Introduction
+
+Differential expression analysis upon cellular perturbations is the most commonly used tool for probing molecular mechanisms of action due to its simplicity and low cost. However the interpretation of such gene expression contrasts is confounded by the complex and nuanced impact of experimental treatments on cellular processes. 
+
+`orthos` is a generative modelling-based approach that disentangles the experiment-specific from the non-specific effects of perturbations on gene expression. The model is trained on a large corpus (>60K annotated / >0.5M augmented per organism) of gene expression contrasts compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)  database of uniformly processed RNAseq experiments we trained a conditional variational model that accurately captures and isolates "**polytopic**" (non-specific, observed across multiple treatments) effects while accounting for context. The residual, **specific** component obtained from this decomposition offers a more unequivocal experimental signature and is a proxy more closely related to the direct molecular effects of a treatment when compared to the raw signal.
+
+In addition to providing a clearer understanding of the effects of experimental treatments on gene exrpession `orthos` also enables researchers to query the contrast database with arbitrary contrasts and identify experiments with similar specific effects ultimately helping to map treatments to mechanisms of action.
+
+Typically the analysis involves two steps:
+
+1. Decomposing a contrast/set of contrasts into  using the `decomposeVar()` function and
+2. Performing a query with the original and decomposed (non-specific and specific) fractions against the corresponding contrast DBs using the `queryWithContrasts()` function.
+
+
+# Demonstration data
+
+To demonstrate the functionality of orthos we use a dataset from the the GEO submission [GSE215150](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE215150).
+
+This series was not part of the `orthos` training or the `orthosDB` constrast database as it was publicly released on January 1st 2023 after the freeze of the training data to the ARCHS4 v2.1.2 database.
+
+The performed experiment involves overexpression (OE) of MKL/megakaryoblastic leukemia 1 (also termed MRTFA/myocardin related transcription factor A) and a constitutively active mutant MKL1 (caMKL1, described in @Hu_et_al_2019) in mouse LM2 and human 4T1 tumor-derived breast cancer cell lines. In addition to the MKL1/caMKL1 OE treatments the series also contains no-treatment controls for each of the two cell lines.
+
+For simplicity the three biological replicates of each condition available in the original series have been collapsed in the data provided in the package.
+
+In the provided form each of the two datasets (Mouse, Human) contains raw counts for >55000 genes identified by gene symbols and three conditions, namely,
+Control (Ctrl), MKL1 OE (MKL1) and consitutive MKL1 OE (caMKL1):
+
+```{r}
+MKL1_human <- readRDS(system.file("data", "GSE215150_MKL1_Human.rds", package = "orthos"))
+head(MKL1_human)
+dim(MKL1_human)
+MKL1_mouse <- readRDS(system.file("data", "GSE215150_MKL1_Mouse.rds", package = "orthos"))
+head(MKL1_mouse)
+dim(MKL1_mouse)
+```
+
+
+Diagnostics?
+
+
+
+# Decomposition of contrast variace into specific and non-specific fractions
+
+The workhorse behind `orthos` are organism-specific conditional variational autoencoder (cVAE) models that can break down the variance of a given differential expression experiment into a non-specific (polytopic) and an experiment-specific fraction. The former corresponds to gene variance that has was observed across multiple instances during training while the latter is variance that is fairly unique to the experiment. 
+
+The inputs to the model are gene counts in the form of log-transformed counts-per-million (lcpms) that encode the **"context"** of the performed experiment as well as the actual gene expression contrasts in the form of gene log fold ratios (LFCs). As we wil see calculation of those inputs is by default performed internally, unless otherwise specified, given only raw gene counts and a specification of the contrasted conditions.
+
+Given the inputs the model encodes the contrast to a concise latent representation (z~D) and also generates a decoded version of the contrast. This decoded contrast corresponds directly to the non-specific fraction; it is the component of the gene variance that the model can account for because it has been seen, in some form, during training. The residual after removing the decoded contrast from the original one is the specific fraction; this is the gene variance component that the model cannot account for (experimental noise + specific biological effects).  
+
+![orthos architecture](orthos_arch.png){width=50%}
+
+
+
+
+# Mutual 
+
+## Overview
+
+
+
+
+# Session information {-}
+
+```{r}
+sessionInfo()
+```
+
+# References
