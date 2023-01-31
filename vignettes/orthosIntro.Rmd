@@ -2,27 +2,69 @@
 title: An Introduction to contrast decomposition and querying using orthos
 author: 
 - name: Panagiotis Papasaikas
-  affiliation: Friedrich Miescher Institute, SIB
-date: "20 January 2023"
+  affiliation: 
+  - &id3 Friedrich Miescher Institute for Biomedical Research, Basel, Switzerland
+  - SIB Swiss Institute of Bioinformatics
+  email: panp80@gmail.com
+- name: Charlotte Soneson
+  affiliation: 
+  - &id3 Friedrich Miescher Institute for Biomedical Research, Basel, Switzerland
+  - SIB Swiss Institute of Bioinformatics
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('orthos')`"
 output:
   BiocStyle::html_document:
     toc_float: true
-package: orthos
-#bibliography: ref.bib
+editor_options: 
+  chunk_output_type: console
+bibliography: orthos.bib
+geometry: "left=0cm,right=3cm,top=2cm,bottom=2cm"
 vignette: >
   %\VignetteIndexEntry{1. Introduction to orthos}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}    
+  %\VignetteEncoding{UTF-8}
+  %\VignettePackage{orthos}
+  %\VignetteKeywords{cVAE, VariationalAutoEncoders, DGE, DifferentialGeneExpression, RNASeq}    
 ---
 
-```{r, echo=FALSE, results="hide", message=FALSE}
+
+```{r setup, include = FALSE, echo=FALSE, results="hide", message=FALSE}
 require(knitr)
-opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
+
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    error = FALSE,
+    warning = FALSE,
+    message = FALSE,
+    crop = NULL
+)
+stopifnot(requireNamespace("htmltools"))
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 ```
 
-```{r setup, echo=FALSE, message=FALSE}
-library(orthos)
+
+```{r, echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics(path = system.file(package="orthos", "orthos.png", mustWork=TRUE))
 ```
+
+
+```{css, echo = FALSE}
+body {
+  margin: 0 auto;
+  max-width: 1600px;
+  padding: 2rem;
+}
+```
+
+
+
+
+
+
+
+
+
 
 # Introduction
 
@@ -32,10 +74,19 @@ Differential expression analysis upon cellular perturbations is the most commonl
 
 In addition to providing a clearer understanding of the effects of experimental treatments on gene exrpession `orthos` also enables researchers to query the contrast database with arbitrary contrasts and identify experiments with similar specific effects ultimately helping to map treatments to mechanisms of action.
 
+After installation, the package can be loaded to the user workspase with:
+
+```{r library}
+library(orthos)
+```
+
+
 Typically the analysis involves two steps:
 
 1. Decomposing a contrast/set of contrasts into  using the `decomposeVar()` function and
 2. Performing a query with the original and decomposed (non-specific and specific) fractions against the corresponding contrast DBs using the `queryWithContrasts()` function.
+
+
 
 
 # Demonstration data
@@ -44,7 +95,7 @@ To demonstrate the functionality of orthos we use a dataset from the the GEO sub
 
 This series was not part of the `orthos` training or the `orthosDB` constrast database as it was publicly released on January 1st 2023 after the freeze of the training data to the ARCHS4 v2.1.2 database.
 
-The performed experiment involves overexpression (OE) of MKL/megakaryoblastic leukemia 1 (also termed MRTFA/myocardin related transcription factor A) and a constitutively active mutant MKL1 (caMKL1, described in @Hu_et_al_2019) in mouse LM2 and human 4T1 tumor-derived breast cancer cell lines. In addition to the MKL1/caMKL1 OE treatments the series also contains no-treatment controls for each of the two cell lines.
+The performed experiment involves overexpression (OE) of MKL/megakaryoblastic leukemia 1 (also termed MRTFA/myocardin related transcription factor A) and a constitutively active mutant MKL1 (caMKL1, described in @hu2019mkl1) in mouse LM2 and human 4T1 tumor-derived breast cancer cell lines. In addition to the MKL1/caMKL1 OE treatments the series also contains no-treatment controls for each of the two cell lines.
 
 For simplicity the three biological replicates of each condition available in the original series have been collapsed in the data provided in the package.
 
@@ -61,7 +112,6 @@ dim(MKL1_mouse)
 ```
 
 
-Diagnostics?
 
 
 
@@ -85,11 +135,11 @@ There are two available modes in which the required inputs can be fed into the f
 In both cases the rownames of `M` (and `MD` if specified) need to be some valid gene identifiers ( Entrez gene ids, ENSEMBL gene ids, gene symbols or ARCHS4 gene ids ). By default the type of gene identifier used is detected automatically.
 
 
-```{r}
-#dec_MKL1_human <- decomposeVar(M=MKL1_human, treatm=c(2,3),cntr=c(1,1), organism = "Human")
+```{r, warning = FALSE, message = FALSE}
+dec_MKL1_human <- decomposeVar(M=MKL1_human, treatm=c(2,3),cntr=c(1,1), organism = "Human", verbose=FALSE)
 
 
-#dec_MKL1_mouse <- decomposeVar(M=MKL1_mouse, treatm=c(2,3),cntr=c(1,1), organism = "Mouse")
+dec_MKL1_mouse <- decomposeVar(M=MKL1_mouse, treatm=c(2,3),cntr=c(1,1), organism = "Mouse", verbose=FALSE)
 ```
 
 Notice that, of the total of gene features present in the input, only those that are part of the `orthos` model (~20K genes ) are used.
@@ -119,19 +169,17 @@ colData(dec_MKL1_mouse)
 
 
 
-```{r, fig.width=9}
+```{r,  fig.width=12}
 BPPARAM <- BiocParallel::MulticoreParam(workers=16)
-#query.res.human <- queryWithContrasts(dec_MKL1_human, organism="Human", BPPARAM = BPPARAM, verbose = FALSE)
+query.res.human <- queryWithContrasts(dec_MKL1_human, organism="Human", BPPARAM = BPPARAM, verbose = FALSE)
 
 
-#query.res.mouse <- queryWithContrasts(dec_MKL1_mouse, organism="Mouse", BPPARAM = BPPARAM, verbose = FALSE)
-
-plotQueryResultsViolin(query.res.human)
-
-plotQueryResultsManh(query.res.human)
+query.res.mouse <- queryWithContrasts(dec_MKL1_mouse, organism="Mouse", BPPARAM = BPPARAM, verbose = FALSE)
 
 
-plotQueryResultsManh(query.res.mouse)
+
+
+print(plotQueryResultsManh(query.res.mouse))
 ```
 
 
