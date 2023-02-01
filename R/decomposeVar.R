@@ -201,7 +201,7 @@ decomposeVar <- function(M,
     ## Detect feature ID type
     ## -------------------------------------------------------------------------
     geneIDs <- rownames(M)
-    rownames(M) <- toupper(gsub("\\.\\d.+", "", rownames(M)))
+    rownames(M) <- toupper(gsub("\\.\\d+", "", rownames(M)))
 
     featureType <- .detectFeatureIdType(featureType = featureType,
                                         genes = genes,
