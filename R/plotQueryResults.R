@@ -5,6 +5,7 @@
 #' 
 #' @param query.results A list containing the results of a query performed with 
 #'  \code{queryWithContrasts}
+#' @param plot Boolean specifying if a plot should be generated.
 #' 
 #' 
 #' @return A composite manhattan/density plot for the scores of queries using different contrast fractions against the respective contrast DBs
@@ -15,7 +16,7 @@
 #' 
 #' @importFrom cowplot plot_grid
 #' 
-plotQueryResultsManh <- function(query.results) {
+plotQueryResultsManh <- function(query.results, plot=TRUE) {
     
     CONTRASTS <- names(query.results$TopHits)
     DATASETS <-  names(query.results$TopHits[[1]])
@@ -28,19 +29,28 @@ plotQueryResultsManh <- function(query.results) {
             idx = seq_along( query.results$zscores[[1]][1,] ),
             ACC = names(query.results$zscores[[1]][1,]  )
         )
+        CONTR.PLOTS <- list()
         for (contrast in CONTRASTS){
             DF <-  cbind(DF,query.results$zscores[[contrast]][dset,])
-            PLOTS[[paste0(dset,"_",contrast)]] <- .plotManhDens(query.results$zscores[[contrast]][dset,], query.results$TopHits[[contrast]][[dset]] ) 
+            CONTR.PLOTS[[contrast]] <- .plotManhDens(query.results$zscores[[contrast]][dset,], query.results$TopHits[[contrast]][[dset]] ) 
         }
+    PLOTS[[dset]] <-  cowplot::plot_grid( plotlist=CONTR.PLOTS,label_size = 8,
+                                          labels= gsub("_CONTRASTS","",CONTRASTS), 
+                                          label_x=c(0.35,0.35,0.35), vjust=4,
+                                          ncol=3  )
     }    
     
+    if(plot){
+        if(length(DATASETS)>3){
+            warning("Too many datasets. Only the first three will be shown. The complete list of plots will however be returned by this function.", immediate. = TRUE)
+        }    
     combined_plot <- cowplot::plot_grid( plotlist=PLOTS,label_size = 10,
-                                         labels = as.vector(outer(CONTRASTS, DATASETS, paste, sep="."))
-    )
+                                         labels = DATASETS,ncol=1, nrow=min(length(DATASETS),3) )
+    print(combined_plot)
+    }
     
-    return(combined_plot)
     
-    return(P)
+    return(PLOTS)
 }
 
 
@@ -161,9 +171,10 @@ plotQueryResultsManh <- function(query.results) {
 #' 
 #' @param query.results A list containing the results of a query performed with 
 #'  \code{queryWithContrasts}
+#' @param plot Boolean specifying if a plot should be generated.
 #' 
 #'
-#' @return A violin plot for the scores of queries using different contrast fractions against the respective contrast DBs
+#' @return A list of ggplot violin plots (one for each dataset) for the scores of queries using different contrast fractions against the respective contrast DBs
 #' 
 #' @examples 
 #' qRES <- queryWithContrasts(MyDecomposedContrasts)
@@ -181,7 +192,7 @@ plotQueryResultsManh <- function(query.results) {
 #' @importFrom rlang .data
 #' @importFrom tidyr pivot_longer
 #' 
-plotQueryResultsViolin <- function(query.results) {
+plotQueryResultsViolin <- function(query.results, plot=TRUE) {
     
     CONTRASTS <- names(query.results$TopHits)
     DATASETS <-  names(query.results$TopHits[[1]])
@@ -233,9 +244,14 @@ plotQueryResultsViolin <- function(query.results) {
         
     }
     
+    if (plot){
+        if(length(PLOTS)>4){
+            warning("Too many datasets. Only the first four will be shown. The complete list of plots will however be returned by this function.", immediate. = TRUE)
+        }   
     combined_plot <- cowplot::plot_grid(
-        plotlist=PLOTS)
-    
-    return(combined_plot)
+        plotlist=PLOTS[1:min(length(PLOTS),4)])
+    print(combined_plot)
+    }
+    return(PLOTS)
 }
 
