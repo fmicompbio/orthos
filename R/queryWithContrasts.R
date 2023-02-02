@@ -208,13 +208,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         
         suppressWarnings({
             if (plotType=="violin"){
-                print(
-                    plotQueryResultsViolin(RESULTS)
-                )
+                    PLOTS <- plotQueryResultsViolin(RESULTS)
             } else if (plotType=="manh"){
-                print (
-                    plotQueryResultsManh(RESULTS)   
-                )
+                    PLOTS <- plotQueryResultsManh(RESULTS)   
             }
         })
     }
