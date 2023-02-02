@@ -21,10 +21,10 @@ bibliography: orthos.bib
 geometry: "left=0cm,right=3cm,top=2cm,bottom=2cm"
 vignette: >
   %\VignetteIndexEntry{1. Introduction to orthos}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignettePackage{orthos}
   %\VignetteKeywords{cVAE, VariationalAutoEncoders, DGE, DifferentialGeneExpression, RNASeq}    
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 
@@ -84,6 +84,7 @@ library(orthos)
 Typically the analysis involves two steps:
 
 1. Decomposing a contrast/set of contrasts into  using the `decomposeVar()` function and
+
 2. Performing a query with the original and decomposed (non-specific and specific) fractions against the corresponding contrast DBs using the `queryWithContrasts()` function.
 
 
@@ -167,21 +168,42 @@ colData(dec_MKL1_mouse)
 
 # Querying the database of gene contrasts using  `queryWithContrasts()`
 
+Typically the next step of the analysis involves querying the contrasts database (orthosDB) to identify public experiments similar to the one(s) under investigation in terms of the original, or decomposed (polytopic, specific fractions). orthosDB contains >100K  DGE experiments compiled from the ARCHS4 database of publicly available expression data. Each entry in orthosDB corresponds to a paired contrast of RNAseq samples (i.e a treatment vs a  control). A combination of metadata semantic and quantitative analysis was used to determine the proper assignment of samples to such pairs in orthosDB.
+
+The function that performs these queries is `queryWithContrasts()`. The input to this function is the `SummarizedExperiment` object obtained in the previous step from `decomposeVar()`. However users can use a column-subsetted version of this object in case they wish to query the DB with a subset of their decomposed datasets:  
+
+The function returns a list with three elements per dataset:
+- Element "person.rhos", is itself a list with each element containing the Pearson's correlation values against all the orthosDB entries for a specific fraction. 
+- Element "zscores", is also a list with each element containing the z-score transformed version of the values above.
+- Element "TopHits", also a list with detailed orthosDB metadata for each of the top `detailTopn` hits per fraction (default 10).
 
 
 ```{r,  fig.width=12}
 BPPARAM <- BiocParallel::MulticoreParam(workers=16)
 query.res.human <- queryWithContrasts(dec_MKL1_human, organism="Human", BPPARAM = BPPARAM, verbose = FALSE)
 
+names(query.res.human)
 
-query.res.mouse <- queryWithContrasts(dec_MKL1_mouse, organism="Mouse", BPPARAM = BPPARAM, verbose = FALSE)
+names(query.res.human$zscores)
+dim( query.res.human$zscores$RESIDUAL_CONTRASTS ) #query datasets in rows, orthosDB entries in columns
+summary(t(query.res.human$zscores$RESIDUAL_CONTRASTS))
+
+
+#Query the database using only the "caMKL1" contrast, supress plotting:
+query.res.human <- queryWithContrasts(dec_MKL1_human[,"caMKL1"], organism="Human", BPPARAM = BPPARAM, verbose = FALSE, plotType="none")
+
+
+query.res.mouse <- queryWithContrasts(dec_MKL1_mouse, organism="Mouse", BPPARAM = BPPARAM, verbose = FALSE, plotType="none")
+ViolinPlots_mouse <- plotQueryResultsViolin(query.res.mouse, plot=FALSE)
+ViolinPlots_mouse[["MKL1"]]
 
 
 
-
-print(plotQueryResultsManh(query.res.mouse))
+ManhDensPlots_mouse <- plotQueryResultsManh(query.res.mouse, plot=FALSE)
+ManhDensPlots_mouse[["MKL1"]]
 ```
 
+# Accessing the contrast DB
 
 
 # Accessing the model internals and other miscellaneous use cases
