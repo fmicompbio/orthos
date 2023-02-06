@@ -22,7 +22,7 @@
     # currently, this loads a local file
     # in the future, this will obtain the database using BiocFileCache or ExperimentHub
     se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-                                                  prefix = paste0(tolower(organism),"_v212_c100"))
+                                                  prefix = paste0(tolower(organism),"_v212_NDF_c100"))
     
     # check validity
     # DBhash <- digest::digest(se, algo = "xxhash64")

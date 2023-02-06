@@ -190,7 +190,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     genes <- SummarizedExperiment::rowData( readRDS ( paste0 (
         "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
-        tolower(organism),"_v212_c100se.rds"
+        tolower(organism),"_v212_NDF_c100se.rds"
         )  ) )
     
 
