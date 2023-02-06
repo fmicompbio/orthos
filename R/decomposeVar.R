@@ -23,9 +23,10 @@
     if (verbose) {
         message("Preparing input...")
     }
-
+    
     ## Manage NA values
     NA.idx <- which(is.na(M))
+    
     if (length(NA.idx) > 0) {
         if (verbose) {
             message("!!!Matrix `M` contains ", length(NA.idx),
@@ -33,12 +34,10 @@
         }
         M[NA.idx] <- 0
     }
-
     ## Lib normalize and log2 transform input count matrix
-    M <- sweep(M[rownames(M) %in% ids, ], 2,
+    M <- sweep(M[rownames(M) %in% ids,,drop=FALSE], 2,
                colSums(M), FUN = "/") * 1e+06
     M <- log2(M + pseudocount)
-
     return(M)
 }
 
@@ -80,7 +79,7 @@
         }
         ID_OLaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
     }
-
+    
     if (verbose) {
         message(max(ID_OLaps), "/", nrow(M),
                 " provided input features mapped against a total of ",
@@ -93,14 +92,14 @@
                 "--> Increased numbers of missing expressed genes in your input ",
                 "might result in model performance decline.")
     }
-
+    
     if (nrow(genes) - max(ID_OLaps) > maxMissing) {
         stop("\n!!!Too many missing features (>", maxMissing, "). ",
              "Make certain you provided valid\nSymbol, Ensembl or ",
              "Entrez gene identifiers for the specified organism as ",
              "rownames in your input matrix `M`.\n")
     }
-
+    
     return(featureType)
 }
 
@@ -161,7 +160,7 @@ decomposeVar <- function(M,
                                          "ARCHS4_ID"),
                          pseudocount = 4,
                          verbose = TRUE) {
-
+    
     ## -------------------------------------------------------------------------
     ## Check input
     ## -------------------------------------------------------------------------
@@ -183,32 +182,32 @@ decomposeVar <- function(M,
     stopifnot("`rownames(M)` must be set to gene identifiers" = !is.null(rownames(M)))
     stopifnot("`M` and `MD` matrices have to have the same dimensions and dimnames" =
                   is.null(MD) | (identical(dimnames(M), dimnames(MD)) &
-                                 identical(dim(M), dim(MD))))
-
+                                     identical(dim(M), dim(MD))))
+    
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
     genes <- SummarizedExperiment::rowData( readRDS ( paste0 (
         "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
         tolower(organism),"_v212_NDF_c100se.rds"
-        )  ) )
+    )  ) )
     
-
-
+    
+    
     ngenes <- nrow(genes)
-
+    
     ## -------------------------------------------------------------------------
     ## Detect feature ID type
     ## -------------------------------------------------------------------------
     geneIDs <- rownames(M)
     rownames(M) <- toupper(gsub("\\.\\d+", "", rownames(M)))
-
+    
     featureType <- .detectFeatureIdType(featureType = featureType,
                                         genes = genes,
                                         M = M,
                                         maxMissing = 10000,
                                         verbose = verbose)
-
+    
     ## -------------------------------------------------------------------------
     ## Preprocess input (NAs ->0, LibNormalize, LogTransform):
     ## -------------------------------------------------------------------------
@@ -218,12 +217,12 @@ decomposeVar <- function(M,
                               verbose = verbose,
                               pseudocount = pseudocount)
     }
-
+    
     # Indices of input features in the model feature vector
     idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
     # Indices of model features in the input feature vector (i.e the rownames of M)
     idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
-
+    
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
     ## -------------------------------------------------------------------------
@@ -236,15 +235,26 @@ decomposeVar <- function(M,
         D[, idx.commonF] <- t(M[idx.commonR, treatm, drop = FALSE]) -
             t(M[idx.commonR, cntr, drop = FALSE])
     }
-
+    
     if (!is.null(MD)) {
+        
+        ## Manage NA values
+        NA.idx <- which(is.na(MD))
+        if (length(NA.idx) > 0) {
+            if (verbose) {
+                message("!!!Matrix `MD` contains ", length(NA.idx),
+                        " NA values.", " Those will be set to 0")
+            }
+            MD[NA.idx] <- 0
+        }
+        
         C <- matrix(log2(pseudocount), nrow = ncol(M), ncol = nrow(genes),
                     dimnames = list(colnames(M), genes[, 1]), byrow = TRUE)
         D <- C * 0
         C[, idx.commonF] <-  t(M[idx.commonR, , drop = FALSE])
         D[, idx.commonF] <-  t(MD[idx.commonR, , drop = FALSE])
     }
-
+    
     if (verbose) {
         message("Encoding context...")
     }
@@ -259,7 +269,7 @@ decomposeVar <- function(M,
                        delta_input = D, context = LATC)
     LATD <- res$LATD
     DEC <- res$DEC
-
+    
     ## -------------------------------------------------------------------------
     ## Prepare output
     ## -------------------------------------------------------------------------
@@ -269,11 +279,11 @@ decomposeVar <- function(M,
     INPUT_DLT <- t(D)
     RES <- INPUT_DLT - DEC
     dimnames(DEC) <- dimnames(RES)
-
+    
     VAR_DEC <- cbind(.M2Mcor(INPUT_DLT, DEC)**2, .M2Mcor(INPUT_DLT, RES)**2)
     VAR_DEC <- cbind(VAR_DEC, rowSums(VAR_DEC) - 1)
     colnames(VAR_DEC) <- c("DECODED", "RESIDUAL", "COMMON")
-
+    
     decomposed.contrasts <- list(INPUT_CONTRASTS = INPUT_DLT,
                                  DECODED_CONTRASTS = DEC,
                                  RESIDUAL_CONTRASTS = RES,
@@ -284,7 +294,7 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Done!")
     }
-
+    
     return(RESULT)
 }
 
@@ -311,16 +321,16 @@ decomposeVar <- function(M,
     ## Load contrast encoder and generator models:
     encoderD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaEncoder_FT_ARCHS4_v212_"
     generatorD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaDecoder_FT_ARCHS4_v212_"
-
+    
     encoderD_path <- paste0(encoderD_path, organism, ".hdf5")
     generatorD_path <- paste0(generatorD_path, organism, ".hdf5")
-
+    
     encoderD <- keras::load_model_hdf5(encoderD_path, compile = FALSE)
     generatorD <- keras::load_model_hdf5(generatorD_path, compile = FALSE)
-
+    
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input, CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
-
+    
     list(LATD = LATD, DEC = DEC)
 }
