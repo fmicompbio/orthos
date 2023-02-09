@@ -144,12 +144,6 @@ queryWithContrasts <- function(contrasts,
     }
     target.contrasts <- .loadContrastDatabase(organism = organism, mode)
     
-    if(length(SUBSET)>0){
-        print(organism)
-        print(dim(target.contrasts))
-        target.contrasts <- target.contrasts[,SUBSET]
-    }
-    
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
 You can make sure by generating your SE generated using `decomposeVar`" = 
