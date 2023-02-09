@@ -49,8 +49,8 @@ plotQueryResultsManh <- function(query.results, plot=TRUE) {
     print(combined_plot)
     }
     
+    return(invisible(PLOTS))
     
-    return(PLOTS)
 }
 
 
@@ -252,6 +252,8 @@ plotQueryResultsViolin <- function(query.results, plot=TRUE) {
         plotlist=PLOTS[1:min(length(PLOTS),4)])
     print(combined_plot)
     }
-    return(PLOTS)
+    
+    return(invisible(PLOTS))
+
 }
 
