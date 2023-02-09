@@ -5,6 +5,9 @@
 #'
 #' @param organism Character scalar selecting the organism for which to load the
 #'     contrast database. One of \code{"Human"} or \code{"Mouse"}.
+#' @param mode When in "ANALYSIS" mode (default) the complete contrast DB is queried. "DEMO" mode
+#'  employs a small "toy" database for the queries. "DEMO" should only be used for testing/demonstration purposes
+#'  and never for actual analysis purposes.
 #'
 #' @return A \code{SummarizedExperiment} with pre-calculated contrasts as
 #'     assays.
@@ -15,14 +18,19 @@
 # #' @importFrom digest digest
 #' 
 #' @keywords internal
-.loadContrastDatabase <- function(organism = c("Human", "Mouse")) {
+.loadContrastDatabase <- function(organism = c("Human", "Mouse"), mode=c("ANALYSIS","DEMO")) {
     organism <- match.arg(organism)
     
     # load SummarizedExperiment    
     # currently, this loads a local file
     # in the future, this will obtain the database using BiocFileCache or ExperimentHub
-    se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-                                                  prefix = paste0(tolower(organism),"_v212_NDF_c100"))
+    if (mode=="DEMO"){
+        se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+                                                      prefix = paste0(tolower(organism),"_v212_NDF_c100_DEMO"))
+    }else{
+        se <- HDF5Array::loadHDF5SummarizedExperiment(dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
+                                                      prefix = paste0(tolower(organism),"_v212_NDF_c100"))    
+    }
     
     # check validity
     # DBhash <- digest::digest(se, algo = "xxhash64")
@@ -68,6 +76,11 @@
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 #'     reduce memory usage.
+#' @param mode When in "ANALYSIS" mode (default) the complete contrast DB is queried. "DEMO" mode
+#'  employs a small "toy" database for the queries. "DEMO" should only be used for testing/demonstration purposes
+#'  and never for actual analysis purposes.
+#'  
+#' 
 #'
 #' @return A list of PearsonRhos, Zscores against the datbase as well as 
 #'     detailed Metadata for the detailTopn hits.
@@ -84,7 +97,7 @@ queryWithContrasts <- function(contrasts,
                                plotType = c("violin", "manh", "none"),
                                detailTopn = 10, verbose = TRUE,
                                BPPARAM = BiocParallel::bpparam(),
-                               chunk_size = 500 ) {
+                               chunk_size = 500, mode=c("ANALYSIS","DEMO") ) {
     
     ## -------------------------------------------------------------------------
     ## Check inputs
@@ -99,9 +112,10 @@ queryWithContrasts <- function(contrasts,
         message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
     }
     use <- match.arg(use)
-    .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     organism <- match.arg(organism)
     plotType <- match.arg(plotType)
+    mode <- match.arg(mode)
+    .assertScalar(x = exprThr, type = "numeric", rngIncl = c(0, 1))
     .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
@@ -128,7 +142,13 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    target.contrasts <- .loadContrastDatabase(organism = organism)
+    target.contrasts <- .loadContrastDatabase(organism = organism, mode)
+    
+    if(length(SUBSET)>0){
+        print(organism)
+        print(dim(target.contrasts))
+        target.contrasts <- target.contrasts[,SUBSET]
+    }
     
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
@@ -208,9 +228,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         
         suppressWarnings({
             if (plotType=="violin"){
-                    PLOTS <- plotQueryResultsViolin(RESULTS)
+                PLOTS <- plotQueryResultsViolin(RESULTS)
             } else if (plotType=="manh"){
-                    PLOTS <- plotQueryResultsManh(RESULTS)   
+                PLOTS <- plotQueryResultsManh(RESULTS)   
             }
         })
     }
