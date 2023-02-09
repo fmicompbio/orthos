@@ -4,14 +4,16 @@
 \alias{plotQueryResultsViolin}
 \title{Visualize query results as violin plots}
 \usage{
-plotQueryResultsViolin(query.results)
+plotQueryResultsViolin(query.results, plot = TRUE)
 }
 \arguments{
 \item{query.results}{A list containing the results of a query performed with 
 \code{queryWithContrasts}}
+
+\item{plot}{Boolean specifying if a plot should be generated.}
 }
 \value{
-A violin plot for the scores of queries using different contrast fractions against the respective contrast DBs
+A list of ggplot violin plots (one for each dataset) for the scores of queries using different contrast fractions against the respective contrast DBs
 }
 \description{
 Visualize query results as violin plots

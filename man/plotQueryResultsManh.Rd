@@ -4,11 +4,13 @@
 \alias{plotQueryResultsManh}
 \title{Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}}
 \usage{
-plotQueryResultsManh(query.results)
+plotQueryResultsManh(query.results, plot = TRUE)
 }
 \arguments{
 \item{query.results}{A list containing the results of a query performed with 
 \code{queryWithContrasts}}
+
+\item{plot}{Boolean specifying if a plot should be generated.}
 }
 \value{
 A composite manhattan/density plot for the scores of queries using different contrast fractions against the respective contrast DBs

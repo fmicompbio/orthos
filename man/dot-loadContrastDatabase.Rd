@@ -4,11 +4,18 @@
 \alias{.loadContrastDatabase}
 \title{Load contrast database}
 \usage{
-.loadContrastDatabase(organism = c("Human", "Mouse"))
+.loadContrastDatabase(
+  organism = c("Human", "Mouse"),
+  mode = c("ANALYSIS", "DEMO")
+)
 }
 \arguments{
 \item{organism}{Character scalar selecting the organism for which to load the
 contrast database. One of \code{"Human"} or \code{"Mouse"}.}
+
+\item{mode}{When in "ANALYSIS" mode (default) the complete contrast DB is queried. "DEMO" mode
+employs a small "toy" database for the queries. "DEMO" should only be used for testing/demonstration purposes
+and never for actual analysis purposes.}
 }
 \value{
 A \code{SummarizedExperiment} with pre-calculated contrasts as
