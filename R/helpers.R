@@ -54,8 +54,8 @@
     
     full_dim <- dim(hdf5)
     full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5))) #grid contains entire columns
+    nblock <- length(full_grid)
 
-    nblock <- length(full_grid) 
     res <- BiocParallel::bplapply(seq_len(nblock), function(b){
         ref_block <- DelayedArray::read_block(hdf5, full_grid[[b]])
         ctx_block <- DelayedArray::read_block(hdf5_ctx, full_grid[[b]]) 
