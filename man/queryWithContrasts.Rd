@@ -13,7 +13,8 @@ queryWithContrasts(
   detailTopn = 10,
   verbose = TRUE,
   BPPARAM = BiocParallel::bpparam(),
-  chunk_size = 500
+  chunk_size = 500,
+  mode = c("ANALYSIS", "DEMO")
 )
 }
 \arguments{
@@ -52,6 +53,10 @@ the way.}
 \item{chunk_size}{Column dimension for the grid used to read blocks from the
 HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 reduce memory usage.}
+
+\item{mode}{When in "ANALYSIS" mode (default) the complete contrast DB is queried. "DEMO" mode
+employs a small "toy" database for the queries. "DEMO" should only be used for testing/demonstration purposes
+and never for actual analysis purposes.}
 }
 \value{
 A list of PearsonRhos, Zscores against the datbase as well as 
