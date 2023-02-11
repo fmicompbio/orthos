@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotQueryResults.R
 \name{plotQueryResultsManh}
 \alias{plotQueryResultsManh}
-\title{Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}}
+\title{Visualize query results as a composite manhattan/density plot.}
 \usage{
 plotQueryResultsManh(query.results, plot = TRUE)
 }
@@ -17,7 +17,7 @@ A composite manhattan/density plot for the scores of queries using
 different contrast fractions against the respective contrast DBs.
 }
 \description{
-Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}
+Visualize query results as a composite manhattan/density plot.
 }
 \examples{
 qRES <- queryWithContrasts(MyDecomposedContrasts)

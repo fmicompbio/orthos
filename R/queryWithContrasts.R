@@ -27,7 +27,8 @@
 
     # load SummarizedExperiment
     # currently, this loads a local file
-    # in the future, this will obtain the database using BiocFileCache or ExperimentHub
+    # in the future, this will obtain the database using BiocFileCache or
+    # ExperimentHub
     if (mode == "DEMO") {
         se <- HDF5Array::loadHDF5SummarizedExperiment(
             dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
@@ -44,7 +45,8 @@
     # DBhash <- digest::digest(se, algo = "xxhash64")
     # hashvals <- list(Human = "87e231a6567c61e0", Mouse = "800d2113e4a41175" )
     #    stopifnot(paste0("The contrast DB contained for ", organism,
-    #                     " has not been correctly loaded. Please remove it and try again.") =
+    #                     " has not been correctly loaded. ",
+    #                     "Please remove it and try again.") =
     #                  DBhash == hashvals[[organism]])
 
     # return
@@ -79,8 +81,9 @@
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along
 #'     the way.
-#' @param BPPARAM BiocParallelParam object specifying how parallelization is to be performed using for e.g
-#'     \code{\link[BiocParallel]{MulticoreParam}}) or \code{\link[BiocParallel]{SnowParam}})
+#' @param BPPARAM BiocParallelParam object specifying how parallelization is to
+#'     be performed using e.g. \code{\link[BiocParallel]{MulticoreParam}})
+#'     or \code{\link[BiocParallel]{SnowParam}})
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 #'     reduce memory usage.
@@ -111,13 +114,15 @@ queryWithContrasts <- function(contrasts,
     ## Check inputs
     ## -------------------------------------------------------------------------
     .assertVector(x = contrasts, type = "SummarizedExperiment")
-    valid.contrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS", "RESIDUAL_CONTRASTS")
+    valid.contrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
+                         "RESIDUAL_CONTRASTS")
     present.contrasts <- intersect(valid.contrasts, names(assays(contrasts)))
     stopifnot("The assays slot in the provided SummarizedExperiment does not contain valid contrast names " =
                   length(present.contrasts) > 0)
 
     if (verbose) {
-        message(paste("provided contrast: ", present.contrasts, collapse = "\n"))
+        message(paste("provided contrast: ", present.contrasts,
+                      collapse = "\n"))
     }
     use <- match.arg(use)
     organism <- match.arg(organism)
@@ -136,8 +141,9 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         BiocParallel::bpprogressbar(BPPARAM) <- TRUE
         if (BiocParallel::bpworkers(BPPARAM) < 10) {
-            BiocParallel::bptasks(BPPARAM) <- ifelse(identical(class(BPPARAM)[[1]],"SerialParam"),
-                                                     10, min(2 * BiocParallel::bpworkers(BPPARAM), 10))
+            BiocParallel::bptasks(BPPARAM) <- ifelse(
+                identical(class(BPPARAM)[[1]],"SerialParam"),
+                10, min(2 * BiocParallel::bpworkers(BPPARAM), 10))
         }
     }
     if (!BiocParallel::bpisup(BPPARAM) && !is(BPPARAM, "MulticoreParam")) {
@@ -164,29 +170,34 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## Calculate correlations
     ## -------------------------------------------------------------------------
     if (use == "expressed.in.both") {
-        # Set a global expression threshold according to a quantile in the query data context
+        # Set a global expression threshold according to a quantile in the
+        # query data context
         if (verbose) {
             message("Thresholding genes...")
         }
         thr <- stats::quantile(context, exprThr)
 
         pearson.rhos <- sapply(present.contrasts, function(x) {
-            message(paste0("Querying contrast database with ", x, "..."))
+            message("Querying contrast database with ", x, "...")
             query <- contrasts[[x]]
             query[context <= thr] <- NA
-            .grid_cor_wNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
-                           hdf5_ctx = SummarizedExperiment::assays(target.contrasts)[["CONTEXT"]],
-                           thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size)
+            .grid_cor_wNAs(
+                query,
+                hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
+                hdf5_ctx = SummarizedExperiment::assays(target.contrasts)[["CONTEXT"]],
+                thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size)
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     } else if (use == "all.genes") {
         pearson.rhos <- sapply(present.contrasts, function(x) {
             if (verbose) {
-                message(paste0("Querying contrast database with ", x, "..."))
+                message("Querying contrast database with ", x, "...")
             }
             query <- contrasts[[x]]
-            .grid_cor_woNAs(query, hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
-                            BPPARAM = BPPARAM, chunk_size = chunk_size)
+            .grid_cor_woNAs(
+                query,
+                hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
+                BPPARAM = BPPARAM, chunk_size = chunk_size)
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     }
@@ -208,7 +219,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     TopHits <- sapply(present.contrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) {
             N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
-            SummarizedExperiment::colData(target.contrasts)[N, c(3, 12, 22, 24, 29, 31, 33)]
+            SummarizedExperiment::colData(target.contrasts)[N, c(3, 12, 22, 24,
+                                                                 29, 31, 33)]
         })
     }, simplify = FALSE, USE.NAMES = TRUE
     )
