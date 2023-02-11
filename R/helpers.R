@@ -27,6 +27,7 @@
 #'
 #' @param query Numeric matrix n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
+#' @param hdf5_ctx HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
 #' @param chunk_size column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to
 #'     write the data on disk.
@@ -52,6 +53,7 @@
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertVector(x = hdf5_ctx, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
+    .assertScalar(x = BPPARAM, type = "BiocParallelParam")
     .assertScalar(x = thr, type = "numeric", allowNULL = TRUE)
 
     full_dim <- dim(hdf5)
@@ -101,7 +103,8 @@
     .assertVector(x = query, type = "matrix")
     .assertVector(x = hdf5, type = "DelayedArray")
     .assertScalar(x = chunk_size, type = "numeric") # add limit using `rngIncl`?
-
+    .assertScalar(x = BPPARAM, type = "BiocParallelParam")
+    
     full_dim <- dim(hdf5)
     # grid contains entire columns
     full_grid <- DelayedArray::colAutoGrid(hdf5,
