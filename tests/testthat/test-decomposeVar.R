@@ -55,11 +55,15 @@ test_that(".readGeneInformation works", {
     genesMouse <- .readGeneInformation("mouse", mustSucceed = FALSE)
     genesHuman <- .readGeneInformation("human", mustSucceed = FALSE)
     
+    expect_s4_class(genesMouse, "DFrame")
+    expect_s4_class(genesHuman, "DFrame")
+    
     if (nrow(genesMouse) == 0 && nrow(genesHuman) == 0) {
         expect_error(.readGeneInformation("mouse", mustSucceed = TRUE))
         expect_error(.readGeneInformation("human", mustSucceed = TRUE))
         
     } else {
+        # here we assume that both `genesMouse` and `genesHuman` are available
         idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
                      "ENTREZ_GENE_ID", "ARCHS4_ID")
         
