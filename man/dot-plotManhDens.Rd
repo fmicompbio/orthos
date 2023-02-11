@@ -20,9 +20,7 @@ Visualize query results as a composite Manhattan/Density plot
 }
 \examples{
  qRES <- queryWithContrasts(MyDecomposedContrasts)
-.plotManhDens(qRES$zscores[[1]][1,], qRES$TopHits[[contrast]][[dset]] ) 
-
-
+.plotManhDens(qRES$zscores[[1]][1, ], qRES$TopHits[[contrast]][[dset]])
 
 }
 \author{

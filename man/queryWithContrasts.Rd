@@ -18,20 +18,20 @@ queryWithContrasts(
 )
 }
 \arguments{
-\item{contrasts}{A \code{SummarizedExperiment} object with assays containing 
-contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS 
-(at least one should be present) and context information in an assay 
+\item{contrasts}{A \code{SummarizedExperiment} object with assays containing
+contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS
+(at least one should be present) and context information in an assay
 named CONTEXT. The latter is only required when use="expressed.in.both".
-This is typically generated using  
+This is typically generated using
 \code{decomposeVar}.}
 
-\item{use}{Determines if all.genes or genes expressed in both query and 
-target context will be used. Note that "expressed.in.both", though more 
+\item{use}{Determines if all.genes or genes expressed in both query and
+target context will be used. Note that "expressed.in.both", though more
 accurate, is slower.}
 
-\item{exprThr}{is the quantile in the provided context that determines the 
-expression value above which a gene is considered to be expressed. This 
-same value is then used for thresholding the contrast database. Only 
+\item{exprThr}{is the quantile in the provided context that determines the
+expression value above which a gene is considered to be expressed. This
+same value is then used for thresholding the contrast database. Only
 applies when use="expressed.in.both"}
 
 \item{organism}{Selects the autoencoder model trained on data from this
@@ -41,10 +41,10 @@ species. One of \code{"Human"} or \code{"Mouse"}.}
 \code{"violin", "manh"} or \code{"none"} to suppress
 the plotting.}
 
-\item{detailTopn}{specifies the number of top hits for which metadata will 
+\item{detailTopn}{specifies the number of top hits for which metadata will
 be returned in the TopHits slot of the results.}
 
-\item{verbose}{Logical scalar indicating whether to print messages along 
+\item{verbose}{Logical scalar indicating whether to print messages along
 the way.}
 
 \item{BPPARAM}{BiocParallelParam object specifying how parallelization is to be performed using for e.g
@@ -54,13 +54,14 @@ the way.}
 HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 reduce memory usage.}
 
-\item{mode}{When in "ANALYSIS" mode (default) the complete contrast DB is queried. "DEMO" mode
-employs a small "toy" database for the queries. "DEMO" should only be used for testing/demonstration purposes
+\item{mode}{When in "ANALYSIS" mode (default) the complete contrast DB is
+queried. "DEMO" mode employs a small "toy" database for the queries.
+"DEMO" should only be used for testing/demonstration purposes
 and never for actual analysis purposes.}
 }
 \value{
-A list of PearsonRhos, Zscores against the datbase as well as 
-    detailed Metadata for the detailTopn hits.
+A list of PearsonRhos, Zscores against the database as well as
+    detailed metadata for the detailTopn hits.
 }
 \description{
 Query the contrast database with a set of contrasts
