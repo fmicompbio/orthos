@@ -45,30 +45,52 @@
 
 #' Load gene annotation table
 #'
-#' @param featureType Character scalar, one of \code{"AUTO"},
-#'     \code{"ENSEMBL_GENE_ID"}, \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"}
-#'     or \code{"ARCHS4_ID"}.
-#' @param genes Gene annotation data frame.
-#' @param M Expression matrix (feature identifiers are in row names).
-#' @param maxMissing Numeric scalar. This function will throw an error if more
-#'     than \code{maxMissing} features in \code{genes} are not available in
-#'     \code{M}.
-#' @param verbose Logical scalar. If \code{TRUE}, report on progress.
+#' @param organism Character scalar, one of \code{"human"} or \code{"mouse"}.
+#' @param mustSucceed Logical scalar. If \code{FALSE} and the gene information
+#'     data is not available, return an \code{S4Vectors::DFrame} object with
+#'     zero rows. If \code{TRUE} (the default) and the gene information data is
+#'     not available, \code{.readGeneInformation} throws an error.
 #'
-#' @return \code{featureType} as a character scalar.
+#' @return \code{S4Vectors::DFrame} table with gene information.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
 #' @importFrom SummarizedExperiment rowData
+#' @importFrom S4Vectors DataFrame
 #' 
 #' @keywords internal
 #' @noRd
-.readGeneInformation <- function(organism = c("human", "mouse")) {
+.readGeneInformation <- function(organism, mustSucceed = TRUE) {
+    .assertScalar(x = organism, type = "character",
+                  validValues = c("human", "mouse"))
+    .assertScalar(x = mustSucceed, type = "logical")
+    
     geneInfoDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
     geneInfoFile <- paste0(organism, "_v212_NDF_c100se.rds")
-    genes <- SummarizedExperiment::rowData(
-        readRDS(file.path(geneInfoDir, geneInfoFile))
-    )
+    geneInfoPath <- file.path(geneInfoDir, geneInfoFile)
+    
+    if (file.exists(geneInfoPath)) {
+        genes <- SummarizedExperiment::rowData(
+            readRDS(file.path(geneInfoDir, geneInfoFile))
+        )
+    } else {
+        if (mustSucceed) {
+            stop("gene information for '", organism, "' is not available")
+        }
+        genes <- S4Vectors::DataFrame(seqnames = factor(), start = integer(),
+                                      end = integer(), width = integer(),
+                                      strand = factor(),
+                                      ENSEMBL_GENE_ID = character(),
+                                      gene_name = character(),
+                                      gene_biotype = character(),
+                                      seq_coord_system = character(),
+                                      description = character(),
+                                      ENSEMBL_GENE_ID_VERSION = character(),
+                                      ENSEMBL_CANONICAL_TRANSCRIPT = character(),
+                                      GENE_SYMBOL = character(),
+                                      ENTREZ_GENE_ID = character(),
+                                      ARCHS4_ID = character())
+    }
     return(genes)
 }
 
