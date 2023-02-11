@@ -43,6 +43,36 @@
 }
 
 
+#' Load gene annotation table
+#'
+#' @param featureType Character scalar, one of \code{"AUTO"},
+#'     \code{"ENSEMBL_GENE_ID"}, \code{"GENE_SYMBOL"}, \code{"ENTREZ_GENE_ID"}
+#'     or \code{"ARCHS4_ID"}.
+#' @param genes Gene annotation data frame.
+#' @param M Expression matrix (feature identifiers are in row names).
+#' @param maxMissing Numeric scalar. This function will throw an error if more
+#'     than \code{maxMissing} features in \code{genes} are not available in
+#'     \code{M}.
+#' @param verbose Logical scalar. If \code{TRUE}, report on progress.
+#'
+#' @return \code{featureType} as a character scalar.
+#'
+#' @author Panagiotis Papasaikas, Michael Stadler
+#'
+#' @importFrom SummarizedExperiment rowData
+#' 
+#' @keywords internal
+#' @noRd
+.readGeneInformation <- function(organism = c("human", "mouse")) {
+    geneInfoDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
+    geneInfoFile <- paste0(organism, "_v212_NDF_c100se.rds")
+    genes <- SummarizedExperiment::rowData(
+        readRDS(file.path(geneInfoDir, geneInfoFile))
+    )
+    return(genes)
+}
+
+
 #' Detect type of feature identifier
 #'
 #' @param featureType Character scalar, one of \code{"AUTO"},
@@ -152,7 +182,7 @@
 #' }
 #'
 #' @importFrom stats na.omit
-#' @importFrom SummarizedExperiment SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom basilisk basiliskRun
 #'
 decomposeVar <- function(M,
@@ -195,11 +225,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- SummarizedExperiment::rowData(readRDS(paste0(
-        "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5/",
-        tolower(organism), "_v212_NDF_c100se.rds"
-    )))
-
+    genes <- .readGeneInformation(tolower(organism))
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
