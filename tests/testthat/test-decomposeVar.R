@@ -73,8 +73,12 @@ test_that(".readGeneInformation works", {
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
-    genesMouse <- .readGeneInformation("mouse")
-    genesHuman <- .readGeneInformation("human")
+    genesMouse <- .readGeneInformation("mouse", mustSucceed = FALSE)
+    genesHuman <- .readGeneInformation("human", mustSucceed = FALSE)
+    skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
+            message = paste0("skipping .detectFeatureIdType tests - ",
+                             "gene information not vailable"))
+    
     idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
                  "ENTREZ_GENE_ID", "ARCHS4_ID")
     nr <- 1000
