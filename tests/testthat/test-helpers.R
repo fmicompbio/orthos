@@ -34,19 +34,36 @@ test_that(".grid_cor_wNAs works", {
     expect_error(.grid_cor_wNAs(query = NULL, hdf5 = mDBaseHDF5), "NULL")
     expect_error(.grid_cor_wNAs(query = "error", hdf5 = mDBaseHDF5), "matrix")
     expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = NULL), "NULL")
-    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = "error"), "HDF5Matrix")
-    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = "error"), "numeric")
-    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = "error"), "numeric")
-    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = -1), "within")
-    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, thr = "error"), "numeric")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = "error"), "DelayedArray")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                hdf5_ctx = "error"), "DelayedArray")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                hdf5_ctx = mDBaseHDF5,
+                                chunk_size = "error"), "numeric")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                hdf5_ctx = mDBaseHDF5,
+                                BPPARAM = "error"), "BiocParallelParam")
+    expect_error(.grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                hdf5_ctx = mDBaseHDF5,
+                                thr = "error"), "numeric")
     
     # correct results
     res0 <- stats::cor(mQuery, mDBase)
     res0thr <- stats::cor(mQueryThr, mDBaseThr, use = "pairwise.complete")
-    res1 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1, thr = 0.0)
-    res1thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5, chunk_size = 10, workers = 1, thr = thr)
-    res2 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 2, thr = 0.0)
-    res2thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5, chunk_size = 10, workers = 2, thr = thr)
+    res1 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                           hdf5_ctx = mDBaseHDF5, chunk_size = 10,
+                           BPPARAM = BiocParallel::SerialParam(), thr = 0.0)
+    res1thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5,
+                              hdf5_ctx = mDBaseHDF5, chunk_size = 10,
+                              BPPARAM = BiocParallel::SerialParam(), thr = thr)
+    res2 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                           hdf5_ctx = mDBaseHDF5, chunk_size = 10,
+                           BPPARAM = BiocParallel::SnowParam(workers = 2),
+                           thr = 0.0)
+    res2thr <- .grid_cor_wNAs(query = mQueryThr, hdf5 = mDBaseThrHDF5,
+                              hdf5_ctx = mDBaseHDF5, chunk_size = 10,
+                              BPPARAM = BiocParallel::MulticoreParam(workers = 2),
+                              thr = thr)
     
     expect_type(res1, "double")
     expect_type(res1thr, "double")
@@ -86,16 +103,22 @@ test_that(".grid_cor_woNAs works", {
     expect_error(.grid_cor_woNAs(query = NULL, hdf5 = mDBaseHDF5), "NULL")
     expect_error(.grid_cor_woNAs(query = "error", hdf5 = mDBaseHDF5), "matrix")
     expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = NULL), "NULL")
-    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = "error"), "HDF5Matrix")
-    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = "error"), "numeric")
-    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = "error"), "numeric")
-    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, workers = -1), "within")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = "error"), "DelayedArray")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                 chunk_size = "error"), "numeric")
+    expect_error(.grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                                 BPPARAM = "error"), "BiocParallelParam")
 
     # correct results
     res0 <- stats::cor(mQuery, mDBase)
-    res1 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1)
-    res2 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 2)
-    res3 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10, workers = 1, thr = 0.0)
+    res1 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10,
+                            BPPARAM = BiocParallel::SerialParam())
+    res2 <- .grid_cor_woNAs(query = mQuery, hdf5 = mDBaseHDF5, chunk_size = 10,
+                            BPPARAM = BiocParallel::MulticoreParam(workers = 2))
+    res3 <- .grid_cor_wNAs(query = mQuery, hdf5 = mDBaseHDF5,
+                           hdf5_ctx = mDBaseHDF5, chunk_size = 10,
+                           BPPARAM = BiocParallel::MulticoreParam(workers = 2),
+                           thr = 0.0)
     
     expect_type(res1, "double")
     expect_type(res2, "double")
