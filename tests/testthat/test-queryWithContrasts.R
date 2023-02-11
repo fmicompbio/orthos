@@ -3,21 +3,24 @@
 ## ------------------------------------------------------------------------- ##
 test_that(".loadContrastDatabase works", {
     expect_error(.loadContrastDatabase("error"))
+    expect_error(.loadContrastDatabase("Human", "error"))
     
-    seHuman <- .loadContrastDatabase("Human")
-    seMouse <- .loadContrastDatabase("Mouse")
+    seHuman <- .loadContrastDatabase("Human", mustSucceed = FALSE)
+    seMouse <- .loadContrastDatabase("Mouse", mustSucceed = FALSE)
     
     expect_s4_class(seHuman, "SummarizedExperiment")
     expect_s4_class(seMouse, "SummarizedExperiment")
     
+    skip_if(identical(dim(seHuman), c(0L, 0L)) ||
+                identical(dim(seMouse), c(0L, 0L)),
+            message = "contrast database not available")
+    
     assayNms <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
                   "RESIDUAL_CONTRASTS", "CONTEXT")
     expect_identical(SummarizedExperiment::assayNames(seHuman),
-                     c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
-                       "RESIDUAL_CONTRASTS", "CONTEXT"))
+                     assayNms)
     expect_identical(SummarizedExperiment::assayNames(seMouse),
-                     c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
-                       "RESIDUAL_CONTRASTS", "CONTEXT"))
+                     assayNms)
     
     expect_identical(dim(seHuman), c(20411L, 74731L))
     expect_identical(dim(seMouse), c(20339L, 58532L))
