@@ -46,6 +46,29 @@ test_that(".preprocessInput works", {
 })
 
 ## ------------------------------------------------------------------------- ##
+## Checks, .readGeneInformation
+## ------------------------------------------------------------------------- ##
+test_that(".readGeneInformation works", {
+    expect_error(.readGeneInformation("error", mustSucceed = FALSE))
+    expect_error(.readGeneInformation("error", mustSucceed = TRUE))
+    
+    genesMouse <- .readGeneInformation("mouse", mustSucceed = FALSE)
+    genesHuman <- .readGeneInformation("human", mustSucceed = FALSE)
+    
+    if (nrow(genesMouse) == 0 && nrow(genesHuman) == 0) {
+        expect_error(.readGeneInformation("mouse", mustSucceed = TRUE))
+        expect_error(.readGeneInformation("human", mustSucceed = TRUE))
+        
+    } else {
+        idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
+                     "ENTREZ_GENE_ID", "ARCHS4_ID")
+        
+        expect_true(all(idTypes %in% colnames(genesMouse)))
+        expect_true(all(idTypes %in% colnames(genesHuman)))
+    }
+})
+
+## ------------------------------------------------------------------------- ##
 ## Checks, .detectFeatureIdType
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
