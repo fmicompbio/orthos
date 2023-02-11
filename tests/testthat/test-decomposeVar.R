@@ -50,12 +50,8 @@ test_that(".preprocessInput works", {
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
-    genesMouse <- readRDS(system.file("extdata",
-                                      "ARCHS4_v212_feature_genes_Mouse.rds",
-                                      package = "orthos"))
-    genesHuman <- readRDS(system.file("extdata",
-                                      "ARCHS4_v212_feature_genes_Human.rds",
-                                      package = "orthos"))
+    genesMouse <- .readGeneInformation("mouse")
+    genesHuman <- .readGeneInformation("human")
     idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
                  "ENTREZ_GENE_ID", "ARCHS4_ID")
     nr <- 1000
