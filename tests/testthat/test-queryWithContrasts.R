@@ -19,8 +19,8 @@ test_that(".loadContrastDatabase works", {
                      c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
                        "RESIDUAL_CONTRASTS", "CONTEXT"))
     
-    expect_identical(dim(seHuman), c(20411L, 77016L))
-    expect_identical(dim(seMouse), c(20339L, 59552L))
+    expect_identical(dim(seHuman), c(20411L, 74731L))
+    expect_identical(dim(seMouse), c(20339L, 58532L))
 
     for (assayNm1 in assayNms) {
         expect_s4_class(SummarizedExperiment::assay(seHuman, assayNm1),
