@@ -2,11 +2,12 @@
 ## Checks, .loadContrastDatabase
 ## ------------------------------------------------------------------------- ##
 test_that(".loadContrastDatabase works", {
-    expect_error(.loadContrastDatabase("error"))
-    expect_error(.loadContrastDatabase("Human", "error"))
+    expect_error(.loadContrastDatabase(organism = "error"))
+    expect_error(.loadContrastDatabase(organism = "Human", mode = "error"))
     
-    seHuman <- .loadContrastDatabase("Human", mustSucceed = FALSE)
-    seMouse <- .loadContrastDatabase("Mouse", mustSucceed = FALSE)
+    useMode <- "DEMO"
+    seHuman <- .loadContrastDatabase("Human", mode = useMode, mustSucceed = FALSE)
+    seMouse <- .loadContrastDatabase("Mouse", mode = useMode, mustSucceed = FALSE)
     
     expect_s4_class(seHuman, "SummarizedExperiment")
     expect_s4_class(seMouse, "SummarizedExperiment")
@@ -21,9 +22,16 @@ test_that(".loadContrastDatabase works", {
                      assayNms)
     expect_identical(SummarizedExperiment::assayNames(seMouse),
                      assayNms)
-    
-    expect_identical(dim(seHuman), c(20411L, 74731L))
-    expect_identical(dim(seMouse), c(20339L, 58532L))
+
+    if (identical(useMode, "ANALYSIS")) {
+        # mode = "ANALYSIS"
+        expect_identical(dim(seHuman), c(20411L, 74731L))
+        expect_identical(dim(seMouse), c(20339L, 58532L))
+    } else {
+        # mode = "DEMO"
+        expect_identical(dim(seHuman), c(20411L, 1000L))
+        expect_identical(dim(seMouse), c(20339L,  988L))
+    }
 
     for (assayNm1 in assayNms) {
         expect_s4_class(SummarizedExperiment::assay(seHuman, assayNm1),
