@@ -47,8 +47,9 @@ be returned in the TopHits slot of the results.}
 \item{verbose}{Logical scalar indicating whether to print messages along
 the way.}
 
-\item{BPPARAM}{BiocParallelParam object specifying how parallelization is to be performed using for e.g
-\code{\link[BiocParallel]{MulticoreParam}}) or \code{\link[BiocParallel]{SnowParam}})}
+\item{BPPARAM}{BiocParallelParam object specifying how parallelization is to
+be performed using e.g. \code{\link[BiocParallel]{MulticoreParam}})
+or \code{\link[BiocParallel]{SnowParam}})}
 
 \item{chunk_size}{Column dimension for the grid used to read blocks from the
 HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes

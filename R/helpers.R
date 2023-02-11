@@ -28,8 +28,8 @@
 #' @param query Numeric matrix n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
 #' @param chunk_size column dimension for the grid used to read blocks from the
-#'     HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
-#'     the data on disk.
+#'     HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to
+#'     write the data on disk.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to
 #'     be performed.
 #' @param thr If specified, a low bound on expression. Values lower than that
@@ -56,7 +56,8 @@
 
     full_dim <- dim(hdf5)
     # grid contains entire columns
-    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5)))
+    full_grid <- DelayedArray::colAutoGrid(hdf5,
+                                           ncol = min(chunk_size, ncol(hdf5)))
     nblock <- length(full_grid)
 
     res <- BiocParallel::bplapply(seq_len(nblock), function(b) {
@@ -79,8 +80,8 @@
 #' @param query Numeric matrix n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix n x l, where l is typically >> k
 #' @param chunk_size column dimension for the grid used to read blocks from the
-#'     HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to write
-#'     the data on disk.
+#'     HDF5 Matrix. Should be larger than/equal to the ncol chunkdim used to
+#'     write the data on disk.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to
 #'     be performed.
 #'
@@ -103,7 +104,8 @@
 
     full_dim <- dim(hdf5)
     # grid contains entire columns
-    full_grid <- DelayedArray::colAutoGrid(hdf5, ncol = min(chunk_size, ncol(hdf5)))
+    full_grid <- DelayedArray::colAutoGrid(hdf5,
+                                           ncol = min(chunk_size, ncol(hdf5)))
 
     res <- DelayedArray::blockApply(hdf5, function(block) {
         cor_res <- stats::cor(query, block, use = "everything")
@@ -184,8 +186,10 @@
 
     ## Check arguments
     stopifnot(is.null(type) || (length(type) == 1L && is.character(type)))
-    stopifnot(is.null(rngIncl) || (length(rngIncl) == 2L && is.numeric(rngIncl)))
-    stopifnot(is.null(rngExcl) || (length(rngExcl) == 2L && is.numeric(rngExcl)))
+    stopifnot(is.null(rngIncl) || (length(rngIncl) == 2L &&
+                                       is.numeric(rngIncl)))
+    stopifnot(is.null(rngExcl) || (length(rngExcl) == 2L &&
+                                       is.numeric(rngExcl)))
     stopifnot(is.null(len) || (length(len) == 1L && is.numeric(len)))
     stopifnot(is.null(rngLen) || (length(rngLen) == 2L && is.numeric(rngLen)))
     stopifnot(is.logical(allowNULL) && length(allowNULL) == 1L)
@@ -220,7 +224,8 @@
 
     if (!is.null(rngIncl)) {
         if (!is.null(validValues)) {
-            if (any((x < rngIncl[1] | x > rngIncl[2]) & !(x %in% validValues))) {
+            if (any((x < rngIncl[1] | x > rngIncl[2]) &
+                    !(x %in% validValues))) {
                 stop("'", xname, "' must be within [", rngIncl[1], ",",
                      rngIncl[2], "] (inclusive), or one of: ", vvPrint,
                      call. = FALSE)
@@ -233,7 +238,8 @@
         }
     } else if (!is.null(rngExcl)) {
         if (!is.null(validValues)) {
-            if (any((x <= rngExcl[1] | x >= rngExcl[2]) & !(x %in% validValues))) {
+            if (any((x <= rngExcl[1] | x >= rngExcl[2]) &
+                    !(x %in% validValues))) {
                 stop("'", xname, "' must be within (", rngExcl[1], ",",
                      rngExcl[2], ") (exclusive), or one of: ", vvPrint,
                      call. = FALSE)
@@ -298,14 +304,17 @@
         callerfunc <- sub("\\(.+$", "", caller)
         haveBioc <- requireNamespace("BiocManager", quietly = TRUE)
         msg <- paste0("The package", ifelse(sum(!avail) > 1, "s '", " '"),
-                      paste(sub("^[^/]+/", "", pkgs[!avail]), collapse = "', '"),
+                      paste(sub("^[^/]+/", "", pkgs[!avail]),
+                            collapse = "', '"),
                       "' ",
                       ifelse(sum(!avail) > 1, "are", "is"), " required for ",
                       callerfunc, "(), but not installed.\n")
         if (suggestInstallation) {
             msg <- paste0(msg,
-                          "Install ", ifelse(sum(!avail) > 1, "them", "it"), " using:\n",
-                          ifelse(haveBioc, "", "install.packages(\"BiocManager\")\n"),
+                          "Install ", ifelse(sum(!avail) > 1, "them", "it"),
+                          " using:\n",
+                          ifelse(haveBioc, "",
+                                 "install.packages(\"BiocManager\")\n"),
                           "BiocManager::install(c(\"",
                           paste(pkgs[!avail], collapse = "\", \""), "\"))")
         }

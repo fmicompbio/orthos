@@ -1,4 +1,4 @@
-#' Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}
+#' Visualize query results as a composite manhattan/density plot.
 #'
 #' @author Panagiotis Papasaikas
 #' @export
@@ -20,7 +20,8 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
     CONTRASTS <- names(query.results$TopHits)
     DATASETS <-  names(query.results$TopHits[[1]])
     topn <- nrow(query.results$TopHits[[1]][[1]])
-    TOP_META <- unique(as.data.frame(do.call(rbind, unlist(query.results$TopHits))))
+    TOP_META <- unique(as.data.frame(do.call(rbind,
+                                             unlist(query.results$TopHits))))
 
     PLOTS <- list()
     for (dset in DATASETS) {
@@ -31,20 +32,22 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
         CONTR.PLOTS <- list()
         for (contrast in CONTRASTS) {
             DF <- cbind(DF, query.results$zscores[[contrast]][dset, ])
-            CONTR.PLOTS[[contrast]] <- .plotManhDens(query.results$zscores[[contrast]][dset, ],
-                                                     query.results$TopHits[[contrast]][[dset]])
+            CONTR.PLOTS[[contrast]] <- .plotManhDens(
+                query.results$zscores[[contrast]][dset, ],
+                query.results$TopHits[[contrast]][[dset]])
         }
-        PLOTS[[dset]] <- cowplot::plot_grid(plotlist = CONTR.PLOTS, label_size = 8,
-                                            labels = gsub("_CONTRASTS", "", CONTRASTS),
-                                            label_x = c(0.35, 0.35, 0.35), vjust = 4,
-                                            ncol = 3)
+        PLOTS[[dset]] <- cowplot::plot_grid(
+            plotlist = CONTR.PLOTS, label_size = 8,
+            labels = gsub("_CONTRASTS", "", CONTRASTS),
+            label_x = c(0.35, 0.35, 0.35), vjust = 4,
+            ncol = 3)
     }
 
     if (plot) {
         if (length(DATASETS) > 3) {
             warning("Too many datasets. Only the first three will be shown. ",
-                    "The complete list of plots will however be returned by this function.",
-                    immediate. = TRUE)
+                    "The complete list of plots will however be returned by ",
+                    "this function.", immediate. = TRUE)
         }
         combined_plot <- cowplot::plot_grid(plotlist = PLOTS, label_size = 10,
                                             labels = DATASETS, ncol = 1,
@@ -65,6 +68,9 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #' @param annot Annotation dataframe for the topn results to highlight
 #'
 #' @return A composite manhattan/density plot
+#'
+#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #'  qRES <- queryWithContrasts(MyDecomposedContrasts)
@@ -116,7 +122,8 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
     expand_y <- 1.2
     dens.plot <-
         ggpubr::ggdensity(DF, "score", fill = "#33638DFF") +
-        ggplot2::scale_x_continuous(limits = c(min(DF$score), max(DF$score) * expand_y)) +
+        ggplot2::scale_x_continuous(limits = c(min(DF$score),
+                                               max(DF$score) * expand_y)) +
         ggpubr::clean_theme() +
         ggplot2::geom_point(
             data = DF[annot$geo_accession, ],
@@ -128,7 +135,8 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 
     manh.plot <-
         ggplot2::ggplot(data = DF, aes(x = .data$idx, y = .data$score)) +
-        ggplot2::scale_y_continuous(limits = c(min(DF$score), max(DF$score) * expand_y)) +
+        ggplot2::scale_y_continuous(limits = c(min(DF$score),
+                                               max(DF$score) * expand_y)) +
         ggplot2::geom_bin2d(bins = 200) +
         ggplot2::scale_fill_continuous(type = "viridis") +
         ggplot2::theme_bw() +
@@ -168,7 +176,8 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #'
 #'
 #' @return A list of ggplot violin plots (one for each dataset) for the scores
-#' of queries using different contrast fractions against the respective contrast DBs.
+#' of queries using different contrast fractions against the respective
+#' contrast DBs.
 #'
 #' @examples
 #' qRES <- queryWithContrasts(MyDecomposedContrasts)
@@ -188,7 +197,8 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
     CONTRASTS <- names(query.results$TopHits)
     DATASETS <-  names(query.results$TopHits[[1]])
     topn <- nrow(query.results$TopHits[[1]][[1]])
-    TOP_META <- unique(as.data.frame(do.call(rbind, unlist(query.results$TopHits))))
+    TOP_META <- unique(as.data.frame(do.call(rbind,
+                                             unlist(query.results$TopHits))))
 
     PLOTS <- list()
     for (dset in DATASETS) {
@@ -200,9 +210,10 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
             DF <- cbind(DF, query.results$zscores[[contrast]][dset, ])
         }
 
-        colnames(DF)[-c(1:2)] <- gsub("_CONTRASTS", "", CONTRASTS)
+        colnames(DF)[-seq_len(2)] <- gsub("_CONTRASTS", "", CONTRASTS)
         plot_df <- tidyr::pivot_longer(DF, cols = 3:ncol(DF),
-                                       names_to = "FRACTION", values_to = "score")
+                                       names_to = "FRACTION",
+                                       values_to = "score")
         plot_df$FRACTION <- factor(plot_df$FRACTION,
                                    levels = gsub("_CONTRASTS", "", CONTRASTS))
         # TopN highest values by FRACTION
@@ -212,15 +223,18 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
             dplyr::slice(seq_len(topn))
         plot_df2$series <- TOP_META[plot_df2$ACC, "series_id"]
 
-        mycolors <- colorRampPalette(ggsci::pal_jco()(10))(length(unique(plot_df2$series)))
+        mycolors <- colorRampPalette(ggsci::pal_jco()(10))(length(
+            unique(plot_df2$series)))
         mycolors <- colorspace::darken(mycolors, 0.25)
         pos <- ggplot2::position_jitter(width = 0.02, height = 0, seed = 2)
 
         PLOTS[[dset]] <-
             ggplot2::ggplot(plot_df, aes(FRACTION, score, fill = FRACTION)) +
             ggplot2::geom_violin(trim = FALSE, size = 0.6) +
-            ggplot2::scale_fill_manual(values = c("#8B451366", "#10701044", "#FF550077")) +
-            ggplot2::theme_minimal() + ggplot2::theme(legend.position = "none")+
+            ggplot2::scale_fill_manual(values = c("#8B451366", "#10701044",
+                                                             "#FF550077")) +
+            ggplot2::theme_minimal() +
+            ggplot2::theme(legend.position = "none") +
             ggplot2::ggtitle(dset) +
             ggplot2::geom_jitter(
                 data = plot_df2,
@@ -237,8 +251,8 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
     if (plot) {
         if (length(PLOTS) > 4) {
             warning("Too many datasets. Only the first four will be shown. ",
-                    "The complete list of plots will however be returned by this function.",
-                    immediate. = TRUE)
+                    "The complete list of plots will however be returned by ",
+                    "this function.", immediate. = TRUE)
         }
     combined_plot <- cowplot::plot_grid(
         plotlist = PLOTS[seq_len(min(length(PLOTS), 4))])

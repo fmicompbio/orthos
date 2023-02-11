@@ -67,7 +67,8 @@
         if (verbose) {
             message("Detecting feature ids-type...")
         }
-        IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID", "ARCHS4_ID")
+        IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
+                     "ARCHS4_ID")
         ID_OLaps <- vapply(IDtypes, function(x) {
             sum(rownames(M) %in% toupper(genes[, x]))
         }, FUN.VALUE = numeric(1))
@@ -83,16 +84,17 @@
     }
 
     if (verbose) {
-        message(max(ID_OLaps), "/", nrow(M),
-                " provided input features mapped against a total of ",
-                nrow(genes), " model features.\n",
-                nrow(genes) - max(ID_OLaps), " missing features will be set to 0.\n",
-                "--> Missing features corresponding to non/lowly expressed genes ",
-                "in your context(s) are of no consequence.\n",
-                "--> The model is robust to small fractions (<10%) of missing ",
-                "genes that are expressed in your context(s).\n",
-                "--> Increased numbers of missing expressed genes in your input ",
-                "might result in model performance decline.")
+        message(
+            max(ID_OLaps), "/", nrow(M),
+            " provided input features mapped against a total of ",
+            nrow(genes), " model features.\n", nrow(genes) - max(ID_OLaps),
+            " missing features will be set to 0.\n",
+            "--> Missing features corresponding to non/lowly expressed genes ",
+            "in your context(s) are of no consequence.\n",
+            "--> The model is robust to small fractions (<10%) of missing ",
+            "genes that are expressed in your context(s).\n",
+            "--> Increased numbers of missing expressed genes in your input ",
+            "might result in model performance decline.")
     }
 
     if (nrow(genes) - max(ID_OLaps) > maxMissing) {
@@ -172,7 +174,8 @@ decomposeVar <- function(M,
     }
     .assertVector(x = M, type = "matrix", rngIncl = c(0, Inf))
     .assertVector(x = MD, type = "matrix", allowNULL = TRUE)
-    .assertVector(x = treatm, type = "numeric", rngIncl = c(1, ncol(M)), allowNULL = TRUE)
+    .assertVector(x = treatm, type = "numeric", rngIncl = c(1, ncol(M)),
+                  allowNULL = TRUE)
     .assertVector(x = cntr, type = "numeric", len = length(treatm),
                   rngIncl = c(1, ncol(M)), allowNULL = TRUE)
     .assertScalar(x = processInput, type = "logical")
@@ -182,10 +185,12 @@ decomposeVar <- function(M,
     .assertScalar(x = verbose, type = "logical")
     stopifnot("`specify either `MD` OR both `treatm` and `cntr`" =
                   !is.null(MD) | (!is.null(treatm) | !is.null(cntr)))
-    stopifnot("`rownames(M)` must be set to gene identifiers" = !is.null(rownames(M)))
-    stopifnot("`M` and `MD` matrices have to have the same dimensions and dimnames" =
-                  is.null(MD) | (identical(dimnames(M), dimnames(MD)) &
-                                     identical(dim(M), dim(MD))))
+    stopifnot("`rownames(M)` must be set to gene identifiers" =
+                  !is.null(rownames(M)))
+    stopifnot(
+        "`M` and `MD` matrices have to have the same dimensions and dimnames" =
+            is.null(MD) | (identical(dimnames(M), dimnames(MD)) &
+                               identical(dim(M), dim(MD))))
 
     ## -------------------------------------------------------------------------
     ## Read gene information
@@ -221,14 +226,16 @@ decomposeVar <- function(M,
 
     # Indices of input features in the model feature vector
     idx.commonF <- na.omit(match(rownames(M), toupper(genes[, featureType])))
-    # Indices of model features in the input feature vector (i.e the rownames of M)
+    # Indices of model features in the input feature vector (i.e the rownames
+    # of M)
     idx.commonR <- which(rownames(M) %in% toupper(genes[, featureType]))
 
     ## -------------------------------------------------------------------------
     ## Initialize context and delta matrices and populate with the input data:
     ## -------------------------------------------------------------------------
     if (is.null(MD)) {
-        C <- matrix(log2(pseudocount), nrow = length(treatm), ncol = nrow(genes),
+        C <- matrix(log2(pseudocount), nrow = length(treatm),
+                    ncol = nrow(genes),
                     dimnames = list(colnames(M)[treatm], rownames(genes)),
                     byrow = TRUE)
         D <- C * 0
@@ -329,7 +336,8 @@ decomposeVar <- function(M,
     generatorD <- keras::load_model_hdf5(generatorD_path, compile = FALSE)
 
     ## Encode and decode deltas:
-    LATD <- predict(encoderD, list(delta_input = delta_input, CONTEXT = context))
+    LATD <- predict(encoderD, list(delta_input = delta_input,
+                                   CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
 
     list(LATD = LATD, DEC = DEC)

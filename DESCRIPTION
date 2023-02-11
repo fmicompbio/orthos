@@ -46,4 +46,4 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
-biocViews: RNASeq, DifferentialExpression
+biocViews: RNASeq, DifferentialExpression, GeneExpression
