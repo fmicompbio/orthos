@@ -7,13 +7,14 @@
 plotQueryResultsViolin(query.results, plot = TRUE)
 }
 \arguments{
-\item{query.results}{A list containing the results of a query performed with 
+\item{query.results}{A list containing the results of a query performed with
 \code{queryWithContrasts}}
 
-\item{plot}{Boolean specifying if a plot should be generated.}
+\item{plot}{Logical scalar specifying if a plot should be generated.}
 }
 \value{
-A list of ggplot violin plots (one for each dataset) for the scores of queries using different contrast fractions against the respective contrast DBs
+A list of ggplot violin plots (one for each dataset) for the scores
+of queries using different contrast fractions against the respective contrast DBs.
 }
 \description{
 Visualize query results as violin plots
@@ -21,8 +22,6 @@ Visualize query results as violin plots
 \examples{
 qRES <- queryWithContrasts(MyDecomposedContrasts)
 plotQueryResults.violin(qRES)
-
-
 
 }
 \author{

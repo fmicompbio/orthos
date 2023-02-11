@@ -54,8 +54,9 @@ A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
     as the \code{\link[SummarizedExperiment]{colData}}.
 }
 \description{
-Decompose input contrasts (gene expression Deltas) to decoded (generic) and residual (unique) components
-according to a contrast encoder-decoder pre-trained on a large corpus of public RNAseq experiments.
+Decompose input contrasts (gene expression Deltas) to decoded (generic)
+and residual (unique) components according to a contrast encoder-decoder
+pre-trained on a large corpus of public RNAseq experiments.
 }
 \examples{
 \dontrun{
