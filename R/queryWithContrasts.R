@@ -9,19 +9,25 @@
 #'     queried. "DEMO" mode employs a small "toy" database for the queries.
 #'     "DEMO" should only be used for testing/demonstration purposes
 #'     and never for actual analysis purposes.
+#' @param mustSucceed Logical scalar. If \code{FALSE} and the contrast database
+#'     is not available, return an empty \code{SummarizedExperiment} object.
+#'     If \code{TRUE} (the default) and the contrast database is
+#'     not available, \code{.loadContrastDatabase} throws an error.
 #'
 #' @return A \code{SummarizedExperiment} with pre-calculated contrasts as
 #'     assays.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
+#' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
 # #' @importFrom digest digest
 #'
 #' @keywords internal
 #' @noRd
 .loadContrastDatabase <- function(organism = c("Human", "Mouse"),
-                                  mode = c("ANALYSIS", "DEMO")) {
+                                  mode = c("ANALYSIS", "DEMO"),
+                                  mustSucceed = TRUE) {
     organism <- match.arg(organism)
     mode <- match.arg(mode)
 
@@ -29,18 +35,26 @@
     # currently, this loads a local file
     # in the future, this will obtain the database using BiocFileCache or
     # ExperimentHub
-    if (mode == "DEMO") {
-        se <- HDF5Array::loadHDF5SummarizedExperiment(
-            dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-            prefix = paste0(tolower(organism), "_v212_NDF_c100_DEMO")
-        )
+    
+    dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
+    if (identical(mode, "DEMO")) {
+        prefix <- paste0(tolower(organism), "_v212_NDF_c100_DEMO")
+        seFile <- file.path(dataDir, paste0(prefix, "se.rds"))
     } else {
-        se <- HDF5Array::loadHDF5SummarizedExperiment(
-            dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-            prefix = paste0(tolower(organism), "_v212_NDF_c100")
-        )
+        prefix <- paste0(tolower(organism), "_v212_NDF_c100")
+        seFile <- file.path(dataDir, paste0(prefix, "se.rds"))
     }
-
+    
+    if (file.exists(seFile)) {
+        se <- HDF5Array::loadHDF5SummarizedExperiment(dir = dataDir,
+                                                      prefix = prefix)
+    } else {
+        if (mustSucceed) {
+            stop("contrast database for '", organism, "' is not available")
+        }
+        se <- SummarizedExperiment::SummarizedExperiment()
+    }
+    
     # check validity
     # DBhash <- digest::digest(se, algo = "xxhash64")
     # hashvals <- list(Human = "87e231a6567c61e0", Mouse = "800d2113e4a41175" )
