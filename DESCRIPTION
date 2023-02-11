@@ -19,20 +19,25 @@ Depends: R (>= 4.0)
 Imports: 
     basilisk,
     BiocParallel,
+    colorspace,
     cowplot,
     DelayedArray,
     dplyr,
     ggplot2,
     ggpubr,
     ggrepel,
+    ggsci,
+    grid,
     HDF5Array,
     keras,
     methods,
+    parallel,
     reticulate,
     rlang,
     stats,
     SummarizedExperiment,
-    tensorflow
+    tensorflow,
+    tidyr
 RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0),
@@ -41,3 +46,4 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
+biocViews: RNASeq, DifferentialExpression
