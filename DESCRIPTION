@@ -17,7 +17,7 @@ Description:
     components. Original and decomposed contrasts can be queried agains a
     large database of publicly available contrasts to identify experiments
     with similar effects.
-License: TODO CHOOSE LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
 Depends:
