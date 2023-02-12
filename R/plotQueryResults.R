@@ -182,8 +182,10 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #' contrast DBs.
 #'
 #' @examples
+#' \dontrun{
 #' qRES <- queryWithContrasts(MyDecomposedContrasts)
 #' plotQueryResults.violin(qRES)
+#' }
 #'
 #' @importFrom dplyr arrange group_by slice
 #' @importFrom colorspace darken
