@@ -49,11 +49,12 @@ Imports:
     tidyr
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown,
     BiocStyle,
-    htmltools
+    BiocManager,
+    knitr,
+    htmltools,
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
