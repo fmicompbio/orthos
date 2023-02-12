@@ -217,9 +217,9 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
         plot_df$FRACTION <- factor(plot_df$FRACTION,
                                    levels = gsub("_CONTRASTS", "", CONTRASTS))
         # TopN highest values by FRACTION
-        plot_df2 <- plot_df %>%
-            dplyr::arrange(desc(score)) %>%
-            dplyr::group_by(FRACTION) %>%
+        plot_df2 <- plot_df |>
+            dplyr::arrange(desc(score)) |>
+            dplyr::group_by(FRACTION) |>
             dplyr::slice(seq_len(topn))
         plot_df2$series <- TOP_META[plot_df2$ACC, "series_id"]
 
