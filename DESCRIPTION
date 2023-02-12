@@ -1,6 +1,6 @@
 Package: orthos
 Type: Package
-Title: `orthos` is an R package for variance decomposition using conditional variational auto-encoders.
+Title: `orthos` is an R package for variance decomposition using conditional variational auto-encoders
 Version: 0.1.0
 Authors@R: c(
     person("Panagiotis", "Papasaikas", email = "panagiotis.papasaikas@fmi.ch",
