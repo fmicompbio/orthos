@@ -46,7 +46,7 @@
 #' Load gene annotation table
 #'
 #' @param organism Character scalar, one of \code{"human"} or \code{"mouse"}.
-#' @param mustSucceed Logical scalar. If \code{FALSE} and the gene information
+#' @param mustWork Logical scalar. If \code{FALSE} and the gene information
 #'     data is not available, return an \code{S4Vectors::DFrame} object with
 #'     zero rows. If \code{TRUE} (the default) and the gene information data is
 #'     not available, \code{.readGeneInformation} throws an error.
@@ -60,10 +60,10 @@
 #' 
 #' @keywords internal
 #' @noRd
-.readGeneInformation <- function(organism, mustSucceed = TRUE) {
+.readGeneInformation <- function(organism, mustWork = TRUE) {
     .assertScalar(x = organism, type = "character",
                   validValues = c("human", "mouse"))
-    .assertScalar(x = mustSucceed, type = "logical")
+    .assertScalar(x = mustWork, type = "logical")
     
     geneInfoDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
     geneInfoFile <- paste0(organism, "_v212_NDF_c100se.rds")
@@ -74,7 +74,7 @@
             readRDS(file.path(geneInfoDir, geneInfoFile))
         )
     } else {
-        if (mustSucceed) {
+        if (mustWork) {
             stop("gene information for '", organism, "' is not available")
         }
         genes <- S4Vectors::DataFrame(seqnames = factor(), start = integer(),

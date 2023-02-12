@@ -6,8 +6,8 @@ test_that(".loadContrastDatabase works", {
     expect_error(.loadContrastDatabase(organism = "Human", mode = "error"))
     
     useMode <- "DEMO"
-    seHuman <- .loadContrastDatabase("Human", mode = useMode, mustSucceed = FALSE)
-    seMouse <- .loadContrastDatabase("Mouse", mode = useMode, mustSucceed = FALSE)
+    seHuman <- .loadContrastDatabase("Human", mode = useMode, mustWork = FALSE)
+    seMouse <- .loadContrastDatabase("Mouse", mode = useMode, mustWork = FALSE)
     
     expect_s4_class(seHuman, "SummarizedExperiment")
     expect_s4_class(seMouse, "SummarizedExperiment")
