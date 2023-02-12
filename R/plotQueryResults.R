@@ -192,6 +192,8 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #' @importFrom ggsci pal_jco
 #' @importFrom rlang .data
 #' @importFrom tidyr pivot_longer
+#' @importFrom plyr desc
+#' @importFrom grDevices colorRampPalette
 #'
 plotQueryResultsViolin <- function(query.results, plot = TRUE) {
     CONTRASTS <- names(query.results$TopHits)
@@ -223,7 +225,7 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
             dplyr::slice(seq_len(topn))
         plot_df2$series <- TOP_META[plot_df2$ACC, "series_id"]
 
-        mycolors <- colorRampPalette(ggsci::pal_jco()(10))(length(
+        mycolors <- grDevices::colorRampPalette(ggsci::pal_jco()(10))(length(
             unique(plot_df2$series)))
         mycolors <- colorspace::darken(mycolors, 0.25)
         pos <- ggplot2::position_jitter(width = 0.02, height = 0, seed = 2)
