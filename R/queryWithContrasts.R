@@ -9,7 +9,7 @@
 #'     queried. "DEMO" mode employs a small "toy" database for the queries.
 #'     "DEMO" should only be used for testing/demonstration purposes
 #'     and never for actual analysis purposes.
-#' @param mustSucceed Logical scalar. If \code{FALSE} and the contrast database
+#' @param mustWork Logical scalar. If \code{FALSE} and the contrast database
 #'     is not available, return an empty \code{SummarizedExperiment} object.
 #'     If \code{TRUE} (the default) and the contrast database is
 #'     not available, \code{.loadContrastDatabase} throws an error.
@@ -27,7 +27,7 @@
 #' @noRd
 .loadContrastDatabase <- function(organism = c("Human", "Mouse"),
                                   mode = c("ANALYSIS", "DEMO"),
-                                  mustSucceed = TRUE) {
+                                  mustWork = TRUE) {
     organism <- match.arg(organism)
     mode <- match.arg(mode)
 
@@ -49,7 +49,7 @@
         se <- HDF5Array::loadHDF5SummarizedExperiment(dir = dataDir,
                                                       prefix = prefix)
     } else {
-        if (mustSucceed) {
+        if (mustWork) {
             stop("contrast database for '", organism, "' is not available")
         }
         se <- SummarizedExperiment::SummarizedExperiment()

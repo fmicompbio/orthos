@@ -49,11 +49,11 @@ test_that(".preprocessInput works", {
 ## Checks, .readGeneInformation
 ## ------------------------------------------------------------------------- ##
 test_that(".readGeneInformation works", {
-    expect_error(.readGeneInformation("error", mustSucceed = FALSE))
-    expect_error(.readGeneInformation("error", mustSucceed = TRUE))
+    expect_error(.readGeneInformation("error", mustWork = FALSE))
+    expect_error(.readGeneInformation("error", mustWork = TRUE))
     
-    genesMouse <- .readGeneInformation("mouse", mustSucceed = FALSE)
-    genesHuman <- .readGeneInformation("human", mustSucceed = FALSE)
+    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
     
     expect_s4_class(genesMouse, "DFrame")
     expect_s4_class(genesHuman, "DFrame")
@@ -64,10 +64,10 @@ test_that(".readGeneInformation works", {
     expect_true(all(idTypes %in% colnames(genesHuman)))
     
     skip_if(nrow(genesMouse) > 0 || nrow(genesHuman) > 0,
-            message = "cannot test `mustSucceed` when data is available")
+            message = "cannot test `mustWork` when data is available")
     
-    expect_error(.readGeneInformation("mouse", mustSucceed = TRUE))
-    expect_error(.readGeneInformation("human", mustSucceed = TRUE))
+    expect_error(.readGeneInformation("mouse", mustWork = TRUE))
+    expect_error(.readGeneInformation("human", mustWork = TRUE))
 })
 
 ## ------------------------------------------------------------------------- ##
@@ -75,8 +75,8 @@ test_that(".readGeneInformation works", {
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
-    genesMouse <- .readGeneInformation("mouse", mustSucceed = FALSE)
-    genesHuman <- .readGeneInformation("human", mustSucceed = FALSE)
+    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
 
     skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
             message = paste0("skipping .detectFeatureIdType tests - ",
