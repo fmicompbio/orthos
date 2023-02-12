@@ -222,8 +222,8 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
                                    levels = gsub("_CONTRASTS", "", CONTRASTS))
         # TopN highest values by FRACTION
         plot_df2 <- plot_df |>
-            dplyr::arrange(desc(score)) |>
-            dplyr::group_by(FRACTION) |>
+            dplyr::arrange(plyr::desc(.data$score)) |>
+            dplyr::group_by(.data$FRACTION) |>
             dplyr::slice(seq_len(topn))
         plot_df2$series <- TOP_META[plot_df2$ACC, "series_id"]
 
@@ -233,7 +233,8 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
         pos <- ggplot2::position_jitter(width = 0.02, height = 0, seed = 2)
 
         PLOTS[[dset]] <-
-            ggplot2::ggplot(plot_df, aes(FRACTION, score, fill = FRACTION)) +
+            ggplot2::ggplot(plot_df, aes(.data$FRACTION, .data$score,
+                                         fill = .data$FRACTION)) +
             ggplot2::geom_violin(trim = FALSE, size = 0.6) +
             ggplot2::scale_fill_manual(values = c("#8B451366", "#10701044",
                                                              "#FF550077")) +
@@ -242,11 +243,11 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
             ggplot2::ggtitle(dset) +
             ggplot2::geom_jitter(
                 data = plot_df2,
-                aes(color = series),
+                aes(color = .data$series),
                 size = 1.5, position = pos) +
             ggrepel::geom_text_repel(
                 data = plot_df2,
-                aes(y = .data$score, label = .data$ACC, color = series),
+                aes(y = .data$score, label = .data$ACC, color = .data$series),
                 size = 3, max.overlaps = 10000,
                 position = pos) +
             ggplot2::scale_color_manual(values = mycolors)
