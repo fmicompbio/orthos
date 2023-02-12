@@ -46,7 +46,7 @@ knitr::opts_chunk$set(
 stopifnot(requireNamespace("htmltools"))
 htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
-do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "0"
+do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "1"
 ```
 
 
