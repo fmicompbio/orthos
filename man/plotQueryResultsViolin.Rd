@@ -21,8 +21,10 @@ contrast DBs.
 Visualize query results as violin plots
 }
 \examples{
+\dontrun{
 qRES <- queryWithContrasts(MyDecomposedContrasts)
 plotQueryResults.violin(qRES)
+}
 
 }
 \author{
