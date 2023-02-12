@@ -11,7 +11,12 @@ Authors@R: c(
            role = "aut", comment = c(ORCID = "0000-0002-2269-4934")),
     person("Friedrich Miescher Institute for Biomedical Research", 
            role = c("cph")))
-Description: TODO PUT DESCRIPTION HERE 
+Description:
+    Decompose RNA-seq contrasts, for example obtained from a gene knock-out or
+    compound treatment experiment, into unspecific and experiment-specific
+    components. Original and decomposed contrasts can be queried agains a
+    large database of publicly available contrasts to identify experiments
+    with similar effects.
 License: TODO CHOOSE LICENSE
 Encoding: UTF-8
 LazyData: false
