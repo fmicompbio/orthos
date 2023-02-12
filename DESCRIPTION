@@ -15,7 +15,9 @@ Description: TODO PUT DESCRIPTION HERE
 License: TODO CHOOSE LICENSE
 Encoding: UTF-8
 LazyData: false
-Depends: R (>= 4.0)
+Depends:
+    R (>= 4.0),
+    SummarizedExperiment,
 Imports: 
     basilisk,
     BiocParallel,
@@ -35,7 +37,6 @@ Imports:
     reticulate,
     rlang,
     stats,
-    SummarizedExperiment,
     S4Vectors,
     tensorflow,
     tidyr
