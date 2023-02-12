@@ -36,6 +36,7 @@ Imports:
     rlang,
     stats,
     SummarizedExperiment,
+    S4Vectors,
     tensorflow,
     tidyr
 RoxygenNote: 7.2.3
