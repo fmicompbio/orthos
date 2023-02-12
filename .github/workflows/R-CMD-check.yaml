@@ -100,7 +100,7 @@ jobs:
 
       - name: Show testthat output
         if: always()
-        run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
+        run: find orthos.Rcheck -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload check results
@@ -108,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
-          path: check
+          path: orthos.Rcheck
 
       # - name: Test coverage
       #   if: matrix.config.os == 'macOS-latest'
