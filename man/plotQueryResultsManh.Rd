@@ -20,8 +20,10 @@ different contrast fractions against the respective contrast DBs.
 Visualize query results as a composite manhattan/density plot.
 }
 \examples{
+\dontrun{
 qRES <- queryWithContrasts(MyDecomposedContrasts)
 plotQueryResults.manh(qRES)
+}
 
 }
 \author{
