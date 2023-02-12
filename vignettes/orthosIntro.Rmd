@@ -10,6 +10,10 @@ author:
   affiliation: 
   - &id3 Friedrich Miescher Institute for Biomedical Research, Basel, Switzerland
   - SIB Swiss Institute of Bioinformatics
+- name: Michael Stadler
+  affiliation: 
+  - &id3 Friedrich Miescher Institute for Biomedical Research, Basel, Switzerland
+  - SIB Swiss Institute of Bioinformatics
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('orthos')`"
 output:
@@ -59,26 +63,40 @@ body {
 
 
 
-
-
-
-
-
-
-
 # Introduction
 
-Differential expression analysis upon cellular perturbations is the most commonly used tool for probing molecular mechanisms of action due to its simplicity and low cost. 
-However, the interpretation of such gene expression contrasts is confounded by the complex and nuanced impact of experimental treatments on cellular processes. 
+RNAseq based differential expression analysis upon cellular perturbations,
+such as gene knockout, RNA knockdown or compound treatment experiments, is
+the most commonly used tool for probing molecular mechanisms of action due to
+its simplicity and low cost. 
+However, the interpretation of such gene expression contrasts is confounded by
+the complex and nuanced impact of experimental treatments on cellular processes.
+For example, knockout or over-expression of a transcription factor will not
+only alter the transcription of its direct target genes, but also cause many
+secondary expression changes. The experimentally measured transcript levels are
+a combination of both direct and indirect effects, which makes complicates
+their interpretation.
 
-`orthos` is a generative modelling-based approach that disentangles the experiment-specific from the non-specific effects of perturbations on gene expression. 
-The model is trained on a large corpus (>60K annotated / >0.5M augmented per organism) of gene expression contrasts compiled from the [ARCHS4](https://maayanlab.cloud/archs4/) database of uniformly processed RNAseq experiments. 
-It accurately captures and isolates "**polytopic**" (non-specific, observed across multiple treatments) effects while accounting for context. 
-The residual, **specific** component obtained from this decomposition offers a more unequivocal experimental signature and is a proxy more closely related to the direct molecular effects of a treatment when compared to the raw signal.
+`orthos` is a generative modelling-based approach that disentangles the
+experiment-specific from the non-specific effects of perturbations on gene
+expression. The model is trained on a large corpus of gene expression contrasts
+(for each human and mouse more than 60,000 annotated contrasts, augmented to
+over 0.5 million each), compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)
+database of uniformly processed RNAseq experiments. 
+It accurately captures and isolates **polytopic** effects (non-specific effects
+that are observed across multiple treatments) while accounting for context
+(for example the tissue). 
+When these **polytopic** effects are subtracted from the experimental results,
+the residual **specific** component obtained from this decomposition offers a
+more unequivocal experimental signature and is more closely related to
+the direct molecular effects of the perturbation when compared to the raw signal.
 
-In addition to providing a clearer understanding of the effects of experimental treatments on gene expression, `orthos` also enables researchers to query the contrast database with arbitrary contrasts and identify experiments with similar specific effects, ultimately helping to map treatments to mechanisms of action.
+In addition to providing a clearer understanding of the effects of experimental
+treatments on gene expression, `orthos` also enables researchers to query the
+contrast database with arbitrary contrasts and identify experiments with similar
+specific effects, ultimately helping to map treatments to mechanisms of action.
 
-After installation, the package can be loaded to the user workspace with:
+After installation, the package can be loaded with:
 
 ```{r library}
 library(orthos)
@@ -87,69 +105,106 @@ library(orthos)
 
 A typical analysis involves two steps:
 
-1. Decomposing a contrast/set of contrasts into the(ir) corresponding specific and polytopic fractions using the `decomposeVar()` function and
+1. Decomposing one or several contrasts into their corresponding specific and
+   polytopic fractions using the `decomposeVar()` function and
 
-2. Performing a query with the original and decomposed (specific, polytopic) fractions against the corresponding contrast DBs using the `queryWithContrasts()` function.
-
+2. Performing a query with the original and decomposed specific and polytopic
+   contrasts against the contrast database using the `queryWithContrasts()`
+   function.
 
 
 
 # Demonstration data
 
-To demonstrate the functionality of orthos we use a dataset from the the GEO submission [GSE215150](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE215150).
+To demonstrate the functionality of `orthos` we use a dataset from the the GEO
+series [GSE215150](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE215150).
 
-This series was not part of the `orthos` training or the `orthosDB` constrast database as it was publicly released on January 1st 2023 after the freeze of the training data to the ARCHS4 v2.1.2 database.
+This series was not part of the `orthos` training or the `orthosData` contrast
+database; it was only publicly released on January 1st 2023 after the freeze of
+the training data to the ARCHS4 v2.1.2 database.
 
-The performed experiment involves overexpression (OE) of the MKL/megakaryoblastic leukemia 1 gene (also termed MRTFA/myocardin related transcription factor A) and a constitutively active mutant MKL1 (caMKL1, described in @hu2019mkl1). 
-Both OEs were performed in mouse LM2 and human 4T1 tumor-derived breast cancer cell lines. 
-In addition to the MKL1/caMKL1 OE treatments the series also contains no-treatment controls for each of the two cell lines.
+The performed experiment involves over-expression (OE) of the MKL/megakaryoblastic
+leukemia 1 gene (also termed MRTFA/myocardin related transcription factor A) and
+a constitutively active mutant MKL1 (caMKL1, described in @hu2019mkl1). 
+Both OE experiments were performed in mouse LM2 and human 4T1 tumor-derived
+breast cancer cell lines. 
+In addition to the MKL1/caMKL1 OE samples, the series also contains no-treatment
+controls for each of the two cell lines.
 
-For simplicity the three biological replicates of each condition available in the original series have been collapsed in the data provided in the package.
+For simplicity the three biological replicates of each available condition
+have been collapsed in the data provided in the package.
 
-In the provided form each of the two datasets (Mouse, Human) contains raw counts for >55000 genes identified by gene symbols and three conditions, namely, Control (Ctrl), MKL1 OE (MKL1) and constitutive MKL1 OE (caMKL1):
+In the provided form each of the two datasets (Mouse, Human) contains raw counts
+for over 55,000 genes identified by gene symbols in three conditions:
+Control (Ctrl), MKL1 OE (MKL1) and constitutively-active MKL1 OE (caMKL1):
 
 ```{r}
-MKL1_human <- readRDS(system.file("data", "GSE215150_MKL1_Human.rds", package = "orthos"))
+MKL1_human <- readRDS(system.file("data", "GSE215150_MKL1_Human.rds",
+                                  package = "orthos"))
 head(MKL1_human)
 dim(MKL1_human)
-MKL1_mouse <- readRDS(system.file("data", "GSE215150_MKL1_Mouse.rds", package = "orthos"))
+MKL1_mouse <- readRDS(system.file("data", "GSE215150_MKL1_Mouse.rds",
+                                  package = "orthos"))
 head(MKL1_mouse)
 dim(MKL1_mouse)
 ```
 
 
 
-
-
 # Decomposition of differential gene expression variance into specific and non-specific fractions using `decomposeVar()`
 
-The workhorse behind `orthos` are organism-specific conditional variational autoencoder (cVAE) models that break down the variance of a given differential expression experiment into a non-specific (polytopic) and an experiment-specific fraction. 
-The former corresponds to gene variance that has been observed across multiple instances during training while the latter is variance that is fairly unique to the experiment. 
+The workhorse behind `orthos` are organism-specific conditional variational
+autoencoder (cVAE) models that break down the variance of a given differential
+expression experiment into a non-specific (polytopic) and an experiment-specific
+components. 
+The non-specific (polytopic) component corresponds to gene variance that has
+been observed across multiple instances during training, while the
+experiment-specific variance is fairly unique to the experiment. 
 
-The inputs to the models are gene counts in the form of log-transformed counts-per-million (lcpms) that are used to encode the **"context"** of the performed experiment as well as the actual gene expression contrasts in the form of gene log fold ratios (LFCs). 
-As we will see, calculation of those inputs is by default performed internally given only **raw gene counts** and a specification of the contrasted conditions.
+The inputs to the models are gene counts in the form of log2-transformed
+counts per million (log2 CPM) that are used to encode the **context** of the
+performed experiment as well as the actual gene expression contrasts in the form
+of gene log2 fold-changes (LFCs). 
+As we will see, calculation of those inputs is by default performed internally
+given only **raw gene counts** and a specification of the contrasted conditions.
 
-Given these inputs the model maps the contrast to a concise latent representation (z~D~) which is then used to generate a decoded version of the contrast. 
-This decoded contrast corresponds directly to the **polytopic** (i.e non-specific) fraction of the observed effects; it subsumes the gene variance that the model can account for because it has been encountered, in some form, during training. 
-The residual obtained after removing the decoded contrast from the original one is the specific fraction; this encompasses the gene variance component that the model cannot account for (random noise + specific biological effects).  
+Given these inputs, the model maps the contrast to a concise latent
+representation (z~D~) which is then used to generate a decoded version of the
+contrast. 
+This decoded contrast corresponds directly to the **polytopic** (non-specific)
+component of the observed effects; it subsumes the gene variance that the model
+can account for because it has been encountered, in some form, during training. 
+The residual obtained after removing the decoded contrast from the original one
+is the specific component; this encompasses the gene variance that the model
+cannot account for (random noise + experiment-specific biological effects).  
 
 ![orthos architecture](orthos_arch.png){width=100%}
 
-The function that performs this contrast decomposition into the polytopic and specific fractions is `decomposeVar()`.
-There are two available modes in which the required inputs can be fed into the function:
+The function that performs this contrast decomposition into the polytopic and
+specific components is `decomposeVar()`.
+There are two available modes in which the required inputs can be fed into the
+function:
 
-- In the first mode the user passes the matrix `M` of raw counts (genes in rows, conditions in columns) and two vectors `treatm` and `cntr` of equal length specifying the `M` column indices corresponding to the "treatments" and their respective "controls". 
-The same column indices can be repeated multiple times in these vectors as for example in the case where multiple treatments are paired to the same control. 
+- In the first mode the user passes the matrix `M` of raw counts (genes in rows,
+  conditions in columns) and two vectors `treatm` and `cntr` of equal length
+  specifying the column indices in `M` corresponding to the "treatments" and
+  their respective "controls". The same column indices can be repeated multiple
+  times in these vectors, for example in the case where multiple treatments are
+  paired to the same control. 
 
-- In the second mode the user passes the matrix `M` of raw counts and a second matrix `MD` that contains precalculated LFCs for the contrasts to be analyzed. 
-In this case `M` specifies the context for the corresponding columns of `MD`. 
-Naturally in this case the two matrices need to have the same dimensionality and matching row and column names. 
+- In the second mode the user passes the matrix `M` of raw counts and a second
+  matrix `MD` that contains precalculated log2 fold-changes for the contrasts to
+  be analyzed. In this case, `M` specifies the context for the corresponding
+  columns of `MD`, and thus the two matrices need to have the same
+  dimensionality and identical row- and column-names. 
 
-In both modes the rownames of `M` (and `MD` if specified) need to correspond to some valid gene identifiers (Entrez gene ids, ENSEMBL gene ids, gene symbols or ARCHS4 gene ids). 
-By default the type of gene identifier used is detected automatically.
+In both modes the rownames of `M` (and `MD` if specified) need to correspond 
+valid gene identifiers (currently `orthos` supports Entrez gene identifiers,
+ENSEMBL gene identifiers, gene symbols or ARCHS4 gene identifiers). 
+By default the type of gene identifier is detected automatically.
 
-
-For the MKL1 data typical calls of `decomposeVar()` using mode 1 would look like this:
+For the MKL1 data, typical calls of `decomposeVar()` using the first mode would
+look like this:
 
 ```{r, warning = FALSE, message = FALSE}
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
@@ -159,21 +214,29 @@ dec_MKL1_mouse <- decomposeVar(M = MKL1_mouse, treatm = c(2, 3), cntr = c(1, 1),
                                organism = "Mouse", verbose = FALSE)
 ```
 
-Notice that, of the total gene features present in the input (>55K), only those that are part of the `orthos` model (~20K genes) are used.
-These ~20K `orthos` genes are "sanctioned" according to several criteria (located on canonical chromosomes, no pseudogenes, no ribosomal protein genes, detected in at least a small fraction of the ARCHS4 database). 
+Notice that, of the total gene features present in the input (over 55,000), only
+those that are part of the `orthos` model (~20,000 genes) are used.
+These ~20,000 `orthos` genes are "sanctioned" according to several criteria
+(located on canonical chromosomes, no pseudogenes, no ribosomal protein genes,
+detected in at least a small fraction of the ARCHS4 database). 
 
-The model is highly robust to small fractions of `orthos` genes not being part of the user input, even if those genes are expressed in the context under consideration. 
-That being noted, it is safer to feed in inputs that are as comprehensive as possible (i.e not filtered in any way) in terms of gene features.
+The model is highly robust to small fractions of `orthos` genes not being part
+of the user input, even if those genes are expressed in the context under
+consideration. That being noted, it is safer to feed in inputs that are as
+comprehensive as possible (i.e not filtered in any way) in terms of gene
+features.
 
 
-
-
-
-
-The output of the function is a `SummarizedExperiment` object with dimensions `N` x `M` where `N` is the number of `orthos` genes for that organism and `M` is the number of contrasts specified during input. 
-The object has 4 assay slots corresponding to the input contrasts, decoded (i.e polytopic), and residual (i.e specific) fractions as well as the gene context. 
-Contrasts are represented as LFCs and context is represented as log transformed cpms (lcpms).  
-The `colData` of the object summarizes the proportion of variance accounted for in each decomposed fraction:
+The output of `decomposeVar()` is a `SummarizedExperiment` object with
+dimensions `N` x `M`, where `N` is the number of `orthos` genes for that
+organism and `M` is the number of contrasts specified during input. 
+The object has 4 assay slots corresponding to the input contrasts,
+decoded (polytopic), and residual (specific) components, as well as the gene
+context. 
+Contrasts are represented as log2 fold-changes (LFCs) and context is represented
+as log2-transformed counts per million (log2 CPM).  
+The `colData` of the object summarizes the proportion of variance accounted for
+in each decomposed fraction:
 
 ```{r}
 summary(dec_MKL1_human)
@@ -187,60 +250,77 @@ colData(dec_MKL1_mouse)
 
 # Querying the database of gene contrasts using  `queryWithContrasts()`
 
-Typically the next step of the analysis involves querying the contrasts database (orthosData) to identify public experiments similar to the one(s) under investigation in terms of the original, or decomposed (polytopic, specific fractions). 
-orthosData contains >100K DGE experiments compiled from the ARCHS4 database of publicly available expression data. 
-Each entry in orthosData corresponds to a pair of RNAseq samples contrasting a treatment vs a control. 
-A combination of metadata semantic and quantitative analysis was used to determine the proper assignment of samples to such pairs in orthosData.
+Typically, the next step of the analysis involves querying the contrasts
+database (`orthosData`) to identify public experiments similar to the one(s)
+under investigation, either in terms of the original or decomposed (polytopic/
+specific) contrasts. 
+`orthosData` contains over 100,000 differential gene expression experiments
+compiled from the ARCHS4 database of publicly available expression data. 
+Each entry in `orthosData` corresponds to a pair of RNAseq samples contrasting
+a treatment vs a control condition. 
+A combination of metadata, semantic and quantitative analyses was used to
+determine the proper assignment of samples to such pairs in `orthosData`.
 
-The function that performs the queries of user-provided decomposed samples against orthosData is `queryWithContrasts()`. 
-The input to this function is the `SummarizedExperiment` object obtained in the previous step from `decomposeVar()`. 
-However, users can use a column-subsetted version of this object in case they wish to query the DB with a subset of their decomposed datasets.  
+The function that performs the queries against `orthosData` is
+`queryWithContrasts()`. The input to this function is the `SummarizedExperiment`
+object obtained in the previous step from `decomposeVar()`, either the complete
+object or also one that has been column-subsetted, allowing to query the 
+contrast database with only a subset of the decomposed contrasts.
 
-The function returns a list with three elements per dataset:
+The function returns a list with three elements per query contrast:
 
-- Element "pearson.rhos", is itself a list with each element containing the Pearson correlation values against all the orthosData entries for a specific fraction (input, decoded (polytopic), residual (specific)). 
-- Element "zscores", is also a list with each element containing the z-score transformed version of the values above.
-- Element "TopHits", also a list with detailed orthosData metadata for each of the top `detailTopn` hits per fraction (default 10).
+- "pearson.rhos" is itself a list with each element containing the Pearson
+  correlation values against all the `orthosData` entries for a specific 
+  component (input, decoded (polytopic), residual (specific)). 
+- "zscores" is also a list with each element containing the z-score transformed
+  version of the "pearson.rhos" values.
+- "TopHits" is also a list with detailed `orthosData` metadata for each of the
+  top `detailTopn` hits per component (default 10).
 
 
-In the following examples please note that the queries are run in "DEMO" mode for the sake of efficiency. 
-For actual analysis purposes, the default "ANALYSIS" mode should always be used.
+In the following examples, please note that the queries are run using
+`mode =  "DEMO"` in order to keep computations short. For actual analyses,
+the default `mode = "ANALYSIS"` should be used.
 
 ```{r, fig.width=12}
-# Parallelization parameters:
-BPPARAM <- BiocParallel::MulticoreParam(workers=2)
+# parallelization parameters:
+params <- BiocParallel::MulticoreParam(workers = 2)
 
-#For demonstration purposes. For actual analyses 'mode' should always be "ANALYSIS" (default):
+# for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):
 query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
-                                      BPPARAM = BPPARAM, verbose = FALSE, 
+                                      BPPARAM = params, verbose = FALSE, 
                                       mode = "DEMO")
 
 names(query.res.human)
 
 names(query.res.human$zscores)
 
-# Query datasets in rows, orthosData entries in columns:
+# query contrasts in rows, `orthosData` entries in columns:
 dim(query.res.human$zscores$RESIDUAL_CONTRASTS) 
 summary(t(query.res.human$zscores$RESIDUAL_CONTRASTS))
 
-# Query the database using only the "caMKL1" mouse contrast, suppress plotting:
-# For demonstration purposes. For actual analyses 'mode' should always be "ANALYSIS" (default):
+# query the database using only the "caMKL1" mouse contrast, suppress plotting:
+# for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):
 query.res.mouse <- queryWithContrasts(dec_MKL1_mouse[, "caMKL1"], organism = "Mouse", 
-                                      BPPARAM = BPPARAM, verbose = FALSE, 
+                                      BPPARAM = params, verbose = FALSE, 
                                       plotType = "none", mode = "DEMO")
 
-#Plot the query results for individual contrasts using violin plots:
+# plot results for individual contrasts using violin plots:
 ViolinPlots_mouse <- plotQueryResultsViolin(query.res.mouse, plot = FALSE)
 ViolinPlots_mouse[["caMKL1"]]
 
-#Plot the query results for individual contrasts using composite Manhattan/Density plots:
+# plot results for individual contrasts using composite Manhattan/Density plots:
 ManhDensPlots_mouse <- plotQueryResultsManh(query.res.mouse, plot = FALSE)
 ManhDensPlots_mouse[["caMKL1"]]
 ```
 
-# Accessing the contrast DB
+!!! Discuss the obtained results for the three different queries !!!
 
-!!! This is a placeholder, text and code to be finalized when orthosData are in place !!!
+
+
+# Accessing the contrast database
+
+!!! This is a placeholder, text and code to be finalized when `orthosData` are in place !!!
 
 ```{r}
 organism <- "Mouse"
