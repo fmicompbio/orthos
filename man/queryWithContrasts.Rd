@@ -61,8 +61,11 @@ queried. "DEMO" mode employs a small "toy" database for the queries.
 and never for actual analysis purposes.}
 }
 \value{
-A list of PearsonRhos, Zscores against the database as well as
-    detailed metadata for the detailTopn hits.
+A list with three elements called "pearson.rhos", "zscores" and
+    "TopHitsof", containing raw and z-scored Pearson's rho correlation
+    coefficients between the query contrast(s) and the contrasts in the
+    database, as well as detailed metadata for the \code{detailTopn} best
+    hits.
 }
 \description{
 Query the contrast database with a set of contrasts
