@@ -45,11 +45,14 @@ knitr::opts_chunk$set(
 )
 stopifnot(requireNamespace("htmltools"))
 htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "0"
 ```
 
 
 ```{r, echo=FALSE, out.width='50%', fig.align='center'}
-knitr::include_graphics(path = system.file(package="orthos", "orthos.png", mustWork=TRUE))
+knitr::include_graphics(path = system.file(package = "orthos", "orthos.png",
+                                           mustWork = TRUE))
 ```
 
 
@@ -106,7 +109,7 @@ library(orthos)
 A typical analysis involves two steps:
 
 1. Decomposing one or several contrasts into their corresponding specific and
-   polytopic fractions using the `decomposeVar()` function and
+   polytopic components using the `decomposeVar()` function and
 
 2. Performing a query with the original and decomposed specific and polytopic
    contrasts against the contrast database using the `queryWithContrasts()`
@@ -151,7 +154,7 @@ dim(MKL1_mouse)
 
 
 
-# Decomposition of differential gene expression variance into specific and non-specific fractions using `decomposeVar()`
+# Decomposition of differential gene expression variance into specific and non-specific components using `decomposeVar()`
 
 The workhorse behind `orthos` are organism-specific conditional variational
 autoencoder (cVAE) models that break down the variance of a given differential
@@ -206,7 +209,7 @@ By default the type of gene identifier is detected automatically.
 For the MKL1 data, typical calls of `decomposeVar()` using the first mode would
 look like this:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE, eval = do_eval}
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
                                organism = "Human", verbose = FALSE)
 
@@ -236,9 +239,9 @@ context.
 Contrasts are represented as log2 fold-changes (LFCs) and context is represented
 as log2-transformed counts per million (log2 CPM).  
 The `colData` of the object summarizes the proportion of variance accounted for
-in each decomposed fraction:
+in each decomposed component:
 
-```{r}
+```{r, eval = do_eval}
 summary(dec_MKL1_human)
 colData(dec_MKL1_human) 
 
@@ -282,7 +285,7 @@ In the following examples, please note that the queries are run using
 `mode =  "DEMO"` in order to keep computations short. For actual analyses,
 the default `mode = "ANALYSIS"` should be used.
 
-```{r, fig.width=12}
+```{r, fig.width = 12, eval = do_eval}
 # parallelization parameters:
 params <- BiocParallel::MulticoreParam(workers = 2)
 
@@ -322,7 +325,7 @@ ManhDensPlots_mouse[["caMKL1"]]
 
 !!! This is a placeholder, text and code to be finalized when `orthosData` are in place !!!
 
-```{r}
+```{r, eval = do_eval}
 organism <- "Mouse"
 orthosDB <- HDF5Array::loadHDF5SummarizedExperiment(
     dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
