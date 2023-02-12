@@ -121,24 +121,27 @@
 #'
 queryWithContrasts <- function(contrasts,
                                use = c("expressed.in.both", "all.genes"),
-                               exprThr = 0.25, organism = c("Human", "Mouse"),
+                               exprThr = 0.25,
+                               organism = c("Human", "Mouse"),
                                plotType = c("violin", "manh", "none"),
-                               detailTopn = 10, verbose = TRUE,
+                               detailTopn = 10,
+                               verbose = TRUE,
                                BPPARAM = BiocParallel::bpparam(),
-                               chunk_size = 500, mode = c("ANALYSIS", "DEMO")) {
+                               chunk_size = 500,
+                               mode = c("ANALYSIS", "DEMO")) {
 
     ## -------------------------------------------------------------------------
     ## Check inputs
     ## -------------------------------------------------------------------------
     .assertVector(x = contrasts, type = "SummarizedExperiment")
-    valid.contrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
-                         "RESIDUAL_CONTRASTS")
-    present.contrasts <- intersect(valid.contrasts, names(assays(contrasts)))
+    validContrasts <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS",
+                        "RESIDUAL_CONTRASTS")
+    presentContrasts <- intersect(validContrasts, names(assays(contrasts)))
     stopifnot("The assays slot in the provided SummarizedExperiment does not contain valid contrast names " =
-                  length(present.contrasts) > 0)
+                  length(presentContrasts) > 0)
 
     if (verbose) {
-        message(paste("provided contrast: ", present.contrasts,
+        message(paste("provided contrast: ", presentContrasts,
                       collapse = "\n"))
     }
     use <- match.arg(use)
@@ -149,9 +152,8 @@ queryWithContrasts <- function(contrasts,
     .assertScalar(x = detailTopn, type = "numeric", rngExcl = c(0, Inf))
     .assertScalar(x = verbose, type = "logical")
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
-    stopifnot("BPPARAM must be an instance of a BiocParallelParam class e.g., MulticoreParam, SnowParam or SerialParam" =
-                  identical(attr(class(BPPARAM), "package"), "BiocParallel"))
-
+    .assertScalar(x = BPPARAM, type = "BiocParallelParam")
+    
     ## ------------------------------------------------------------------------
     ## Setup bpprogressbar, initialize cluster
     ## ------------------------------------------------------------------------
@@ -174,14 +176,14 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    target.contrasts <- .loadContrastDatabase(organism = organism, mode)
+    targetContrasts <- .loadContrastDatabase(organism = organism, mode)
 
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
 You can make sure by generating your SE generated using `decomposeVar`" =
-                   identical(rownames(contrasts), rownames(target.contrasts)))
+                   identical(rownames(contrasts), rownames(targetContrasts)))
     context <- SummarizedExperiment::assays(contrasts)[["CONTEXT"]]
-    contrasts <- SummarizedExperiment::assays(contrasts)[present.contrasts]
+    contrasts <- SummarizedExperiment::assays(contrasts)[presentContrasts]
 
     ## -------------------------------------------------------------------------
     ## Calculate correlations
@@ -194,26 +196,28 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         }
         thr <- stats::quantile(context, exprThr)
 
-        pearson.rhos <- sapply(present.contrasts, function(x) {
-            message("Querying contrast database with ", x, "...")
+        pearson.rhos <- sapply(presentContrasts, function(x) {
+            if (verbose) {
+                message("Querying contrast database with ", x, "...")
+            }
             query <- contrasts[[x]]
             query[context <= thr] <- NA
             .grid_cor_wNAs(
                 query,
-                hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
-                hdf5_ctx = SummarizedExperiment::assays(target.contrasts)[["CONTEXT"]],
+                hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
+                hdf5_ctx = SummarizedExperiment::assays(targetContrasts)[["CONTEXT"]],
                 thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size)
         }, simplify = FALSE, USE.NAMES = TRUE
         )
     } else if (use == "all.genes") {
-        pearson.rhos <- sapply(present.contrasts, function(x) {
+        pearson.rhos <- sapply(presentContrasts, function(x) {
             if (verbose) {
                 message("Querying contrast database with ", x, "...")
             }
             query <- contrasts[[x]]
             .grid_cor_woNAs(
                 query,
-                hdf5 = SummarizedExperiment::assays(target.contrasts)[[x]],
+                hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
                 BPPARAM = BPPARAM, chunk_size = chunk_size)
         }, simplify = FALSE, USE.NAMES = TRUE
         )
@@ -225,7 +229,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     if (verbose) {
         message("Compiling query statistics...")
     }
-    zscores <- sapply(present.contrasts, function(x) {
+    zscores <- sapply(presentContrasts, function(x) {
         t(scale(t(pearson.rhos[[x]])))
     }, simplify = FALSE, USE.NAMES = TRUE
     )
@@ -233,10 +237,10 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## -------------------------------------------------------------------------
     ## Get top hits
     ## -------------------------------------------------------------------------
-    TopHits <- sapply(present.contrasts, function(contr) {
+    TopHits <- sapply(presentContrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) {
             N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
-            SummarizedExperiment::colData(target.contrasts)[N, c(3, 12, 22, 24,
+            SummarizedExperiment::colData(targetContrasts)[N, c(3, 12, 22, 24,
                                                                  29, 31, 33)]
         })
     }, simplify = FALSE, USE.NAMES = TRUE
@@ -245,7 +249,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## -------------------------------------------------------------------------
     ## Gather results
     ## -------------------------------------------------------------------------
-    RESULTS <- list(pearson.rhos = pearson.rhos, zscores = zscores,
+    RESULTS <- list(pearson.rhos = pearson.rhos,
+                    zscores = zscores,
                     TopHits = TopHits)
 
     ## -------------------------------------------------------------------------
