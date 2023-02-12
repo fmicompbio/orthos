@@ -11,8 +11,10 @@
 #' different contrast fractions against the respective contrast DBs.
 #'
 #' @examples
+#' \dontrun{
 #' qRES <- queryWithContrasts(MyDecomposedContrasts)
 #' plotQueryResults.manh(qRES)
+#' }
 #'
 #' @importFrom cowplot plot_grid
 #'
