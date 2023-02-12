@@ -34,11 +34,13 @@ Imports:
     ggpubr,
     ggrepel,
     ggsci,
+    grDevices,
     grid,
     HDF5Array,
     keras,
     methods,
     parallel,
+    plyr,
     reticulate,
     rlang,
     stats,
@@ -50,7 +52,8 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    BiocStyle
+    BiocStyle,
+    htmltools
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
