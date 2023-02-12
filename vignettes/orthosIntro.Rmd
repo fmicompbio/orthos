@@ -142,11 +142,11 @@ for over 55,000 genes identified by gene symbols in three conditions:
 Control (Ctrl), MKL1 OE (MKL1) and constitutively-active MKL1 OE (caMKL1):
 
 ```{r}
-MKL1_human <- readRDS(system.file("data", "GSE215150_MKL1_Human.rds",
+MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
                                   package = "orthos"))
 head(MKL1_human)
 dim(MKL1_human)
-MKL1_mouse <- readRDS(system.file("data", "GSE215150_MKL1_Mouse.rds",
+MKL1_mouse <- readRDS(system.file("extdata", "GSE215150_MKL1_Mouse.rds",
                                   package = "orthos"))
 head(MKL1_mouse)
 dim(MKL1_mouse)
