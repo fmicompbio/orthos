@@ -1,5 +1,5 @@
 # orthos
-<img src="orthos.png" alt="orthos" width="200"/>
+<img src="inst/orthos.png" alt="orthos" width="200"/>
 
 Differential expression analysis upon cellular perturbations is the most commonly used tool for probing molecular mechanisms of action due to its simplicity and low cost. However the interpretation of such gene expression contrasts is confounded by the complex and nuanced impact of experimental treatments on cellular processes. 
 
