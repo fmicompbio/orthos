@@ -106,8 +106,11 @@
 #'     "DEMO" should only be used for testing/demonstration purposes
 #'     and never for actual analysis purposes.
 #'
-#' @return A list of PearsonRhos, Zscores against the database as well as
-#'     detailed metadata for the detailTopn hits.
+#' @return A list with three elements called "pearson.rhos", "zscores" and
+#'     "TopHitsof", containing raw and z-scored Pearson's rho correlation
+#'     coefficients between the query contrast(s) and the contrasts in the
+#'     database, as well as detailed metadata for the \code{detailTopn} best
+#'     hits.
 #'
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores
