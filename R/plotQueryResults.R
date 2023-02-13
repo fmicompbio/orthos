@@ -53,7 +53,8 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
                     "The complete list of plots will however be returned by ",
                     "this function.", immediate. = TRUE)
         }
-        combined_plot <- cowplot::plot_grid(plotlist = PLOTS, label_size = 10,
+        combined_plot <- cowplot::plot_grid(plotlist = PLOTS[seq.int(min(length(DATASETS), 3))],
+                                            label_size = 10,
                                             labels = DATASETS, ncol = 1,
                                             nrow = min(length(DATASETS), 3))
         print(combined_plot)
