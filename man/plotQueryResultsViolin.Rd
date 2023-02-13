@@ -4,10 +4,10 @@
 \alias{plotQueryResultsViolin}
 \title{Visualize query results as violin plots}
 \usage{
-plotQueryResultsViolin(query.results, plot = TRUE)
+plotQueryResultsViolin(queryResults, plot = TRUE)
 }
 \arguments{
-\item{query.results}{A list containing the results of a query performed with
+\item{queryResults}{A list containing the results of a query performed with
 \code{queryWithContrasts}}
 
 \item{plot}{Logical scalar specifying if a plot should be generated.}
@@ -28,5 +28,5 @@ plotQueryResults.violin(qRES)
 
 }
 \author{
-Panagiotis Papasaikas
+Panagiotis Papasaikas, Michael Stadler
 }

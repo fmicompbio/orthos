@@ -1,9 +1,9 @@
 #' Visualize query results as a composite manhattan/density plot.
 #'
-#' @author Panagiotis Papasaikas
+#' @author Panagiotis Papasaikas, Michael Stadler
 #' @export
 #'
-#' @param query.results A list containing the results of a query performed with
+#' @param queryResults A list containing the results of a query performed with
 #'     \code{queryWithContrasts}
 #' @param plot Logical scalar specifying if a plot should be generated.
 #'
@@ -18,22 +18,23 @@
 #'
 #' @importFrom cowplot plot_grid
 #'
-plotQueryResultsManh <- function(query.results, plot = TRUE) {
-    CONTRASTS <- names(query.results$TopHits)
-    DATASETS <-  names(query.results$TopHits[[1]])
-    topn <- nrow(query.results$TopHits[[1]][[1]])
-    TOP_META <- unique(as.data.frame(do.call(rbind,
-                                             unlist(query.results$TopHits))))
+plotQueryResultsManh <- function(queryResults, plot = TRUE) {
+    .assertVector(x = queryResults, type = "list")
+    stopifnot("'queryResults' must contain elements 'zscores' and 'TopHits'" = 
+                  all(c("zscores", "TopHits") %in% names(queryResults)))
+    .assertScalar(x = plot, type = "logical")
+    CONTRASTS <- names(queryResults$TopHits)
+    DATASETS <-  names(queryResults$TopHits[[1]])
 
     PLOTS <- list()
     for (dset in DATASETS) {
         DF <- data.frame(
-            idx = seq_along(query.results$zscores[[1]][1, ]),
-            ACC = names(query.results$zscores[[1]][1, ])
+            idx = seq_along(queryResults$zscores[[1]][1, ]),
+            ACC = names(queryResults$zscores[[1]][1, ])
         )
         CONTR.PLOTS <- list()
         for (contrast in CONTRASTS) {
-            DF <- cbind(DF, query.results$zscores[[contrast]][dset, ])
+            DF <- cbind(DF, queryResults$zscores[[contrast]][dset, ])
             CONTR.PLOTS[[contrast]] <- .plotManhDens(
                 query.results$zscores[[contrast]][dset, ],
                 query.results$TopHits[[contrast]][[dset]])
@@ -90,7 +91,7 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 .plotManhDens <- function(scores, annot = "") {
     # validate arguments
     .assertVector(x = scores, type = "numeric")
-    .assertVector(x = annot)
+    .assertVector(x = annot, type = "DataFrame")
 
     # make sure scores have names
     if (is.null(names(scores))) {
@@ -172,7 +173,7 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #' @author Panagiotis Papasaikas
 #' @export
 #'
-#' @param query.results A list containing the results of a query performed with
+#' @param queryResults A list containing the results of a query performed with
 #'     \code{queryWithContrasts}
 #' @param plot Logical scalar specifying if a plot should be generated.
 #'
@@ -199,33 +200,37 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #' @importFrom plyr desc
 #' @importFrom grDevices colorRampPalette
 #'
-plotQueryResultsViolin <- function(query.results, plot = TRUE) {
-    CONTRASTS <- names(query.results$TopHits)
-    DATASETS <-  names(query.results$TopHits[[1]])
-    topn <- nrow(query.results$TopHits[[1]][[1]])
+plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
+    .assertVector(x = queryResults, type = "list")
+    stopifnot("'queryResults' must contain elements 'zscores' and 'TopHits'" = 
+                  all(c("zscores", "TopHits") %in% names(queryResults)))
+    .assertScalar(x = plot, type = "logical")
+    CONTRASTS <- names(queryResults$TopHits)
+    DATASETS <-  names(queryResults$TopHits[[1]])
+    topn <- nrow(queryResults$TopHits[[1]][[1]])
     TOP_META <- unique(as.data.frame(do.call(rbind,
-                                             unlist(query.results$TopHits))))
+                                             unlist(queryResults$TopHits))))
 
     PLOTS <- list()
     for (dset in DATASETS) {
         DF <- data.frame(
-            idx = seq_along(query.results$zscores[[1]][1, ]),
-            ACC = names(query.results$zscores[[1]][1, ])
+            idx = seq_along(queryResults$zscores[[1]][1, ]),
+            ACC = names(queryResults$zscores[[1]][1, ])
         )
         for (contrast in CONTRASTS) {
-            DF <- cbind(DF, query.results$zscores[[contrast]][dset, ])
+            DF <- cbind(DF, queryResults$zscores[[contrast]][dset, ])
         }
 
         colnames(DF)[-seq_len(2)] <- gsub("_CONTRASTS", "", CONTRASTS)
         plot_df <- tidyr::pivot_longer(DF, cols = 3:ncol(DF),
-                                       names_to = "FRACTION",
+                                       names_to = "COMPONENT",
                                        values_to = "score")
-        plot_df$FRACTION <- factor(plot_df$FRACTION,
-                                   levels = gsub("_CONTRASTS", "", CONTRASTS))
-        # TopN highest values by FRACTION
+        plot_df$COMPONENT <- factor(plot_df$COMPONENT,
+                                    levels = gsub("_CONTRASTS", "", CONTRASTS))
+        # TopN highest values by COMPONENT
         plot_df2 <- plot_df |>
             dplyr::arrange(plyr::desc(.data$score)) |>
-            dplyr::group_by(.data$FRACTION) |>
+            dplyr::group_by(.data$COMPONENT) |>
             dplyr::slice(seq_len(topn))
         plot_df2$series <- TOP_META[plot_df2$ACC, "series_id"]
 
