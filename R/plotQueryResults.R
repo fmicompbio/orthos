@@ -146,7 +146,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
         ggplot2::ggplot(data = DF, aes(x = .data$idx, y = .data$score)) +
         ggplot2::scale_y_continuous(limits = c(min(DF$score),
                                                max(DF$score) * expand_y)) +
-        ggplot2::geom_bin2d(bins = 200) +
+        ggplot2::geom_bin2d(bins = 200, na.rm = TRUE) +
         ggplot2::scale_fill_continuous(type = "viridis") +
         ggplot2::theme_bw() +
         ggplot2::geom_point(
