@@ -79,8 +79,10 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #' @noRd
 #'
 #' @examples
+#' \dontrun{
 #'  qRES <- queryWithContrasts(MyDecomposedContrasts)
 #' .plotManhDens(qRES$zscores[[1]][1, ], qRES$TopHits[[contrast]][[dset]])
+#' }
 #'
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
 #'     theme_bw geom_bin2d ggplot labs
