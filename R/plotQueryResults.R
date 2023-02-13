@@ -8,7 +8,7 @@
 #' @param plot Logical scalar specifying if a plot should be generated.
 #'
 #' @return A composite manhattan/density plot for the scores of queries using
-#' different contrast fractions against the respective contrast DBs.
+#' different contrast components against the respective contrast DBs.
 #'
 #' @examples
 #' \dontrun{
@@ -178,7 +178,7 @@ plotQueryResultsManh <- function(query.results, plot = TRUE) {
 #'
 #'
 #' @return A list of ggplot violin plots (one for each dataset) for the scores
-#' of queries using different contrast fractions against the respective
+#' of queries using different contrast components against the respective
 #' contrast DBs.
 #'
 #' @examples
@@ -235,8 +235,8 @@ plotQueryResultsViolin <- function(query.results, plot = TRUE) {
         pos <- ggplot2::position_jitter(width = 0.02, height = 0, seed = 2)
 
         PLOTS[[dset]] <-
-            ggplot2::ggplot(plot_df, aes(.data$FRACTION, .data$score,
-                                         fill = .data$FRACTION)) +
+            ggplot2::ggplot(plot_df, aes(.data$COMPONENT, .data$score,
+                                         fill = .data$COMPONENT)) +
             ggplot2::geom_violin(trim = FALSE, size = 0.6) +
             ggplot2::scale_fill_manual(values = c("#8B451366", "#10701044",
                                                              "#FF550077")) +
