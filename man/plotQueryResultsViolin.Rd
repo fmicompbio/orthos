@@ -14,7 +14,7 @@ plotQueryResultsViolin(query.results, plot = TRUE)
 }
 \value{
 A list of ggplot violin plots (one for each dataset) for the scores
-of queries using different contrast fractions against the respective
+of queries using different contrast components against the respective
 contrast DBs.
 }
 \description{
