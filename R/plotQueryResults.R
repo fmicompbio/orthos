@@ -36,8 +36,9 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
         for (contrast in CONTRASTS) {
             DF <- cbind(DF, queryResults$zscores[[contrast]][dset, ])
             CONTR.PLOTS[[contrast]] <- .plotManhDens(
-                query.results$zscores[[contrast]][dset, ],
-                query.results$TopHits[[contrast]][[dset]])
+                queryResults$zscores[[contrast]][dset, ],
+                queryResults$TopHits[[contrast]][[dset]],
+                "z-score")
         }
         PLOTS[[dset]] <- cowplot::plot_grid(
             plotlist = CONTR.PLOTS, label_size = 8,
@@ -64,11 +65,13 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 
 #' Visualize query results as a composite Manhattan/Density plot
 #'
-#' @author Panagiotis Papasaikas
+#' @author Panagiotis Papasaikas, Michael Stadler
 #'
 #' @param scores Numeric named vector (typically of z-scores) to use for
 #'     visualization
 #' @param annot Annotation dataframe for the topn results to highlight
+#' @param scoreType Character scalar describing the type of \code{scores}
+#'     (use to label the y axis).
 #'
 #' @return A composite manhattan/density plot
 #'
@@ -80,7 +83,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #' .plotManhDens(qRES$zscores[[1]][1, ], qRES$TopHits[[contrast]][[dset]])
 #'
 #' @importFrom ggplot2 element_blank theme geom_point aes scale_fill_continuous
-#'     theme_bw geom_bin2d ggplot
+#'     theme_bw geom_bin2d ggplot labs
 #' @importFrom ggpubr ggdensity rotate clean_theme
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom cowplot plot_grid
@@ -88,7 +91,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #' @importFrom dplyr filter
 #' @importFrom rlang .data
 #'
-.plotManhDens <- function(scores, annot = "") {
+.plotManhDens <- function(scores, annot = "", scoreType = "z-score") {
     # validate arguments
     .assertVector(x = scores, type = "numeric")
     .assertVector(x = annot, type = "DataFrame")
@@ -147,6 +150,8 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
             data = DF[annot$geo_accession, ],
             aes(color = annot$series_id),
             size = 1.5) +
+        ggplot2::labs(x = "Contrast index",
+                      y = paste0("Similarity (", scoreType, ")")) +
         ggrepel::geom_text_repel(
             data = DF[DF$ACC %in% annot$geo_accession, ],
             aes(x = .data$idx, y = .data$score, label = .data$ACC),
@@ -170,7 +175,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 
 #' Visualize query results as violin plots
 #'
-#' @author Panagiotis Papasaikas
+#' @author Panagiotis Papasaikas, Michael Stadler
 #' @export
 #'
 #' @param queryResults A list containing the results of a query performed with
@@ -192,7 +197,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #' @importFrom colorspace darken
 #' @importFrom cowplot plot_grid
 #' @importFrom ggplot2 ggplot ggtitle geom_jitter geom_violin position_jitter
-#'     scale_color_manual scale_fill_manual theme theme_minimal
+#'     scale_color_manual scale_fill_manual theme theme_minimal labs
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom ggsci pal_jco
 #' @importFrom rlang .data
@@ -252,6 +257,8 @@ plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
                 data = plot_df2,
                 aes(color = .data$series),
                 size = 1.5, position = pos) +
+            ggplot2::labs(x = "Contrast component",
+                          y = "Similarity (z-score)") +
             ggrepel::geom_text_repel(
                 data = plot_df2,
                 aes(y = .data$score, label = .data$ACC, color = .data$series),
@@ -266,9 +273,9 @@ plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
                     "The complete list of plots will however be returned by ",
                     "this function.", immediate. = TRUE)
         }
-    combined_plot <- cowplot::plot_grid(
-        plotlist = PLOTS[seq_len(min(length(PLOTS), 4))])
-    print(combined_plot)
+        combined_plot <- cowplot::plot_grid(
+            plotlist = PLOTS[seq_len(min(length(PLOTS), 4))])
+        print(combined_plot)
     }
 
     return(invisible(PLOTS))
