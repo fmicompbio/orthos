@@ -46,16 +46,42 @@ test_that(".preprocessInput works", {
 })
 
 ## ------------------------------------------------------------------------- ##
+## Checks, .readGeneInformation
+## ------------------------------------------------------------------------- ##
+test_that(".readGeneInformation works", {
+    expect_error(.readGeneInformation("error", mustWork = FALSE))
+    expect_error(.readGeneInformation("error", mustWork = TRUE))
+    
+    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    
+    expect_s4_class(genesMouse, "DFrame")
+    expect_s4_class(genesHuman, "DFrame")
+    
+    idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
+                 "ENTREZ_GENE_ID", "ARCHS4_ID")
+    expect_true(all(idTypes %in% colnames(genesMouse)))
+    expect_true(all(idTypes %in% colnames(genesHuman)))
+    
+    skip_if(nrow(genesMouse) > 0 || nrow(genesHuman) > 0,
+            message = "cannot test `mustWork` when data is available")
+    
+    expect_error(.readGeneInformation("mouse", mustWork = TRUE))
+    expect_error(.readGeneInformation("human", mustWork = TRUE))
+})
+
+## ------------------------------------------------------------------------- ##
 ## Checks, .detectFeatureIdType
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
-    genesMouse <- readRDS(system.file("extdata",
-                                      "ARCHS4_v212_feature_genes_Mouse.rds",
-                                      package = "orthos"))
-    genesHuman <- readRDS(system.file("extdata",
-                                      "ARCHS4_v212_feature_genes_Human.rds",
-                                      package = "orthos"))
+    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+
+    skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
+            message = paste0("skipping .detectFeatureIdType tests - ",
+                             "gene information not vailable"))
+    
     idTypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL",
                  "ENTREZ_GENE_ID", "ARCHS4_ID")
     nr <- 1000
@@ -115,4 +141,92 @@ test_that(".detectFeatureIdType works", {
                         ARCHS4_ID = "ARCHS4_ID")
     expect_identical(resMouseL, resExpected)
     expect_identical(resHumanL, resExpected)
+})
+
+
+## ------------------------------------------------------------------------- ##
+## Checks, decomposeVar
+## ------------------------------------------------------------------------- ##
+test_that("decomposeVar works", {
+    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    
+    skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
+            message = paste0("skipping decomposeVar tests - ",
+                             "gene information not vailable"))
+
+    fnameHuman <- system.file("extdata", "GSE215150_MKL1_Human.rds",
+                              package = "orthos", mustWork = TRUE)
+    fnameMouse <- system.file("extdata", "GSE215150_MKL1_Mouse.rds",
+                              package = "orthos", mustWork = TRUE)
+
+    countsHuman <- readRDS(fnameHuman)
+    countsMouse <- readRDS(fnameMouse)
+    
+    decHuman <- decomposeVar(M = countsHuman, treatm = c(2, 3), cntr = c(1, 1), 
+                             organism = "Human", verbose = FALSE)
+    decMouse <- decomposeVar(M = countsMouse, treatm = c(2, 3), cntr = c(1, 1),
+                             organism = "Mouse", verbose = FALSE)
+    
+    expect_s4_class(decHuman, "SummarizedExperiment")
+    expect_s4_class(decMouse, "SummarizedExperiment")
+    
+    expect_identical(colnames(decHuman), c("MKL1", "caMKL1"))
+    expect_identical(colnames(decMouse), c("MKL1", "caMKL1"))
+    
+    anms <- c("INPUT_CONTRASTS", "DECODED_CONTRASTS", "RESIDUAL_CONTRASTS", 
+              "CONTEXT")
+    expect_identical(SummarizedExperiment::assayNames(decHuman), anms)
+    expect_identical(SummarizedExperiment::assayNames(decMouse), anms)
+    
+    for (anm1 in anms) {
+        expect_type(assay(decHuman, anm1), "double")
+        expect_type(assay(decMouse, anm1), "double")
+    }
+    
+    expect_identical(dim(decHuman), c(20411L, 2L))
+    expect_identical(dim(decMouse), c(20339L, 2L))
+    
+    expect_equal(colSums(assay(decHuman, "INPUT_CONTRASTS")),
+                 c(MKL1 = -287.736062968947, caMKL1 = -2875.33388549955))
+    expect_equal(colSums(assay(decHuman, "DECODED_CONTRASTS")),
+                 c(MKL1 = -345.53792401588, caMKL1 = -2228.12848719998))
+    expect_equal(colSums(assay(decHuman, "RESIDUAL_CONTRASTS")),
+                 c(MKL1 = 57.8018610469331, caMKL1 = -647.205398299573))
+    expect_equal(colSums(assay(decHuman, "CONTEXT")),
+                 c(MKL1 = 78030.7107896163, caMKL1 = 78030.7107896163))
+    
+    expect_equal(colSums(assay(decMouse, "INPUT_CONTRASTS")),
+                 c(MKL1 = -205.650429365804, caMKL1 = -637.007214334137))
+    expect_equal(colSums(assay(decMouse, "DECODED_CONTRASTS")),
+                 c(MKL1 = -99.0546978751445, caMKL1 = -586.600493863487))
+    expect_equal(colSums(assay(decMouse, "RESIDUAL_CONTRASTS")),
+                 c(MKL1 = -106.595731490659, caMKL1 = -50.40672047065))
+    expect_equal(colSums(assay(decMouse, "CONTEXT")),
+                 c(MKL1 = 79313.4220740248, caMKL1 = 79313.4220740248))
+    
+    idsHuman <- intersect(rownames(countsHuman), rownames(decHuman))
+    idsMouse <- intersect(rownames(countsMouse), rownames(decMouse))
+    
+    expect_length(idsHuman, 18051L)
+    expect_length(idsMouse, 19776L)
+    
+    decHuman2 <- decomposeVar(M = countsHuman[idsHuman, 2:3],
+                              MD = assay(decHuman, "INPUT_CONTRASTS")[idsHuman, ], 
+                              organism = "Human", verbose = TRUE)
+    decMouse2 <- decomposeVar(M = countsMouse[idsMouse, 2:3],
+                              MD = assay(decMouse, "INPUT_CONTRASTS")[idsMouse, ],
+                              organism = "Mouse", verbose = TRUE)
+    
+    expect_identical(dim(decHuman), dim(decHuman2))
+    expect_identical(dim(decMouse), dim(decMouse2))
+    
+    expect_true(all(
+        diag(cor(assay(decHuman, "RESIDUAL_CONTRASTS"),
+                 assay(decHuman2, "RESIDUAL_CONTRASTS"))) > 0.99
+    ))
+    expect_true(all(
+        diag(cor(assay(decMouse, "RESIDUAL_CONTRASTS"),
+                 assay(decMouse2, "RESIDUAL_CONTRASTS"))) > 0.64
+    ))
 })

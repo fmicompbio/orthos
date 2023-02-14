@@ -1,6 +1,6 @@
 Package: orthos
 Type: Package
-Title: `orthos` is an R package for variance decomposition using conditional variational auto-encoders.
+Title: `orthos` is an R package for variance decomposition using conditional variational auto-encoders
 Version: 0.1.0
 Authors@R: c(
     person("Panagiotis", "Papasaikas", email = "panagiotis.papasaikas@fmi.ch",
@@ -11,33 +11,51 @@ Authors@R: c(
            role = "aut", comment = c(ORCID = "0000-0002-2269-4934")),
     person("Friedrich Miescher Institute for Biomedical Research", 
            role = c("cph")))
-Description: TODO PUT DESCRIPTION HERE 
-License: TODO CHOOSE LICENSE
+Description:
+    Decompose RNA-seq contrasts, for example obtained from a gene knock-out or
+    compound treatment experiment, into unspecific and experiment-specific
+    components. Original and decomposed contrasts can be queried agains a
+    large database of publicly available contrasts to identify experiments
+    with similar effects.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-Depends: R (>= 4.0)
+Depends:
+    R (>= 4.0),
+    SummarizedExperiment,
 Imports: 
     basilisk,
     BiocParallel,
+    colorspace,
     cowplot,
     DelayedArray,
     dplyr,
     ggplot2,
     ggpubr,
     ggrepel,
+    ggsci,
+    grDevices,
+    grid,
     HDF5Array,
     keras,
     methods,
+    parallel,
+    plyr,
     reticulate,
     rlang,
     stats,
-    SummarizedExperiment,
-    tensorflow
+    S4Vectors,
+    tensorflow,
+    tidyr
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat (>= 3.0.0),
+    BiocStyle,
+    BiocManager,
     knitr,
-    rmarkdown
+    htmltools,
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 StagedInstall: no
+biocViews: RNASeq, DifferentialExpression, GeneExpression
