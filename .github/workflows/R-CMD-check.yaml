@@ -27,6 +27,7 @@ jobs:
       CRAN: ${{ matrix.config.cran }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
       ORTHOS_MODEL_EVAL: 0
 
@@ -110,13 +111,13 @@ jobs:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
           path: orthos.Rcheck
 
-      # - name: Test coverage
-      #   if: matrix.config.os == 'macOS-latest'
-      #   run: |
-      #     install.packages("covr")
-      #     covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")
-      #   shell: Rscript {0}
-      # 
+      - name: Test coverage
+        if: matrix.config.os == 'ubuntu-latest'
+        run: |
+          install.packages("covr")
+          covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")
+        shell: Rscript {0}
+
       # - name: Deploy
       #   if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.config.os == 'macOS-latest'
       #   run: |
