@@ -2,27 +2,30 @@
 % Please edit documentation in R/plotQueryResults.R
 \name{plotQueryResultsManh}
 \alias{plotQueryResultsManh}
-\title{Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}}
+\title{Visualize query results as a composite manhattan/density plot.}
 \usage{
-plotQueryResultsManh(query.results, plot = TRUE)
+plotQueryResultsManh(queryResults, plot = TRUE)
 }
 \arguments{
-\item{query.results}{A list containing the results of a query performed with 
+\item{queryResults}{A list containing the results of a query performed with
 \code{queryWithContrasts}}
 
-\item{plot}{Boolean specifying if a plot should be generated.}
+\item{plot}{Logical scalar specifying if a plot should be generated.}
 }
 \value{
-A composite manhattan/density plot for the scores of queries using different contrast fractions against the respective contrast DBs
+A composite manhattan/density plot for the scores of queries using
+different contrast components against the respective contrast DBs.
 }
 \description{
-Visualize query results as a composite manhattan/density plot. This is a wrapper around \code{.plotManhDens}
+Visualize query results as a composite manhattan/density plot.
 }
 \examples{
+\dontrun{
 qRES <- queryWithContrasts(MyDecomposedContrasts)
 plotQueryResults.manh(qRES)
+}
 
 }
 \author{
-Panagiotis Papasaikas
+Panagiotis Papasaikas, Michael Stadler
 }
