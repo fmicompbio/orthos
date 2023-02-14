@@ -180,7 +180,7 @@ The function returns a list with three elements per dataset:
 - Element "TopHits", also a list with detailed orthosDB metadata for each of the top `detailTopn` hits per fraction (default 10).
 
 
-In the following examples please note that the queries are run in "DEMO" mode for the sake of efficiency. For actual analysis purposes the defaul "ANALYSIS" mode should always be used.
+In the following examples please note that the queries are run in "DEMO" mode for the sake of efficiency. For actual analysis purposes the default "ANALYSIS" mode should always be used.
 
 ```{r,  fig.width=12}
 # Parallelization parameters:
