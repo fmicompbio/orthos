@@ -85,7 +85,7 @@ experiment-specific from the non-specific effects of perturbations on gene
 expression. The model is trained on a large corpus of gene expression contrasts
 (for each human and mouse more than 60,000 annotated contrasts, augmented to
 over 0.5 million each), compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)
-database of uniformly processed RNAseq experiments. 
+database of uniformly processed RNAseq experiments (@lachmann2018massive). 
 It accurately captures and isolates **polytopic** effects (non-specific effects
 that are observed across multiple treatments) while accounting for context
 (for example the tissue). 
@@ -201,7 +201,7 @@ function:
   columns of `MD`, and thus the two matrices need to have the same
   dimensionality and identical row- and column-names. 
 
-In both modes the rownames of `M` (and `MD` if specified) need to correspond 
+In both modes the rownames of `M` (and `MD` if specified) need to correspond to 
 valid gene identifiers (currently `orthos` supports Entrez gene identifiers,
 ENSEMBL gene identifiers, gene symbols or ARCHS4 gene identifiers). 
 By default the type of gene identifier is detected automatically.
@@ -258,7 +258,7 @@ database (`orthosData`) to identify public experiments similar to the one(s)
 under investigation, either in terms of the original or decomposed (polytopic/
 specific) contrasts. 
 `orthosData` contains over 100,000 differential gene expression experiments
-compiled from the ARCHS4 database of publicly available expression data. 
+compiled from the ARCHS4 database of publicly available expression data (@lachmann2018massive). 
 Each entry in `orthosData` corresponds to a pair of RNAseq samples contrasting
 a treatment vs a control condition. 
 A combination of metadata, semantic and quantitative analyses was used to
