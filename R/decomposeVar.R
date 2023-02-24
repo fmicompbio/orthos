@@ -261,7 +261,12 @@ decomposeVar <- function(M,
                                         M = M,
                                         maxMissing = 10000,
                                         verbose = verbose)
-
+    # Indices of input features in the model feature vector
+    idx.commonF1 <- na.omit(match(rownames(M), toupper(genes[, featureType])))
+    # Indices of model features in the input feature vector (i.e the rownames
+    # of M)
+    idx.commonR1 <- which(rownames(M) %in% toupper(genes[, featureType]))
+    
     ## -------------------------------------------------------------------------
     ## Preprocess input (NAs -> 0, LibNormalize, LogTransform):
     ## -------------------------------------------------------------------------
@@ -346,6 +351,9 @@ decomposeVar <- function(M,
     RESULT <- SummarizedExperiment(assays = decomposed.contrasts,
                                    colData = list(ACCOUNTED_VARIANCE = VAR_DEC))
     rownames(RESULT) <- rownames(genes)
+    rowData(RESULT)$User_provided_IDs <- rep(NA,nrow(RESULT))
+    rowData(RESULT)$User_provided_IDs[idx.commonF1] <- geneIDs[idx.commonR1]
+
     if (verbose) {
         message("Done!")
     }
