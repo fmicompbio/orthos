@@ -239,9 +239,16 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     ## -------------------------------------------------------------------------
     TopHits <- sapply(presentContrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) {
-            N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
-            SummarizedExperiment::colData(targetContrasts)[N, c(3, 12, 22, 24,
-                                                                 29, 31, 33)]
+            #N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
+            Zscore <- sort(x, decreasing = TRUE)[seq_len(detailTopn)]
+            N <- names(Zscore)
+            DBinfo <- SummarizedExperiment::colData(targetContrasts)[N, c(12, 29, 3, 22, 24,
+                                                                          33, 31)]
+            colnames(DBinfo)[colnames(DBinfo)=="CNTname"] <- "CNT_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo)=="geo_accession"] <- "TREATM_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo)=="Cor2CNT"] <- "corr_TREATM_CNT"
+            cbind(Zscore, DBinfo)
+            
         })
     }, simplify = FALSE, USE.NAMES = TRUE
     )
