@@ -318,13 +318,13 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basiliskRun(env = orthosenv, fun = .predict_encoder,
+    LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoder,
                         organism = organism,
                         gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basiliskRun(env = orthosenv, fun = .predict_encoderd,
+    res <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoderd,
                        organism = organism,
                        delta_input = D, context = LATC)
     LATD <- res$LATD
@@ -366,11 +366,18 @@ decomposeVar <- function(M,
 #'
 #' @importFrom keras load_model_hdf5
 #' @importFrom stats predict
+#' @importFrom ExperimentHub ExperimentHub
+#' @importFrom AnnotationHub query
 #'
 .predict_encoder <- function(gene_input, organism) {
     encoder_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/ContextEncoder_ARCHS4_v212_"
     encoder_path <- paste0(encoder_path, organism, ".hdf5")
     encoder <- keras::load_model_hdf5(encoder_path, compile = FALSE)
+    
+    query_keys <- c( "orthosData", "ContextEncoder_",organism, "ARCHS4" )
+    hub <- ExperimentHub::ExperimentHub()
+    encoder <- AnnotationHub::query(hub, query_keys)[[1]]
+    
     predict(encoder, list(gene_input = gene_input))
 }
 
@@ -397,4 +404,13 @@ decomposeVar <- function(M,
     DEC <- t(predict(generatorD, cbind(LATD, context)))
 
     list(LATD = LATD, DEC = DEC)
+}
+
+
+
+testHub <- function(){
+query_keys <- c( "orthosData", "ContextEncoder_","Mouse", "ARCHS4" )
+hub <- ExperimentHub::ExperimentHub()
+encoder <- AnnotationHub::query(hub, query_keys)[[1]]
+return(encoder)
 }
