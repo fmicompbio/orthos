@@ -370,10 +370,11 @@ decomposeVar <- function(M,
 #' @importFrom AnnotationHub query
 #'
 .predict_encoder <- function(gene_input, organism) {
-    encoder_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/ContextEncoder_ARCHS4_v212_"
-    encoder_path <- paste0(encoder_path, organism, ".hdf5")
-    encoder <- keras::load_model_hdf5(encoder_path, compile = FALSE)
+    #encoder_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/ContextEncoder_ARCHS4_v212_"
+    #encoder_path <- paste0(encoder_path, organism, ".hdf5")
+    #encoder <- keras::load_model_hdf5(encoder_path, compile = FALSE)
     
+    ## Load model from ExperimentHub:
     query_keys <- c( "orthosData", "ContextEncoder_",organism, "ARCHS4" )
     hub <- ExperimentHub::ExperimentHub()
     encoder <- AnnotationHub::query(hub, query_keys)[[1]]
@@ -386,18 +387,27 @@ decomposeVar <- function(M,
 #'
 #' @importFrom keras load_model_hdf5
 #' @importFrom stats predict
+#' @importFrom ExperimentHub ExperimentHub
+#' @importFrom AnnotationHub query
 #'
 .predict_encoderd <- function(delta_input, context, organism) {
     ## Load contrast encoder and generator models:
-    encoderD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaEncoder_FT_ARCHS4_v212_"
-    generatorD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaDecoder_FT_ARCHS4_v212_"
+    #encoderD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaEncoder_FT_ARCHS4_v212_"
+    #generatorD_path <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Trained_models/deJUNKER_models/DeltaDecoder_FT_ARCHS4_v212_"
 
-    encoderD_path <- paste0(encoderD_path, organism, ".hdf5")
-    generatorD_path <- paste0(generatorD_path, organism, ".hdf5")
+    #encoderD_path <- paste0(encoderD_path, organism, ".hdf5")
+    #generatorD_path <- paste0(generatorD_path, organism, ".hdf5")
 
-    encoderD <- keras::load_model_hdf5(encoderD_path, compile = FALSE)
-    generatorD <- keras::load_model_hdf5(generatorD_path, compile = FALSE)
-
+    #encoderD <- keras::load_model_hdf5(encoderD_path, compile = FALSE)
+    #generatorD <- keras::load_model_hdf5(generatorD_path, compile = FALSE)
+    
+    ## Load models from ExperimentHub:
+    query_keysE <- c( "orthosData", "DeltaEncoder_",organism, "ARCHS4" )
+    query_keysD <- c( "orthosData", "DeltaDecoder_",organism, "ARCHS4" )
+    hub <- ExperimentHub::ExperimentHub()
+    encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
+    generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
+    
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input,
                                    CONTEXT = context))
@@ -407,10 +417,3 @@ decomposeVar <- function(M,
 }
 
 
-
-testHub <- function(){
-query_keys <- c( "orthosData", "ContextEncoder_","Mouse", "ARCHS4" )
-hub <- ExperimentHub::ExperimentHub()
-encoder <- AnnotationHub::query(hub, query_keys)[[1]]
-return(encoder)
-}
