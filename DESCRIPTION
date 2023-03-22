@@ -1,28 +1,26 @@
-Package: orthos
 Type: Package
-Title: `orthos` is an R package for variance decomposition using conditional variational auto-encoders
+Package: orthos
+Title: `orthos` is an R package for variance decomposition using
+    conditional variational auto-encoders
 Version: 0.1.0
 Authors@R: c(
-    person("Panagiotis", "Papasaikas", email = "panagiotis.papasaikas@fmi.ch",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1640-7636")),
-    person("Charlotte", "Soneson", email = "charlotte.soneson@fmi.ch", 
-           role = "aut", comment = c(ORCID = "0000-0003-3833-2169")),
-    person("Michael", "Stadler", email = "michael.stadler@fmi.ch", 
-           role = "aut", comment = c(ORCID = "0000-0002-2269-4934")),
-    person("Friedrich Miescher Institute for Biomedical Research", 
-           role = c("cph")))
-Description:
-    Decompose RNA-seq contrasts, for example obtained from a gene knock-out or
-    compound treatment experiment, into unspecific and experiment-specific
-    components. Original and decomposed contrasts can be queried agains a
-    large database of publicly available contrasts to identify experiments
-    with similar effects.
+    person("Panagiotis", "Papasaikas", , "panagiotis.papasaikas@fmi.ch", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1640-7636")),
+    person("Charlotte", "Soneson", , "charlotte.soneson@fmi.ch", role = "aut",
+           comment = c(ORCID = "0000-0003-3833-2169")),
+    person("Michael", "Stadler", , "michael.stadler@fmi.ch", role = "aut",
+           comment = c(ORCID = "0000-0002-2269-4934")),
+    person("Friedrich Miescher Institute for Biomedical Research", role = "cph")
+  )
+Description:Decompose RNA-seq contrasts, for example obtained from a gene
+    knock-out or compound treatment experiment, into unspecific and
+    experiment-specific components. Original and decomposed contrasts can
+    be queried agains a large database of publicly available contrasts to
+    identify experiments with similar effects.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: false
 Depends:
     R (>= 4.0),
-    SummarizedExperiment,
+    SummarizedExperiment
 Imports: 
     basilisk,
     BiocParallel,
@@ -39,23 +37,29 @@ Imports:
     HDF5Array,
     keras,
     methods,
+    orthosData,
     parallel,
     plyr,
     reticulate,
     rlang,
-    stats,
     S4Vectors,
+    stats,
     tensorflow,
     tidyr
-RoxygenNote: 7.2.3
 Suggests: 
-    BiocStyle,
     BiocManager,
-    knitr,
+    BiocStyle,
     htmltools,
+    knitr,
     rmarkdown,
     testthat (>= 3.0.0)
-Config/testthat/edition: 3
-VignetteBuilder: knitr
-StagedInstall: no
+Remotes:
+    fmicompbio/orthosData
+VignetteBuilder: 
+    knitr
 biocViews: RNASeq, DifferentialExpression, GeneExpression
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: false
+RoxygenNote: 7.2.3
+StagedInstall: no
