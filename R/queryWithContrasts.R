@@ -88,7 +88,7 @@
 #'     expression value above which a gene is considered to be expressed. This
 #'     same value is then used for thresholding the contrast database. Only
 #'     applies when use="expressed.in.both"
-#' @param organism Selects the autoencoder model trained on data from this
+#' @param organism Uses the `orthosData` contrast Database  from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param plotType Select the type of visualization for the query results
 #'     \code{"violin", "manh"} or \code{"none"} to suppress
