@@ -21,13 +21,15 @@ License: MIT + file LICENSE
 Depends:
     R (>= 4.0),
     SummarizedExperiment
-Imports: 
+Imports:
+    AnnotationHub,
     basilisk,
     BiocParallel,
     colorspace,
     cowplot,
     DelayedArray,
     dplyr,
+    Experimenthub,
     ggplot2,
     ggpubr,
     ggrepel,
@@ -37,6 +39,7 @@ Imports:
     HDF5Array,
     keras,
     methods,
+    orthosData,
     parallel,
     plyr,
     reticulate,
