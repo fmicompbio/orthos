@@ -36,7 +36,9 @@
     # in the future, this will obtain the database using BiocFileCache or
     # ExperimentHub
     
-    dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
+    # dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
+
+    dataDir <- orthosData:::GetorthosContrastDB(organism=organism, mode=mode)
     if (identical(mode, "DEMO")) {
         prefix <- paste0(tolower(organism), "_v212_NDF_c100_DEMO")
         seFile <- file.path(dataDir, paste0(prefix, "se.rds"))

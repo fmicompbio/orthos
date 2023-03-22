@@ -57,16 +57,20 @@
 #'
 #' @importFrom SummarizedExperiment rowData
 #' @importFrom S4Vectors DataFrame
+#' @importFrom orthosData GetorthosContrastDB
 #' 
 #' @keywords internal
 #' @noRd
 .readGeneInformation <- function(organism, mustWork = TRUE) {
     .assertScalar(x = organism, type = "character",
-                  validValues = c("human", "mouse"))
+                  validValues = c("Human", "Mouse"))
     .assertScalar(x = mustWork, type = "logical")
     
-    geneInfoDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
-    geneInfoFile <- paste0(organism, "_v212_NDF_c100se.rds")
+    #geneInfoDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
+    #geneInfoDir <- "/Users/papapana/Downloads/"
+    
+    geneInfoDir <- orthosData:::GetorthosContrastDB(organism=organism,mode="DEMO")
+    geneInfoFile <- paste0(tolower(organism), "_v212_NDF_c100_DEMOse.rds")
     geneInfoPath <- file.path(geneInfoDir, geneInfoFile)
     
     if (file.exists(geneInfoPath)) {
@@ -247,7 +251,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- .readGeneInformation(tolower(organism))
+    genes <- .readGeneInformation(organism)
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
@@ -376,9 +380,12 @@ decomposeVar <- function(M,
     
     ## Load model from ExperimentHub:
     query_keys <- c( "orthosData", "ContextEncoder_",organism, "ARCHS4" )
+    suppressMessages({
+        suppressWarnings({
     hub <- ExperimentHub::ExperimentHub()
     encoder <- AnnotationHub::query(hub, query_keys)[[1]]
-    
+        })
+    })
     predict(encoder, list(gene_input = gene_input))
 }
 
@@ -404,10 +411,14 @@ decomposeVar <- function(M,
     ## Load models from ExperimentHub:
     query_keysE <- c( "orthosData", "DeltaEncoder_",organism, "ARCHS4" )
     query_keysD <- c( "orthosData", "DeltaDecoder_",organism, "ARCHS4" )
+    
+    suppressMessages({
+        suppressWarnings({
     hub <- ExperimentHub::ExperimentHub()
     encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
     generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
-    
+        })
+    })
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input,
                                    CONTEXT = context))
