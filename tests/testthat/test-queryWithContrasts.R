@@ -45,7 +45,7 @@ test_that(".loadContrastDatabase works", {
 ## Checks, queryWithContrasts
 ## ------------------------------------------------------------------------- ##
 test_that("queryWithContrasts works", {
-    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("Human", mustWork = FALSE)
     
     skip_if(nrow(genesHuman) == 0,
             message = paste0("skipping queryWithContrasts tests - ",
