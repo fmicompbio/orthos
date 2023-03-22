@@ -29,7 +29,7 @@ Imports:
     cowplot,
     DelayedArray,
     dplyr,
-    Experimenthub,
+    ExperimentHub,
     ggplot2,
     ggpubr,
     ggrepel,
