@@ -52,8 +52,8 @@ test_that(".readGeneInformation works", {
     expect_error(.readGeneInformation("error", mustWork = FALSE))
     expect_error(.readGeneInformation("error", mustWork = TRUE))
     
-    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
-    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    genesMouse <- .readGeneInformation("Mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("Human", mustWork = FALSE)
     
     expect_s4_class(genesMouse, "DFrame")
     expect_s4_class(genesHuman, "DFrame")
@@ -66,8 +66,8 @@ test_that(".readGeneInformation works", {
     skip_if(nrow(genesMouse) > 0 || nrow(genesHuman) > 0,
             message = "cannot test `mustWork` when data is available")
     
-    expect_error(.readGeneInformation("mouse", mustWork = TRUE))
-    expect_error(.readGeneInformation("human", mustWork = TRUE))
+    expect_error(.readGeneInformation("Mouse", mustWork = TRUE))
+    expect_error(.readGeneInformation("Human", mustWork = TRUE))
 })
 
 ## ------------------------------------------------------------------------- ##
@@ -75,8 +75,8 @@ test_that(".readGeneInformation works", {
 ## ------------------------------------------------------------------------- ##
 test_that(".detectFeatureIdType works", {
     # load annotation and create synthetic data
-    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
-    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    genesMouse <- .readGeneInformation("Mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("Human", mustWork = FALSE)
 
     skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
             message = paste0("skipping .detectFeatureIdType tests - ",
@@ -148,8 +148,8 @@ test_that(".detectFeatureIdType works", {
 ## Checks, decomposeVar
 ## ------------------------------------------------------------------------- ##
 test_that("decomposeVar works", {
-    genesMouse <- .readGeneInformation("mouse", mustWork = FALSE)
-    genesHuman <- .readGeneInformation("human", mustWork = FALSE)
+    genesMouse <- .readGeneInformation("Mouse", mustWork = FALSE)
+    genesHuman <- .readGeneInformation("Human", mustWork = FALSE)
     
     skip_if(nrow(genesMouse) == 0 || nrow(genesHuman) == 0,
             message = paste0("skipping decomposeVar tests - ",
