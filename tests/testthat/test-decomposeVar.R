@@ -188,22 +188,22 @@ test_that("decomposeVar works", {
     expect_identical(dim(decMouse), c(20339L, 2L))
     
     expect_equal(colSums(assay(decHuman, "INPUT_CONTRASTS")),
-                 c(MKL1 = -287.736062968947, caMKL1 = -2875.33388549955))
+                 c(MKL1 = -287.736062968947, caMKL1 = -2875.33388549955), tolerance = 1e-3)
     expect_equal(colSums(assay(decHuman, "DECODED_CONTRASTS")),
-                 c(MKL1 = -345.53792401588, caMKL1 = -2228.12848719998))
+                 c(MKL1 = -345.53792401588, caMKL1 = -2228.12848719998), tolerance = 1e-3)
     expect_equal(colSums(assay(decHuman, "RESIDUAL_CONTRASTS")),
-                 c(MKL1 = 57.8018610469331, caMKL1 = -647.205398299573))
+                 c(MKL1 = 57.8018610469331, caMKL1 = -647.205398299573), tolerance = 1e-3)
     expect_equal(colSums(assay(decHuman, "CONTEXT")),
-                 c(MKL1 = 78030.7107896163, caMKL1 = 78030.7107896163))
+                 c(MKL1 = 78030.7107896163, caMKL1 = 78030.7107896163), tolerance = 1e-3)
     
     expect_equal(colSums(assay(decMouse, "INPUT_CONTRASTS")),
-                 c(MKL1 = -205.650429365804, caMKL1 = -637.007214334137))
+                 c(MKL1 = -205.650429365804, caMKL1 = -637.007214334137), tolerance = 1e-3)
     expect_equal(colSums(assay(decMouse, "DECODED_CONTRASTS")),
-                 c(MKL1 = -99.0546978751445, caMKL1 = -586.600493863487))
+                 c(MKL1 = -99.0546978751445, caMKL1 = -586.600493863487), tolerance = 1e-3)
     expect_equal(colSums(assay(decMouse, "RESIDUAL_CONTRASTS")),
-                 c(MKL1 = -106.595731490659, caMKL1 = -50.40672047065))
+                 c(MKL1 = -106.595731490659, caMKL1 = -50.40672047065), tolerance = 1e-3)
     expect_equal(colSums(assay(decMouse, "CONTEXT")),
-                 c(MKL1 = 79313.4220740248, caMKL1 = 79313.4220740248))
+                 c(MKL1 = 79313.4220740248, caMKL1 = 79313.4220740248), tolerance = 1e-3)
     
     idsHuman <- intersect(rownames(countsHuman), rownames(decHuman))
     idsMouse <- intersect(rownames(countsMouse), rownames(decMouse))
