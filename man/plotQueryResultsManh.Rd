@@ -20,10 +20,26 @@ different contrast components against the respective contrast DBs.
 Visualize query results as a composite manhattan/density plot.
 }
 \examples{
-\dontrun{
-qRES <- queryWithContrasts(MyDecomposedContrasts)
-plotQueryResults.manh(qRES)
+\donttest{
+MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
+package = "orthos"))
+
+# Decompose contrasts:
+dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
+                              organism = "Human", verbose = FALSE)
+
+# Perform query against contrast DB with the decomposed fractions.
+# !!!Note!!! mode="DEMO" for demonstration purposes only.                             
+params <- BiocParallel::MulticoreParam(workers = 2)                              
+query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
+                                     BPPARAM = params, verbose = FALSE, 
+                                     mode = "DEMO")
+                                     
+# plot results for individual contrasts using composite Manhattan/Density plots:
+ManhDensPlots <- plotQueryResultsManh(query.res.human, plot = FALSE)
+ManhDensPlots[["caMKL1"]]
 }
+
 
 }
 \author{

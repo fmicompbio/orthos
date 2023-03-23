@@ -198,10 +198,26 @@
 #'     as the \code{\link[SummarizedExperiment]{colData}}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' 
+#' MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
+#' package = "orthos"))
+#' 
+#' # Specifying M, treatm and cntr:
+#' dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
+#'                               organism = "Human", verbose = FALSE)
+#'                               
+#'                               
+#' # Alternatively by specifying M and MD:
+#' pseudocount <- 4 
+#' M  <- sweep(MKL1_human, 2,
+#'                   colSums(MKL1_human), FUN = "/") * 1e+06
+#' M  <- log2(M + pseudocount)
+#' DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
+#' ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
+#' colnames(ContextM) <- colnames(DeltaM) # M and MD need identical dimnames                       
 #' RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
-#' RES <- decomposeVar(M = CountM, treatm = c(3, 4, 5, 6),
-#'                     cntr = c(1, 1, 2, 2), processInput = FALSE)
+#' 
 #' }
 #'
 #' @importFrom stats na.omit
