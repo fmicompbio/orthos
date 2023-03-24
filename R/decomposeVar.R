@@ -50,6 +50,8 @@
 #'     data is not available, return an \code{S4Vectors::DFrame} object with
 #'     zero rows. If \code{TRUE} (the default) and the gene information data is
 #'     not available, \code{.readGeneInformation} throws an error.
+#'  @param verbose Logical scalar indicating whether to print messages along
+#'     the way.
 #'
 #' @return \code{S4Vectors::DFrame} table with gene information.
 #'
@@ -61,12 +63,13 @@
 #' 
 #' @keywords internal
 #' @noRd
-.readGeneInformation <- function(organism, mustWork = TRUE) {
+.readGeneInformation <- function(organism, mustWork = TRUE, verbose=TRUE) {
     .assertScalar(x = organism, type = "character",
                   validValues = c("Human", "Mouse"))
     .assertScalar(x = mustWork, type = "logical")
+    .assertScalar(x = verbose, type = "logical")
     
-    geneInfoDir <- orthosData::GetorthosContrastDB(organism=organism,mode="DEMO")
+    geneInfoDir <- orthosData::GetorthosContrastDB(organism=organism,mode="DEMO", verbose = verbose)
     geneInfoFile <- paste0(tolower(organism), "_v212_NDF_c100_DEMOse.rds")
     geneInfoPath <- file.path(geneInfoDir, geneInfoFile)
     
@@ -264,7 +267,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- .readGeneInformation(organism)
+    genes <- .readGeneInformation(organism, verbose=verbose)
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
