@@ -68,37 +68,43 @@ body {
 
 # Introduction
 
-RNAseq based differential expression analysis upon cellular perturbations,
-such as gene knockout, RNA knockdown or compound treatment experiments, is
+RNAseq-based differential expression analysis upon cellular perturbations,
+such as gene knockouts, RNA knockdowns or compound treatment experiments, is
 the most commonly used tool for probing molecular mechanisms of action due to
 its simplicity and low cost. 
-However, the interpretation of such gene expression contrasts is confounded by
-the complex and nuanced impact of experimental treatments on cellular processes.
+
+However, interpretation of such gene expression contrasts is confounded by
+the complex and nuanced impacts of experimental treatments on cellular processes.
+
 For example, knockout or over-expression of a transcription factor will not
 only alter the transcription of its direct target genes, but also cause many
-secondary expression changes. The experimentally measured transcript levels are
-a combination of both direct and indirect effects, which makes complicates
-their interpretation.
+secondary expression changes. In addition, treatments  or  treatment delivery agents 
+typically elicit a variety of unintended, systemic responses 
+(such as immune, toxic, metabolic) that cannot be well-controlled for by the design of the study.
+
+The final experimentally measured gene expression changes are a hard to assess convolution
+of specific and non-specific secondary and lateral treatment effects.
 
 `orthos` is a generative modelling-based approach that disentangles the
 experiment-specific from the non-specific effects of perturbations on gene
-expression. The model is trained on a large corpus of gene expression contrasts
-(for each human and mouse more than 60,000 annotated contrasts, augmented to
-over 0.5 million each), compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)
+expression. It is trained on a large corpus of gene expression contrasts
+(per organism >60K annotated, >0.5M augmented), compiled from the [ARCHS4](https://maayanlab.cloud/archs4/)
 database of uniformly processed RNAseq experiments (@lachmann2018massive). 
 It accurately captures and isolates **polytopic** effects (non-specific effects
 that are observed across multiple treatments) while accounting for context
-(for example the tissue). 
-When these **polytopic** effects are subtracted from the experimental results,
-the residual **specific** component obtained from this decomposition offers a
-more unequivocal experimental signature and is more closely related to
-the direct molecular effects of the perturbation when compared to the raw signal.
+(tissue or cell-line experimental background). 
+
+The residual **specific** component obtained from this decomposition offers a more unequivocal 
+experimental signature and is more closely related to the direct molecular effects
+of the perturbation when compared to the raw signal.
 
 In addition to providing a clearer understanding of the effects of experimental
 treatments on gene expression, `orthos` also enables researchers to query the
 contrast database with arbitrary contrasts and identify experiments with similar
 specific effects, ultimately helping to map treatments to mechanisms of action.
 
+
+# Installation
 After installation, the package can be loaded with:
 
 ```{r library}
@@ -159,27 +165,29 @@ dim(MKL1_mouse)
 The workhorse behind `orthos` are organism-specific conditional variational
 autoencoder (cVAE) models that break down the variance of a given differential
 expression experiment into a non-specific (polytopic) and an experiment-specific
-components. 
+components.
+
 The non-specific (polytopic) component corresponds to gene variance that has
 been observed across multiple instances during training, while the
 experiment-specific variance is fairly unique to the experiment. 
 
 The inputs to the models are gene counts in the form of log2-transformed
-counts per million (log2 CPM) that are used to encode the **context** of the
+counts per million (LCPMs) that are used to encode the **context** of the
 performed experiment as well as the actual gene expression contrasts in the form
-of gene log2 fold-changes (LFCs). 
+of log2 fold-changes (LFCs), i.e log2-transformed CPM ratios. 
 As we will see, calculation of those inputs is by default performed internally
 given only **raw gene counts** and a specification of the contrasted conditions.
 
 Given these inputs, the model maps the contrast to a concise latent
 representation (z~D~) which is then used to generate a decoded version of the
 contrast. 
+
 This decoded contrast corresponds directly to the **polytopic** (non-specific)
 component of the observed effects; it subsumes the gene variance that the model
 can account for because it has been encountered, in some form, during training. 
 The residual obtained after removing the decoded contrast from the original one
 is the specific component; this encompasses the gene variance that the model
-cannot account for (random noise + experiment-specific biological effects).  
+cannot account for (experiment-specific biological effects + random noise).  
 
 ![orthos architecture](orthos_arch.png){width=100%}
 
@@ -206,19 +214,33 @@ valid gene identifiers (currently `orthos` supports Entrez gene identifiers,
 ENSEMBL gene identifiers, gene symbols or ARCHS4 gene identifiers). 
 By default the type of gene identifier is detected automatically.
 
+The first time that `decomposeVar` is executed for a particular organism, the models required for inference
+will be automatically downloaded from `ExperimentHub` and cached in the user ExperimentHub directory 
+( see `ExperimentHub::getExperimentHubOption("CACHE")` ). 
+
 For the MKL1 data, typical calls of `decomposeVar()` using the first mode would
 look like this:
 
 ```{r, warning = FALSE, message = FALSE, eval = do_eval}
+#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for human:
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
                                organism = "Human", verbose = FALSE)
+dec_MKL1_human
 
+#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:
 dec_MKL1_mouse <- decomposeVar(M = MKL1_mouse, treatm = c(2, 3), cntr = c(1, 1),
                                organism = "Mouse", verbose = FALSE)
+dec_MKL1_mouse
 ```
+
+
+The output of `decomposeVar()` is a `SummarizedExperiment` object with
+dimensions `N` x `M`, where `N` is the number of `orthos` genes for that
+organism and `M` is the number of contrasts specified during input. 
 
 Notice that, of the total gene features present in the input (over 55,000), only
 those that are part of the `orthos` model (~20,000 genes) are used.
+
 These ~20,000 `orthos` genes are "sanctioned" according to several criteria
 (located on canonical chromosomes, no pseudogenes, no ribosomal protein genes,
 detected in at least a small fraction of the ARCHS4 database). 
@@ -229,23 +251,29 @@ consideration. That being noted, it is safer to feed in inputs that are as
 comprehensive as possible (i.e not filtered in any way) in terms of gene
 features.
 
-
-The output of `decomposeVar()` is a `SummarizedExperiment` object with
-dimensions `N` x `M`, where `N` is the number of `orthos` genes for that
-organism and `M` is the number of contrasts specified during input. 
-The object has 4 assay slots corresponding to the input contrasts,
-decoded (polytopic), and residual (specific) components, as well as the gene
-context. 
+The `SummarizedExperiment` output also has 4 assay slots corresponding to
+the input contrasts, decoded (polytopic), and residual (specific) components,
+as well as the gene context. 
 Contrasts are represented as log2 fold-changes (LFCs) and context is represented
 as log2-transformed counts per million (log2 CPM).  
+
 The `colData` of the object summarizes the proportion of variance accounted for
 in each decomposed component:
 
 ```{r, eval = do_eval}
-summary(dec_MKL1_human)
+assays(dec_MKL1_human)
+
+#MA plot of for the input contrasts:
+ggplot2::ggplot()+geom_point(
+        aes(x = assay(dec_MKL1_human,"CONTEXT")[,1], y = assay(dec_MKL1_human,"INPUT_CONTRASTS")[,1],
+        size = 0.025,
+        alpha = 0.5
+
+    ))
+
 colData(dec_MKL1_human) 
 
-summary(dec_MKL1_mouse)
+assays(dec_MKL1_mouse)
 colData(dec_MKL1_mouse)
 ```
 

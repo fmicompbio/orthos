@@ -72,7 +72,7 @@ A typical analysis with `orthos` involves two main steps:
 2. Performing queries with the original and decomposed specific and polytopic
    fractions against the `orthosData` contrast database
    
-For more details on usage please refere to the Bioconductor vignette:
+For more details on usage please refer to the package vignette.
 
    
 
