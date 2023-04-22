@@ -78,12 +78,14 @@ the complex and nuanced impacts of experimental treatments on cellular processes
 
 For example, knockout or over-expression of a transcription factor will not
 only alter the transcription of its direct target genes, but also cause many
-secondary expression changes. In addition, treatments  or  treatment delivery agents 
-typically elicit a variety of unintended, systemic responses 
-(such as immune, toxic, metabolic) that cannot be well-controlled for by the design of the study.
+secondary expression changes. In addition, treatments  or  treatment delivery 
+agents typically elicit a variety of unintended, systemic responses 
+(such as immune, toxic, metabolic) that cannot be well-controlled for by the 
+design of the study.
 
-The final experimentally measured gene expression changes are a hard to assess convolution
-of specific and non-specific secondary and lateral treatment effects.
+The final experimentally measured gene expression changes are a hard to assess 
+convolution of specific and non-specific secondary and lateral treatment 
+effects.
 
 `orthos` is a generative modelling-based approach that disentangles the
 experiment-specific from the non-specific effects of perturbations on gene
@@ -94,9 +96,9 @@ It accurately captures and isolates **polytopic** effects (non-specific effects
 that are observed across multiple treatments) while accounting for context
 (tissue or cell-line experimental background). 
 
-The residual **specific** component obtained from this decomposition offers a more unequivocal 
-experimental signature and is more closely related to the direct molecular effects
-of the perturbation when compared to the raw signal.
+The residual **specific** component obtained from this decomposition offers a 
+more unequivocal experimental signature and is more closely related to the 
+direct molecular effects of the perturbation when compared to the raw signal.
 
 In addition to providing a clearer understanding of the effects of experimental
 treatments on gene expression, `orthos` also enables researchers to query the
@@ -214,9 +216,10 @@ valid gene identifiers (currently `orthos` supports Entrez gene identifiers,
 ENSEMBL gene identifiers, gene symbols or ARCHS4 gene identifiers). 
 By default the type of gene identifier is detected automatically.
 
-The first time that `decomposeVar` is executed for a particular organism, the models required for inference
-will be automatically downloaded from `ExperimentHub` and cached in the user ExperimentHub directory 
-( see `ExperimentHub::getExperimentHubOption("CACHE")` ). 
+The first time that `decomposeVar` is executed for a particular organism, the 
+models required for inference will be automatically downloaded from 
+`ExperimentHub` and cached in the user ExperimentHub directory 
+(see `ExperimentHub::getExperimentHubOption("CACHE")`). 
 
 For the MKL1 data, typical calls of `decomposeVar()` using the first mode would
 look like this:

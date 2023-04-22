@@ -1,7 +1,6 @@
 #'
 #' @author Charlotte Soneson
 #'
-#'
 #' @importFrom basilisk BasiliskEnvironment
 orthosenv <- basilisk::BasiliskEnvironment(
     envname = "orthos", pkgname = "orthos",

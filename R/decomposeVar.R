@@ -6,7 +6,7 @@
 #' \code{pseudocount}, and setting of \code{NA} values to 0.
 #' The subset of \code{M} with row names in \code{ids} is returned.
 #'
-#' @param M Numeric matrices with feature counts (features are in rows,
+#' @param M Numeric matrix with feature counts (features are in rows,
 #'     samples in columns).
 #' @param ids Character vector. Only rows of \code{M} with row names in
 #'     \code{ids} will be returned.
@@ -31,7 +31,7 @@
     if (length(NA.idx) > 0) {
         if (verbose) {
             message("!!!Matrix `M` contains ", length(NA.idx),
-                    " NA values.", " Those will be set to 0")
+                    " NA values.", " Those will be set to 0.")
         }
         M[NA.idx] <- 0
     }
@@ -45,7 +45,7 @@
 
 #' Load gene annotation table
 #'
-#' @param organism Character scalar, one of \code{"human"} or \code{"mouse"}.
+#' @param organism Character scalar, one of \code{"Human"} or \code{"Mouse"}.
 #' @param mustWork Logical scalar. If \code{FALSE} and the gene information
 #'     data is not available, return an \code{S4Vectors::DFrame} object with
 #'     zero rows. If \code{TRUE} (the default) and the gene information data is
@@ -63,13 +63,15 @@
 #' 
 #' @keywords internal
 #' @noRd
-.readGeneInformation <- function(organism, mustWork = TRUE, verbose=TRUE) {
+.readGeneInformation <- function(organism, mustWork = TRUE, verbose = TRUE) {
     .assertScalar(x = organism, type = "character",
                   validValues = c("Human", "Mouse"))
     .assertScalar(x = mustWork, type = "logical")
     .assertScalar(x = verbose, type = "logical")
     
-    geneInfoDir <- orthosData::GetorthosContrastDB(organism=organism,mode="DEMO", verbose = verbose)
+    geneInfoDir <- orthosData::GetorthosContrastDB(organism = organism,
+                                                   mode = "DEMO", 
+                                                   verbose = verbose)
     geneInfoFile <- paste0(tolower(organism), "_v212_NDF_c100_DEMOse.rds")
     geneInfoPath <- file.path(geneInfoDir, geneInfoFile)
     
@@ -166,7 +168,7 @@
 
 #' Decompose input contrasts to decoded and residual fractions
 #'
-#' Decompose input contrasts (gene expression Deltas) to decoded (generic)
+#' Decompose input contrasts (gene expression deltas) to decoded (generic)
 #' and residual (unique) components according to a contrast encoder-decoder
 #' pre-trained on a large corpus of public RNAseq experiments.
 #'
@@ -231,7 +233,7 @@ decomposeVar <- function(M,
                          MD = NULL,
                          treatm = NULL, cntr = NULL,
                          processInput = TRUE,
-                         organism = c("Human","Mouse"),
+                         organism = c("Human", "Mouse"),
                          featureType = c("AUTO", "ENSEMBL_GENE_ID",
                                          "GENE_SYMBOL", "ENTREZ_GENE_ID",
                                          "ARCHS4_ID"),
@@ -267,7 +269,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- .readGeneInformation(organism, verbose=verbose)
+    genes <- .readGeneInformation(organism, verbose = verbose)
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
@@ -315,9 +317,7 @@ decomposeVar <- function(M,
         C[, idx.commonF] <- t(M[idx.commonR, cntr, drop = FALSE])
         D[, idx.commonF] <- t(M[idx.commonR, treatm, drop = FALSE]) -
             t(M[idx.commonR, cntr, drop = FALSE])
-    }
-
-    if (!is.null(MD)) {
+    } else {
         ## Manage NA values
         NA.idx <- which(is.na(MD))
         if (length(NA.idx) > 0) {
@@ -339,14 +339,14 @@ decomposeVar <- function(M,
         message("Encoding context...")
     }
     LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoder,
-                        organism = organism,
-                        gene_input = C)
+                                  organism = organism,
+                                  gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
     res <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoderd,
-                       organism = organism,
-                       delta_input = D, context = LATC)
+                                 organism = organism,
+                                 delta_input = D, context = LATC)
     LATD <- res$LATD
     DEC <- res$DEC
 
@@ -371,7 +371,7 @@ decomposeVar <- function(M,
     RESULT <- SummarizedExperiment(assays = decomposed.contrasts,
                                    colData = list(ACCOUNTED_VARIANCE = VAR_DEC))
     rownames(RESULT) <- rownames(genes)
-    rowData(RESULT)$User_provided_IDs <- rep(NA,nrow(RESULT))
+    rowData(RESULT)$User_provided_IDs <- rep(NA, nrow(RESULT))
     rowData(RESULT)$User_provided_IDs[idx.commonF1] <- geneIDs[idx.commonR1]
 
     if (verbose) {
@@ -391,11 +391,11 @@ decomposeVar <- function(M,
 #'
 .predict_encoder <- function(gene_input, organism) {
     ## Load context encoder model from ExperimentHub:
-    query_keys <- c( "orthosData", "ContextEncoder_",organism, "ARCHS4" )
-    suppressMessages({
-        suppressWarnings({
-    hub <- ExperimentHub::ExperimentHub()
-    encoder <- AnnotationHub::query(hub, query_keys)[[1]]
+    query_keys <- c("orthosData", "ContextEncoder_", organism, "ARCHS4")
+    suppressMessages ({
+        suppressWarnings ({
+            hub <- ExperimentHub::ExperimentHub()
+            encoder <- AnnotationHub::query(hub, query_keys)[[1]]
         })
     })
     predict(encoder, list(gene_input = gene_input))
@@ -411,21 +411,21 @@ decomposeVar <- function(M,
 #'
 .predict_encoderd <- function(delta_input, context, organism) {
     ## Load contrast encoder and generator models from ExperimentHub:
-    query_keysE <- c( "orthosData", "DeltaEncoder_",organism, "ARCHS4" )
-    query_keysD <- c( "orthosData", "DeltaDecoder_",organism, "ARCHS4" )
+    query_keysE <- c("orthosData", "DeltaEncoder_", organism, "ARCHS4")
+    query_keysD <- c("orthosData", "DeltaDecoder_", organism, "ARCHS4")
     
-    suppressMessages({
-        suppressWarnings({
-    hub <- ExperimentHub::ExperimentHub()
-    encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
-    generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
+    suppressMessages ({
+        suppressWarnings ({
+            hub <- ExperimentHub::ExperimentHub()
+            encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
+            generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
         })
     })
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input,
                                    CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
-
+    
     list(LATD = LATD, DEC = DEC)
 }
 

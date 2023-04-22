@@ -38,7 +38,7 @@
     
     # dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
 
-    dataDir <- orthosData::GetorthosContrastDB(organism=organism, mode=mode)
+    dataDir <- orthosData::GetorthosContrastDB(organism = organism, mode = mode)
     if (identical(mode, "DEMO")) {
         prefix <- paste0(tolower(organism), "_v212_NDF_c100_DEMO")
         seFile <- file.path(dataDir, paste0(prefix, "se.rds"))
@@ -79,27 +79,25 @@
 #'     contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS
 #'     (at least one should be present) and context information in an assay
 #'     named CONTEXT. The latter is only required when use="expressed.in.both".
-#'     This is typically generated using
-#'     \code{decomposeVar}.
+#'     This is typically generated using \code{decomposeVar}.
 #' @param use Determines if all.genes or genes expressed in both query and
 #'     target context will be used. Note that "expressed.in.both", though more
 #'     accurate, is slower.
 #' @param exprThr is the quantile in the provided context that determines the
 #'     expression value above which a gene is considered to be expressed. This
 #'     same value is then used for thresholding the contrast database. Only
-#'     applies when use="expressed.in.both"
-#' @param organism Uses the `orthosData` contrast Database  from this
+#'     applies when use="expressed.in.both".
+#' @param organism Uses the `orthosData` contrast database from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param plotType Select the type of visualization for the query results
-#'     \code{"violin", "manh"} or \code{"none"} to suppress
-#'     the plotting.
+#'     \code{"violin", "manh"} or \code{"none"} to suppress the plotting.
 #' @param detailTopn specifies the number of top hits for which metadata will
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along
 #'     the way.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to
 #'     be performed using e.g. \code{\link[BiocParallel]{MulticoreParam}})
-#'     or \code{\link[BiocParallel]{SnowParam}})
+#'     or \code{\link[BiocParallel]{SnowParam}}).
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 #'     reduce memory usage.
@@ -109,7 +107,7 @@
 #'     and never for actual analysis purposes.
 #'
 #' @return A list with three elements called "pearson.rhos", "zscores" and
-#'     "TopHitsof", containing raw and z-scored Pearson's rho correlation
+#'     "TopHits", containing raw and z-scored Pearson's rho correlation
 #'     coefficients between the query contrast(s) and the contrasts in the
 #'     database, as well as detailed metadata for the \code{detailTopn} best
 #'     hits.
@@ -173,14 +171,14 @@ queryWithContrasts <- function(contrasts,
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
     .assertScalar(x = BPPARAM, type = "BiocParallelParam")
     
-    ## ------------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
     ## Setup bpprogressbar, initialize cluster
-    ## ------------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
     if (verbose) {
         BiocParallel::bpprogressbar(BPPARAM) <- TRUE
         if (BiocParallel::bpworkers(BPPARAM) < 10) {
-            BiocParallel::bptasks(BPPARAM) <- ifelse(
-                identical(class(BPPARAM)[[1]],"SerialParam"),
+            BiocParallel::bptasks(BPPARAM) <- ifelse (
+                identical(class(BPPARAM)[[1]], "SerialParam"),
                 10, min(2 * BiocParallel::bpworkers(BPPARAM), 10))
         }
     }
@@ -263,9 +261,9 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             N <- names(Zscore)
             DBinfo <- SummarizedExperiment::colData(targetContrasts)[N, c(12, 29, 3, 22, 24,
                                                                           33, 31)]
-            colnames(DBinfo)[colnames(DBinfo)=="CNTname"] <- "CNT_geo_accession"
-            colnames(DBinfo)[colnames(DBinfo)=="geo_accession"] <- "TREATM_geo_accession"
-            colnames(DBinfo)[colnames(DBinfo)=="Cor2CNT"] <- "corr_TREATM_CNT"
+            colnames(DBinfo)[colnames(DBinfo) == "CNTname"] <- "CNT_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo) == "geo_accession"] <- "TREATM_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo) == "Cor2CNT"] <- "corr_TREATM_CNT"
             cbind(Zscore, DBinfo)
             
         })
@@ -287,7 +285,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             message("Generating plots...")
         }
 
-        suppressWarnings({
+        suppressWarnings ({
             if (plotType == "violin") {
                 PLOTS <- plotQueryResultsViolin(RESULTS)
             } else if (plotType == "manh") {
