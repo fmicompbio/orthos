@@ -110,6 +110,12 @@ jobs:
         with:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
           path: orthos.Rcheck
+          
+      - name: Run BiocCheck
+        uses: grimbough/bioc-actions/run-BiocCheck@v1
+        with:
+          error-on: 'error'
+          arguments: '--no-check-bioc-views --no-check-bioc-help'
 
       - name: Test coverage
         if: matrix.config.os == 'ubuntu-latest'
