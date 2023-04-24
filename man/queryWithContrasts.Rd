@@ -75,14 +75,14 @@ package = "orthos"))
 
 # Decompose contrasts:
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
-                              organism = "Human", verbose = FALSE)
+                               organism = "Human", verbose = FALSE)
 
 # Perform query against contrast DB with the decomposed fractions.
 # !!!Note!!! mode="DEMO" for demonstration purposes only.                             
 params <- BiocParallel::MulticoreParam(workers = 2)                              
 query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
-                                     BPPARAM = params, verbose = FALSE, 
-                                     mode = "DEMO")
+                                      BPPARAM = params, verbose = FALSE, 
+                                      mode = "DEMO")
 }
 
 }
