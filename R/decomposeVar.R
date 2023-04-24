@@ -338,15 +338,17 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoder,
+    LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predictEncoder,
                                   organism = organism,
-                                  gene_input = C)
+                                  gene_input = C,
+                                  testload = "tensorflow")
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoderd,
+    res <- basilisk::basiliskRun(env = orthosenv, fun = .predictEncoderD,
                                  organism = organism,
-                                 delta_input = D, context = LATC)
+                                 delta_input = D, context = LATC,
+                                 testload = "tensorflow")
     LATD <- res$LATD
     DEC <- res$DEC
 
