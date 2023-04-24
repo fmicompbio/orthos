@@ -21,22 +21,25 @@
 
 
 #' Calculate correlation between a numeric matrix and a (large)
+#' 
 #' HDF5Matrix/DelayedMatrix using grid access. Both matrices can contain NAs.
 #' If \code{thr} is specified, substitution of values less than \code{thr} with
 #' \code{NA}s will be performed on the HDF5Matrix.
 #'
 #' @param query Numeric matrix with dimensions n x k.
 #' @param hdf5 HDF5Matrix/DelayedMatrix with dimensions n x l, where l is 
-#'     typically >> k.
+#'     typically >> k. This is typically a contrast matrix to be queried.
 #' @param hdf5_ctx HDF5Matrix/DelayedMatrix with dimensions n x l, where l is 
-#'     typically >> k.
+#'     typically >> k. This is typically a context matrix corresponding to the
+#'     contrast matrix \code{hdf5} and will be used for filtering purposes.
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5Matrix. Should be larger than/equal to the ncol chunkdim used to
 #'     write the data on disk.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to
 #'     be performed.
-#' @param thr If specified, a lower bound on expression. Values lower than that
-#'     are substituted by \code{NA}s in the HDF5Matrix.
+#' @param thr If specified, a lower bound on expression. Values in \code{hdf5}
+#'     corresponding to values in \code{hdf5_ctx} lower than \code{thr} are
+#'     set to \code{NA}s.
 #'
 #' @return Correlation matrix with dimensions k x l.
 #'
