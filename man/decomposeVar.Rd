@@ -58,6 +58,13 @@ Decompose input contrasts (gene expression deltas) to decoded (generic)
 and residual (unique) components according to a contrast encoder-decoder
 pre-trained on a large corpus of public RNAseq experiments.
 }
+\details{
+When calling \code{decomposeVar()}, you may see an \code{ImportError}
+    on the console. This most likely does not have any negative consequences,
+    rather it means that R and python may not be library compatible and that
+    an automated fallback approach is being used (for more details see
+    \code{testload} argument of \code{\link[basilisk]{basiliskStart}}).
+}
 \examples{
 \donttest{
 

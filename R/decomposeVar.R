@@ -198,6 +198,12 @@
 #' @param verbose Logical scalar indicating whether to print messages along
 #'     the way.
 #'
+#' @details When calling \code{decomposeVar()}, you may see an \code{ImportError}
+#'     on the console. This most likely does not have any negative consequences,
+#'     rather it means that R and python may not be library compatible and that
+#'     an automated fallback approach is being used (for more details see
+#'     \code{testload} argument of \code{\link[basilisk]{basiliskStart}}).
+#'
 #' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
 #'     with the decomposed contrasts in the assays and the decomposed variance
 #'     as the \code{\link[SummarizedExperiment]{colData}}.
