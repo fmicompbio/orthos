@@ -72,7 +72,7 @@ dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1),
 # Alternatively by specifying M and MD:
 pseudocount <- 4 
 M  <- sweep(MKL1_human, 2,
-                  colSums(MKL1_human), FUN = "/") * 1e+06
+            colSums(MKL1_human), FUN = "/") * 1e+06
 M  <- log2(M + pseudocount)
 DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
 ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts

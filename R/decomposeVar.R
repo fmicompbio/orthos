@@ -26,18 +26,18 @@
     }
 
     ## Manage NA values
-    NA.idx <- which(is.na(M))
+    indicesNA <- which(is.na(M))
 
-    if (length(NA.idx) > 0) {
+    if (length(indicesNA) > 0) {
         if (verbose) {
-            message("!!!Matrix `M` contains ", length(NA.idx),
-                    " NA values.", " Those will be set to 0.")
+            message("Matrix `M` contains ", length(indicesNA),
+                    " NA values. Those will be set to 0.")
         }
-        M[NA.idx] <- 0
+        M[indicesNA] <- 0
     }
     ## Lib normalize and log2 transform input count matrix
     M <- sweep(M[rownames(M) %in% ids, , drop = FALSE], 2,
-               colSums(M), FUN = "/") * 1e+06
+               1e+06 / colSums(M), FUN = "*")
     M <- log2(M + pseudocount)
     return(M)
 }
@@ -127,10 +127,10 @@
         }
         IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
                      "ARCHS4_ID")
-        ID_OLaps <- vapply(IDtypes, function(x) {
+        IDoverlaps <- vapply(IDtypes, function(x) {
             sum(rownames(M) %in% toupper(genes[, x]))
         }, FUN.VALUE = numeric(1))
-        featureType <- IDtypes[which.max(ID_OLaps)]
+        featureType <- IDtypes[which.max(IDoverlaps)]
         if (verbose) {
             message("Feature ids-type detected: ", featureType)
         }
@@ -138,14 +138,14 @@
         if (verbose) {
             message("Feature ids-type specified by user: ", featureType)
         }
-        ID_OLaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
+        IDoverlaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
     }
 
     if (verbose) {
         message(
-            max(ID_OLaps), "/", nrow(M),
+            max(IDoverlaps), "/", nrow(M),
             " provided input features mapped against a total of ",
-            nrow(genes), " model features.\n", nrow(genes) - max(ID_OLaps),
+            nrow(genes), " model features.\n", nrow(genes) - max(IDoverlaps),
             " missing features will be set to 0.\n",
             "--> Missing features corresponding to non/lowly expressed genes ",
             "in your context(s) are of no consequence.\n",
@@ -155,8 +155,8 @@
             "might result in model performance decline.")
     }
 
-    if (nrow(genes) - max(ID_OLaps) > maxMissing) {
-        stop("\n!!!Too many missing features (>", maxMissing, "). ",
+    if (nrow(genes) - max(IDoverlaps) > maxMissing) {
+        stop("\nToo many missing features (>", maxMissing, "). ",
              "Make certain you provided valid\nSymbol, Ensembl or ",
              "Entrez gene identifiers for the specified organism as ",
              "rownames in your input matrix `M`.\n")
@@ -216,7 +216,7 @@
 #' # Alternatively by specifying M and MD:
 #' pseudocount <- 4 
 #' M  <- sweep(MKL1_human, 2,
-#'                   colSums(MKL1_human), FUN = "/") * 1e+06
+#'             colSums(MKL1_human), FUN = "/") * 1e+06
 #' M  <- log2(M + pseudocount)
 #' DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
 #' ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
@@ -319,13 +319,13 @@ decomposeVar <- function(M,
             t(M[idx.commonR, cntr, drop = FALSE])
     } else {
         ## Manage NA values
-        NA.idx <- which(is.na(MD))
-        if (length(NA.idx) > 0) {
+        indicesNA <- which(is.na(MD))
+        if (length(indicesNA) > 0) {
             if (verbose) {
-                message("!!!Matrix `MD` contains ", length(NA.idx),
-                        " NA values.", " Those will be set to 0")
+                message("Matrix `MD` contains ", length(indicesNA),
+                        " NA values. Those will be set to 0")
             }
-            MD[NA.idx] <- 0
+            MD[indicesNA] <- 0
         }
 
         C <- matrix(log2(pseudocount), nrow = ncol(M), ncol = nrow(genes),
@@ -391,7 +391,7 @@ decomposeVar <- function(M,
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom AnnotationHub query
 #'
-.predict_encoder <- function(gene_input, organism) {
+.predictEncoder <- function(gene_input, organism) {
     ## Load context encoder model from ExperimentHub:
     query_keys <- c("orthosData", "ContextEncoder_", organism, "ARCHS4")
     suppressMessages ({
@@ -411,7 +411,7 @@ decomposeVar <- function(M,
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom AnnotationHub query
 #'
-.predict_encoderd <- function(delta_input, context, organism) {
+.predictEncoderD <- function(delta_input, context, organism) {
     ## Load contrast encoder and generator models from ExperimentHub:
     query_keysE <- c("orthosData", "DeltaEncoder_", organism, "ARCHS4")
     query_keysD <- c("orthosData", "DeltaDecoder_", organism, "ARCHS4")
