@@ -6,7 +6,9 @@
 #' @author Charlotte Soneson
 #'
 #' @examples
+#' \donttest{
 #' testOrthosEnv()
+#' }
 #'
 #' @export
 #'
