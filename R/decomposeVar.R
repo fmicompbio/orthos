@@ -57,7 +57,7 @@
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
-#' @importFrom SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment rowData rowData<-
 #' @importFrom S4Vectors DataFrame
 #' @importFrom orthosData GetorthosContrastDB
 #' 
