@@ -227,7 +227,7 @@
 #'
 #' @importFrom stats na.omit
 #' @importFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom basilisk basiliskRun
+#' @importFrom basilisk basiliskRun basiliskStart basiliskStop
 #'
 decomposeVar <- function(M,
                          MD = NULL,
@@ -338,17 +338,20 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predictEncoder,
+    cl <- basiliskStart(orthosenv,
+                        testload = "tensorflow")
+    LATC <- basilisk::basiliskRun(proc = cl,
+                                  fun = .predictEncoder,
                                   organism = organism,
-                                  gene_input = C,
-                                  testload = "tensorflow")
+                                  gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basilisk::basiliskRun(env = orthosenv, fun = .predictEncoderD,
+    res <- basilisk::basiliskRun(proc = cl,
+                                 fun = .predictEncoderD,
                                  organism = organism,
-                                 delta_input = D, context = LATC,
-                                 testload = "tensorflow")
+                                 delta_input = D, context = LATC)
+    basilisk::basiliskStop(cl)
     LATD <- res$LATD
     DEC <- res$DEC
 
@@ -394,12 +397,8 @@ decomposeVar <- function(M,
 .predictEncoder <- function(gene_input, organism) {
     ## Load context encoder model from ExperimentHub:
     query_keys <- c("orthosData", "ContextEncoder_", organism, "ARCHS4")
-    suppressMessages ({
-        suppressWarnings ({
-            hub <- ExperimentHub::ExperimentHub()
-            encoder <- AnnotationHub::query(hub, query_keys)[[1]]
-        })
-    })
+    hub <- ExperimentHub::ExperimentHub()
+    encoder <- AnnotationHub::query(hub, query_keys)[[1]]
     predict(encoder, list(gene_input = gene_input))
 }
 
@@ -416,13 +415,9 @@ decomposeVar <- function(M,
     query_keysE <- c("orthosData", "DeltaEncoder_", organism, "ARCHS4")
     query_keysD <- c("orthosData", "DeltaDecoder_", organism, "ARCHS4")
     
-    suppressMessages ({
-        suppressWarnings ({
-            hub <- ExperimentHub::ExperimentHub()
-            encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
-            generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
-        })
-    })
+    hub <- ExperimentHub::ExperimentHub()
+    encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
+    generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input,
                                    CONTEXT = context))
