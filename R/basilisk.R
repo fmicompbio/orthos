@@ -9,7 +9,6 @@
     "keras==2.10.0", 
     "pydot==1.4.2", 
     "numpy==1.22.4",
-    "_libgcc_mutex==0.1",
     "absl-py==1.4.0",
     "aiohttp==3.8.4",
     "aiosignal==1.3.1",
@@ -176,6 +175,7 @@
     #"libnsl==2.0.0",
     #"nccl==2.15.5.1",
     ## not available for windows
+    #"_libgcc_mutex==0.1",
     #"libgfortran5==12.2.0",
     #"ncurses==6.3",
     #"ld_impl_linux-64==2.40",
