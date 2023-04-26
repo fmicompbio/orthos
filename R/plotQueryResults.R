@@ -74,7 +74,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
                                             label_size = 10,
                                             labels = DATASETS, ncol = 1,
                                             nrow = min(length(DATASETS), 3))
-        print(combined_plot)
+        plot(combined_plot)
     }
 
     return(invisible(PLOTS))
@@ -310,7 +310,7 @@ plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
         }
         combined_plot <- cowplot::plot_grid(
             plotlist = PLOTS[seq_len(min(length(PLOTS), 4))])
-        print(combined_plot)
+        plot(combined_plot)
     }
 
     return(invisible(PLOTS))
