@@ -213,7 +213,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         }
         thr <- stats::quantile(context, exprThr)
 
-        pearson.rhos <- sapply(presentContrasts, function(x) {
+        pearson.rhos <- lapply(presentContrasts, function(x) {
             if (verbose) {
                 message("Querying contrast database with ", x, "...")
             }
@@ -224,10 +224,11 @@ You can make sure by generating your SE generated using `decomposeVar`" =
                 hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
                 hdf5_ctx = SummarizedExperiment::assays(targetContrasts)[["CONTEXT"]],
                 thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size)
-        }, simplify = FALSE, USE.NAMES = TRUE
-        )
+        })
+        names(pearson.rhos) <- presentContrasts
+
     } else if (use == "all.genes") {
-        pearson.rhos <- sapply(presentContrasts, function(x) {
+        pearson.rhos <- lapply(presentContrasts, function(x) {
             if (verbose) {
                 message("Querying contrast database with ", x, "...")
             }
@@ -236,8 +237,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
                 query,
                 hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
                 BPPARAM = BPPARAM, chunk_size = chunk_size)
-        }, simplify = FALSE, USE.NAMES = TRUE
-        )
+        })
+        names(pearson.rhos) <- presentContrasts
     }
 
     ## -------------------------------------------------------------------------
@@ -246,15 +247,15 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     if (verbose) {
         message("Compiling query statistics...")
     }
-    zscores <- sapply(presentContrasts, function(x) {
+    zscores <- lapply(presentContrasts, function(x) {
         t(scale(t(pearson.rhos[[x]])))
-    }, simplify = FALSE, USE.NAMES = TRUE
-    )
+    })
+    names(zscores) <- presentContrasts
 
     ## -------------------------------------------------------------------------
     ## Get top hits
     ## -------------------------------------------------------------------------
-    TopHits <- sapply(presentContrasts, function(contr) {
+    TopHits <- lapply(presentContrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) {
             #N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
             Zscore <- sort(x, decreasing = TRUE)[seq_len(detailTopn)]
@@ -267,8 +268,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             cbind(Zscore, DBinfo)
             
         })
-    }, simplify = FALSE, USE.NAMES = TRUE
-    )
+    })
+    names(TopHits) <- presentContrasts
 
     ## -------------------------------------------------------------------------
     ## Gather results
