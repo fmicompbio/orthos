@@ -50,12 +50,12 @@ test_that("plotQueryResultsManh works", {
     
     # arguments
     expect_error(plotQueryResultsManh(queryResults = "error"))
-    expect_error(plotQueryResultsManh(queryResults = qres, plot = "error"))
+    expect_error(plotQueryResultsManh(queryResults = qres, doPlot = "error"))
     
     # results
     tf <- tempfile(fileext = ".png")
     grDevices::png(filename = tf)
-    p <- plotQueryResultsManh(queryResults = qres, plot = TRUE)
+    p <- plotQueryResultsManh(queryResults = qres, doPlot = TRUE)
     grDevices::dev.off()
     
     expect_type(p, "list")
@@ -80,12 +80,12 @@ test_that("plotQueryResultsViolin works", {
     
     # arguments
     expect_error(plotQueryResultsViolin(queryResults = "error"))
-    expect_error(plotQueryResultsViolin(queryResults = qres, plot = "error"))
+    expect_error(plotQueryResultsViolin(queryResults = qres, doPlot = "error"))
     
     # results
     tf <- tempfile(fileext = ".png")
     grDevices::png(filename = tf)
-    p <- plotQueryResultsViolin(queryResults = qres, plot = TRUE)
+    p <- plotQueryResultsViolin(queryResults = qres, doPlot = TRUE)
     grDevices::dev.off()
     
     expect_type(p, "list")

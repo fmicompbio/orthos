@@ -4,13 +4,13 @@
 \alias{plotQueryResultsViolin}
 \title{Visualize query results as violin plots}
 \usage{
-plotQueryResultsViolin(queryResults, plot = TRUE)
+plotQueryResultsViolin(queryResults, doPlot = TRUE)
 }
 \arguments{
 \item{queryResults}{A list containing the results of a query performed with
 \code{queryWithContrasts}}
 
-\item{plot}{Logical scalar specifying if a plot should be generated.}
+\item{doPlot}{Logical scalar specifying if a plot should be generated.}
 }
 \value{
 A list of ggplot violin plots (one for each dataset) for the scores
@@ -37,7 +37,7 @@ query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human",
                                      mode = "DEMO")
                                      
 # plot results for individual contrasts using violin plots::
-ViolinPlots <- plotQueryResultsViolin(query.res.human, plot = FALSE)
+ViolinPlots <- plotQueryResultsViolin(query.res.human, doPlot = FALSE)
 ViolinPlots[["caMKL1"]]
 }
 

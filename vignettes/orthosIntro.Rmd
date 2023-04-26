@@ -339,11 +339,11 @@ query.res.mouse <- queryWithContrasts(dec_MKL1_mouse[, "caMKL1"], organism = "Mo
                                       plotType = "none", mode = "DEMO")
 
 # plot results for individual contrasts using violin plots:
-ViolinPlots_mouse <- plotQueryResultsViolin(query.res.mouse, plot = FALSE)
+ViolinPlots_mouse <- plotQueryResultsViolin(query.res.mouse, doPlot = FALSE)
 ViolinPlots_mouse[["caMKL1"]]
 
 # plot results for individual contrasts using composite Manhattan/Density plots:
-ManhDensPlots_mouse <- plotQueryResultsManh(query.res.mouse, plot = FALSE)
+ManhDensPlots_mouse <- plotQueryResultsManh(query.res.mouse, doPlot = FALSE)
 ManhDensPlots_mouse[["caMKL1"]]
 ```
 
