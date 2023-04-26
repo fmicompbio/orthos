@@ -1,6 +1,6 @@
 # orthos 0.99.0
 
-* prepare package for submission to Bioconductor
+* prepare package for submission to Bioconductor.
 
 # orthos 0.1.0
 
