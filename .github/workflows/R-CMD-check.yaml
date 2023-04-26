@@ -99,11 +99,6 @@ jobs:
       - name: Build, Install, Check
         uses: grimbough/bioc-actions/build-install-check@v1
 
-      - name: Show check output
-        if: always()
-        run: find . -name '00check.log' -exec cat '{}' \; || true
-        shell: bash
-
       - name: Show testthat output
         if: always()
         run: find . -name 'testthat.Rout*' -exec cat '{}' \; || true
