@@ -111,7 +111,6 @@ jobs:
       - name: Show testthat output
         if: always()
         run: cat ${{ steps.build-install-check.outputs.check-dir }}/tests/testthat.Rout
-        # run: find . -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload check results
@@ -119,7 +118,6 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
-          #path: orthos.Rcheck
           path: ${{ steps.build-install-check.outputs.check-dir }}
           
       - name: Run BiocCheck
