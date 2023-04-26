@@ -286,13 +286,11 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             message("Generating plots...")
         }
 
-        suppressWarnings ({
-            if (plotType == "violin") {
-                PLOTS <- plotQueryResultsViolin(RESULTS)
-            } else if (plotType == "manh") {
-                PLOTS <- plotQueryResultsManh(RESULTS)
-            }
-        })
+        if (plotType == "violin") {
+            PLOTS <- plotQueryResultsViolin(RESULTS)
+        } else if (plotType == "manh") {
+            PLOTS <- plotQueryResultsManh(RESULTS)
+        }
     }
 
     if (verbose) {
