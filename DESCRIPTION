@@ -12,11 +12,13 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-2269-4934")),
     person("Friedrich Miescher Institute for Biomedical Research", role = "cph")
   )
-Description: Decompose RNA-seq contrasts, for example obtained from a gene
-    knock-out or compound treatment experiment, into unspecific and
+Description: `orthos` decomposes RNA-seq contrasts, for example obtained from a
+    gene knock-out or compound treatment experiment, into unspecific and
     experiment-specific components. Original and decomposed contrasts can
-    be queried agains a large database of publicly available contrasts to
-    identify experiments with similar effects.
+    be efficiently queried against a large database of publicly available
+    contrasts (ARCHS4, https://maayanlab.cloud/archs4/) to identify similar
+    experiments. `orthos` furthermore provides plotting functions to visualize
+    the results of such a search for similar contrasts.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.2),
