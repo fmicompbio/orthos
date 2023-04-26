@@ -97,11 +97,21 @@ jobs:
         shell: Rscript {0}
 
       - name: Build, Install, Check
+        id: build-install-check
         uses: grimbough/bioc-actions/build-install-check@v1
 
+      - name: Upload install log if the build/install/check step fails
+        if: always() && (steps.build-install-check.outcome == 'failure')
+        uses: actions/upload-artifact@v3
+        with: 
+          name: install-log
+          path: |
+            ${{ steps.build-install-check.outputs.install-log }}
+            
       - name: Show testthat output
         if: always()
-        run: find . -name 'testthat.Rout*' -exec cat '{}' \; || true
+        run: cat ${{ steps.build-install-check.outputs.check-dir }}/tests/testthat.Rout
+        # run: find . -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload check results
@@ -109,7 +119,8 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
-          path: orthos.Rcheck
+          #path: orthos.Rcheck
+          path: ${{ steps.build-install-check.outputs.check-dir }}
           
       - name: Run BiocCheck
         uses: grimbough/bioc-actions/run-BiocCheck@v1
