@@ -167,7 +167,7 @@ dim(MKL1_mouse)
 The workhorse behind `orthos` are organism-specific conditional variational
 autoencoder (cVAE) models that break down the variance of a given differential
 expression experiment into a non-specific (polytopic) and an experiment-specific
-components.
+component.
 
 The non-specific (polytopic) component corresponds to gene variance that has
 been observed across multiple instances during training, while the
@@ -219,7 +219,8 @@ By default the type of gene identifier is detected automatically.
 The first time that `decomposeVar` is executed for a particular organism, the 
 models required for inference will be automatically downloaded from 
 `ExperimentHub` and cached in the user ExperimentHub directory 
-(see `ExperimentHub::getExperimentHubOption("CACHE")`). 
+(see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
+companion package. 
 
 For the MKL1 data, typical calls of `decomposeVar()` using the first mode would
 look like this:
@@ -250,7 +251,7 @@ detected in at least a small fraction of the ARCHS4 database).
 
 The model is highly robust to small fractions of `orthos` genes not being part
 of the user input, even if those genes are expressed in the context under
-consideration. That being noted, it is safer to feed in inputs that are as
+consideration. That being noted, it is safer to feed-in inputs that are as
 comprehensive as possible (i.e not filtered in any way) in terms of gene
 features.
 
@@ -288,6 +289,7 @@ Typically, the next step of the analysis involves querying the contrasts
 database (`orthosData`) to identify public experiments similar to the one(s)
 under investigation, either in terms of the original or decomposed (polytopic/
 specific) contrasts. 
+
 `orthosData` contains over 100,000 differential gene expression experiments
 compiled from the ARCHS4 database of publicly available expression data (@lachmann2018massive). 
 Each entry in `orthosData` corresponds to a pair of RNAseq samples contrasting
@@ -298,7 +300,7 @@ determine the proper assignment of samples to such pairs in `orthosData`.
 The function that performs the queries against `orthosData` is
 `queryWithContrasts()`. The input to this function is the `SummarizedExperiment`
 object obtained in the previous step from `decomposeVar()`, either the complete
-object or also one that has been column-subsetted, allowing to query the 
+object or one that has been column-subsetted, allowing to query the 
 contrast database with only a subset of the decomposed contrasts.
 
 The function returns a list with three elements per query contrast:
@@ -332,6 +334,9 @@ names(query.res.human$zscores)
 dim(query.res.human$zscores$RESIDUAL_CONTRASTS) 
 summary(t(query.res.human$zscores$RESIDUAL_CONTRASTS))
 
+#Information on the top hits of the query using the residual human MKL1/caMKL1 contrasts:
+query.res.human$TopHits$RESIDUAL_CONTRASTS
+
 # query the database using only the "caMKL1" mouse contrast, suppress plotting:
 # for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):
 query.res.mouse <- queryWithContrasts(dec_MKL1_mouse[, "caMKL1"], organism = "Mouse", 
@@ -345,9 +350,25 @@ ViolinPlots_mouse[["caMKL1"]]
 # plot results for individual contrasts using composite Manhattan/Density plots:
 ManhDensPlots_mouse <- plotQueryResultsManh(query.res.mouse, doPlot = FALSE)
 ManhDensPlots_mouse[["caMKL1"]]
+
+
+#Information on the top hits of the query using the residual mouse caMKL1 contrasts:
+query.res.mouse$TopHits$RESIDUAL_CONTRASTS
+
 ```
 
-!!! Discuss the obtained results for the three different queries !!!
+
+The top hits obtained for the residual (specific) fractions of either MKL1 or caMKL1 contrasts both in human and mouse are more clearly separated 
+from the background compared to those obtained from the input or decoded (polytopic) fractions.
+
+More importantly closer inspection of those top hits for the residual contrasts in both experiments (e.g hits from series GSE77120, GSE112277 or GSE140898 in human or GSE164860 in mouse) reveal that they correspond to treatments involving either MKL/MRTFA overexpression or overexpression of the MKL related transcription factor MYOCD.
+Of note, these treatments were performed in various cell contexts, different from the ones of the experiment under study (LM2 and 4T1 cell lines for mouse and human respectively). 
+
+In general, as in this example, the residual sepcific fraction of a DGE profile will be a better query proxy for molecularly and mechanistically related treatments  as it is largely stripped of nuisance variance present in the original contrast.
+
+On the other hand the decoded polytopic fraction and its corresponding query hits can also be of interest in some applications as it informs on downstream/secondary or lateral treatment effects. 
+
+
 
 
 
