@@ -433,7 +433,8 @@ for (contrast in names(assays(dec_MKL1_mouse))[c(4, 1, 2, 3)]) {
 
 ```
 
-# Accessing the model internals and other miscellaneous use cases
+# Advanced use cases: Accessing the model internals
+
 
 Producing latent encodings of contrasts
 Producing latent encodings of contexts
