@@ -268,12 +268,13 @@ in each decomposed component:
 assays(dec_MKL1_human)
 
 #MA plot of for the input contrasts:
-ggplot2::ggplot()+geom_point(
-        aes(x = assay(dec_MKL1_human,"CONTEXT")[,1], y = assay(dec_MKL1_human,"INPUT_CONTRASTS")[,1],
-        size = 0.025,
-        alpha = 0.5
-
-    ))
+DF <- data.frame(L2CPM= assay(dec_MKL1_human,"CONTEXT")[,1],
+                 L2FC=assay(dec_MKL1_human,"INPUT_CONTRASTS")[,1])
+ggplot(data=DF, aes(x=L2CPM, y=L2FC)) + 
+  geom_point(alpha=0.4, size=1.8) + 
+  geom_hline(aes(yintercept = 0), colour = "darkgray", linewidth = 0.5) +
+  xlab("Expression (Log2 CPMs)") + 
+  ylab("Log2 Fold Change")  
 
 colData(dec_MKL1_human) 
 
