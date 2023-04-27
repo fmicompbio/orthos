@@ -152,7 +152,7 @@ plotQueryResultsManh <- function(queryResults, doPlot = TRUE) {
                                                max(DF$score) * expand_y)) +
         ggpubr::clean_theme() +
         ggplot2::geom_point(
-            data = DF[annot$geo_accession, ],
+            data = DF[annot$TREATM_geo_accession, ],
             aes(x = .data$score, y = 0, color = annot$series_id),
             size = 1.5) +
         ggpubr::rotate() +
@@ -167,13 +167,13 @@ plotQueryResultsManh <- function(queryResults, doPlot = TRUE) {
         ggplot2::scale_fill_continuous(type = "viridis") +
         ggplot2::theme_bw() +
         ggplot2::geom_point(
-            data = DF[annot$geo_accession, ],
+            data = DF[annot$TREATM_geo_accession, ],
             aes(color = annot$series_id),
             size = 1.5) +
         ggplot2::labs(x = "Contrast index",
                       y = paste0("Similarity (", scoreType, ")")) +
         ggrepel::geom_text_repel(
-            data = DF[DF$ACC %in% annot$geo_accession, ],
+            data = DF[DF$ACC %in% annot$TREATM_geo_accession, ],
             aes(x = .data$idx, y = .data$score, label = .data$ACC),
             size = 3, max.overlaps = 10000) +
         ggplot2::theme(legend.position = "none",
