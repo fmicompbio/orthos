@@ -303,7 +303,15 @@ object obtained in the previous step from `decomposeVar()`, either the complete
 object or one that has been column-subsetted, allowing to query the 
 contrast database with only a subset of the decomposed contrasts.
 
-The function returns a list with three elements per query contrast:
+As was the case  for the `orthos` models, a database will be automatically downloaded from 
+`ExperimentHub` and cached in the user ExperimentHub directory 
+(see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
+companion package, the first time `queryWithContrasts()` is called for that
+database or the first time the user attempts to access the database directly
+with `loadContrastDatabase()` (see [Accessing the contrast database]) .
+
+
+The `queryWithContrasts()` function returns a list with three elements per query contrast:
 
 - "pearson.rhos" is itself a list with each element containing the Pearson
   correlation values against all the `orthosData` entries for a specific 
@@ -362,9 +370,9 @@ The top hits obtained for the residual (specific) fractions of either MKL1 or ca
 from the background compared to those obtained from the input or decoded (polytopic) fractions.
 
 More importantly closer inspection of those top hits for the residual contrasts in both experiments (e.g hits from series GSE77120, GSE112277 or GSE140898 in human or GSE164860 in mouse) reveal that they correspond to treatments involving either MKL/MRTFA overexpression or overexpression of the MKL related transcription factor MYOCD.
-Of note, these treatments were performed in various cell contexts, different from the ones of the experiment under study (LM2 and 4T1 cell lines for mouse and human respectively). 
+Of note, these treatments were performed in various cell contexts, different from the ones of the MKL study under consideration (LM2 and 4T1 cell lines for mouse and human respectively). 
 
-In general, as in this example, the residual sepcific fraction of a DGE profile will be a better query proxy for molecularly and mechanistically related treatments  as it is largely stripped of nuisance variance present in the original contrast.
+In general, as in this example, the residual sepcific fraction of a DGE profile will be a better query proxy for molecularly and mechanistically related treatments as it is largely stripped of nuisance variance present in the original contrast.
 
 On the other hand the decoded polytopic fraction and its corresponding query hits can also be of interest in some applications as it informs on downstream/secondary or lateral treatment effects. 
 
@@ -374,22 +382,52 @@ On the other hand the decoded polytopic fraction and its corresponding query hit
 
 # Accessing the contrast database
 
-!!! This is a placeholder, text and code to be finalized when `orthosData` are in place !!!
+The `orthos` package provides functionality for direct access to contrast databases of `orthosData` with the
+`loadContrastDatabase()` function.
+
+This can be used to retrieve contrast values for all or subsets of genes or metadata for specific datasets, e.g for hits identified with `queryWithContrasts()`. 
+
+The organism-specific databases are compiled HDF5SummarizedExperiment objects. 
+As was the case  for the `orthos` models, a database will be automatically downloaded from 
+`ExperimentHub` and cached in the user ExperimentHub directory 
+(see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
+companion package, the first time `loadContrastDatabase()` is called for that
+database either directly or via `queryWithContrasts()`.
+
+The HDF5SummarizedExperiment object contains pre-calculated INPUT, RESIDUAL and DECODED log2 fold change contrasts as well as 
+the corresponding expression CONTEXT in log2 CPM representation for all the datasets in `orthosData`.
+
+Extensive gene  and contrast annotation is available in the object's `rowData` and `colData` respectively.
+
 
 ```{r, eval = do_eval}
 organism <- "Mouse"
-orthosDB <- HDF5Array::loadHDF5SummarizedExperiment(
-    dir = "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5",
-    prefix = paste0(tolower(organism), "_v212_NDF_c100_DEMO")
-)
-par(mfrow = c(2,2))
+orthosDB <-  loadContrastDatabase (organism="Mouse", mode="DEMO")
 
+orthosDB 
+
+#Available contrast annotations:
+colnames(colData(orthosDB))
+
+#Available gene annotations:
+colnames(rowData(orthosDB))
+
+#Retrieve partial annotation for a specific contrast
+#returned as a top-hit in the mouse caMKL1 query above:
+colData(orthosDB)["GSM5021181",c("title","series_id","CNTname")]
+
+# Compare context and individual contrast fractions between
+# the mouse caMKL1 contrast under consideration and the "GSM5021181"
+# query hit:
+par(mfrow = c(2,2))
 queryID <- "GSM5021181"
 for (contrast in names(assays(dec_MKL1_mouse))[c(4, 1, 2, 3)]) {
+    unit <- "L2FC"
+    if (contrast=="CONTEXT") {unit <- "L2CPM"}
     plot(assays(dec_MKL1_mouse)[[contrast]][, "caMKL1"],
          assays(orthosDB)[[contrast]][, queryID],
          pch = 16, cex = 0.5, col = "darkslategrey", main = contrast,
-         xlab = "LFC caMKL1", ylab = paste0("LFC ", queryID))
+         xlab = paste0(unit, " caMKL1"), ylab = paste0("LFC ", queryID))
     abline(0, 1, col = "darkred", lwd = 0.8, lty = 2)
 }     
 
