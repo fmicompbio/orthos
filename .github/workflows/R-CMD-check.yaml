@@ -111,12 +111,16 @@ jobs:
           path: |
             ${{ steps.build-install-check.outputs.install-log }}
             
-      - name: Show testthat output
-        if: always()
+      - name: Show testthat output (windows)
+        if: matrix.config.os == 'windows-latest'
         run: |
-            cd ${{ steps.build-install-check.outputs.check-dir }}
-            cd tests
-            cat testthat.Rout
+            type ${{ steps.build-install-check.outputs.check-dir }}\tests\testthat.Rout
+        shell: cmd
+
+      - name: Show testthat output (non-windows)
+        if: matrix.config.os != 'windows-latest'
+        run: |
+            cat ${{ steps.build-install-check.outputs.check-dir }}/tests/testthat.Rout
         shell: bash
 
       - name: Upload check results
