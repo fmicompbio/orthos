@@ -110,7 +110,10 @@ jobs:
             
       - name: Show testthat output
         if: always()
-        run: cat ${{ steps.build-install-check.outputs.check-dir }}/tests/testthat.Rout
+        run: |
+            cd ${{ steps.build-install-check.outputs.check-dir }}
+            cd tests
+            cat testthat.Rout
         shell: bash
 
       - name: Upload check results
