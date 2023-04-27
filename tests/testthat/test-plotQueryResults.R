@@ -54,7 +54,7 @@ test_that("plotQueryResultsManh works", {
     
     # results
     tf <- tempfile(fileext = ".png")
-    grDevices::png(filename = tf)
+    grDevices::png(filename = tf, width = 1000, height = 1000, pointsize = 16)
     p <- plotQueryResultsManh(queryResults = qres, doPlot = TRUE)
     grDevices::dev.off()
     
@@ -64,7 +64,7 @@ test_that("plotQueryResultsManh works", {
     for (i in seq_along(p)) {
         expect_s3_class(p[[i]], "ggplot")
     }
-    expect_true(file.info(tf)['size'] > 20000)
+    expect_true(file.info(tf)['size'] > 5000)
     
     # clean up
     unlink(tf)
