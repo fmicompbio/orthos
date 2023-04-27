@@ -1,13 +1,13 @@
 ## ------------------------------------------------------------------------- ##
-## Checks, .loadContrastDatabase
+## Checks, loadContrastDatabase
 ## ------------------------------------------------------------------------- ##
-test_that(".loadContrastDatabase works", {
-    expect_error(.loadContrastDatabase(organism = "error"))
-    expect_error(.loadContrastDatabase(organism = "Human", mode = "error"))
+test_that("loadContrastDatabase works", {
+    expect_error(loadContrastDatabase(organism = "error"))
+    expect_error(loadContrastDatabase(organism = "Human", mode = "error"))
     
     useMode <- "DEMO"
-    seHuman <- .loadContrastDatabase("Human", mode = useMode, mustWork = FALSE)
-    seMouse <- .loadContrastDatabase("Mouse", mode = useMode, mustWork = FALSE)
+    seHuman <- loadContrastDatabase("Human", mode = useMode, mustWork = FALSE)
+    seMouse <- loadContrastDatabase("Mouse", mode = useMode, mustWork = FALSE)
     
     expect_s4_class(seHuman, "SummarizedExperiment")
     expect_s4_class(seMouse, "SummarizedExperiment")

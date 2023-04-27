@@ -12,31 +12,42 @@
 #' @param mustWork Logical scalar. If \code{FALSE} and the contrast database
 #'     is not available, return an empty \code{SummarizedExperiment} object.
 #'     If \code{TRUE} (the default) and the contrast database is
-#'     not available, \code{.loadContrastDatabase} throws an error.
+#'     not available, \code{loadContrastDatabase} throws an error.
 #'
+#' @details Organism-specific databases are compiled in HDF5SummarizedExperiment objects.
+#' The first time `loadContrastDatabase()` is called for 
+#' a database either directly or via `queryWithContrasts()` the required objects 
+#' will be automatically downloaded from `ExperimentHub` and cached in the user
+#' ExperimentHub directory (see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
+#' companion data-package.
+#' 
 #' @return A \code{SummarizedExperiment} with pre-calculated contrasts as
 #'     assays.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
+#' @examples
+#' \donttest{
+#' 
+#' # !!!Note!!! mode="DEMO" for demonstration purposes only. Default is mode="ANALYSIS"
+#' SE_mouse_demoDB <- loadContrastDatabase (organism="Mouse", mode="DEMO")
+#' SE_mouse_demoDB
+#' 
+#' SE_human_demoDB <- loadContrastDatabase (organism="Human", mode="DEMO")
+#' SE_human_demoDB
+#' 
+#' }
+#'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
 # #' @importFrom digest digest
 #'
-#' @keywords internal
-#' @noRd
-.loadContrastDatabase <- function(organism = c("Human", "Mouse"),
+#'
+loadContrastDatabase <- function(organism = c("Human", "Mouse"),
                                   mode = c("ANALYSIS", "DEMO"),
                                   mustWork = TRUE) {
     organism <- match.arg(organism)
     mode <- match.arg(mode)
-
-    # load SummarizedExperiment
-    # currently, this loads a local file
-    # in the future, this will obtain the database using BiocFileCache or
-    # ExperimentHub
-    
-    # dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
 
     dataDir <- orthosData::GetorthosContrastDB(organism = organism, mode = mode)
     if (identical(mode, "DEMO")) {
@@ -193,7 +204,7 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    targetContrasts <- .loadContrastDatabase(organism = organism, mode)
+    targetContrasts <- loadContrastDatabase(organism = organism, mode)
 
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
