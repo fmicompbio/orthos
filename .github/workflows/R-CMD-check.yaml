@@ -32,7 +32,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
-      ORTHOS_MODEL_EVAL: 0
+      ORTHOS_MODEL_EVAL: 1
 
 
     steps:
