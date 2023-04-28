@@ -147,4 +147,4 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.config.os == 'ubuntu-latest'
         run: |
           R CMD INSTALL .
-          Rscript -e "remotes::install_dev('pkgdown'); pkgdown::deploy_to_branch(new_process = FALSE)"
+          Rscript -e "remotes::install_cran('pkgdown'); pkgdown::deploy_to_branch(new_process = FALSE)"
