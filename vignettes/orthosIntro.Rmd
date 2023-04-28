@@ -262,16 +262,20 @@ The `colData` of the object summarizes the proportion of variance accounted for
 in each decomposed component:
 
 ```{r, eval = do_eval}
+suppressPackageStartupMessages({
+    library(ggplot2)
+    library(SummarizedExperiment)
+})
 assays(dec_MKL1_human)
 
 #MA plot of for the input contrasts:
-DF <- data.frame(L2CPM= assay(dec_MKL1_human,"CONTEXT")[,1],
-                 L2FC=assay(dec_MKL1_human,"INPUT_CONTRASTS")[,1])
-ggplot(data=DF, aes(x=L2CPM, y=L2FC)) + 
-  geom_point(alpha=0.4, size=1.8) + 
-  geom_hline(aes(yintercept = 0), colour = "darkgray", linewidth = 0.5) +
-  xlab("Expression (Log2 CPMs)") + 
-  ylab("Log2 Fold Change")  
+DF <- data.frame(L2CPM = assay(dec_MKL1_human, "CONTEXT")[, 1],
+                 L2FC = assay(dec_MKL1_human, "INPUT_CONTRASTS")[, 1])
+ggplot(data = DF, aes(x = L2CPM, y = L2FC)) + 
+    geom_point(alpha = 0.4, size = 1.8) + 
+    geom_hline(aes(yintercept = 0), colour = "darkgray", linewidth = 0.5) +
+    xlab("Expression (Log2 CPMs)") + 
+    ylab("Log2 Fold Change")  
 
 colData(dec_MKL1_human) 
 
@@ -360,7 +364,6 @@ ManhDensPlots_mouse[["caMKL1"]]
 
 #Information on the top hits of the query using the residual mouse caMKL1 contrasts:
 query.res.mouse$TopHits$RESIDUAL_CONTRASTS
-
 ```
 
 
@@ -400,7 +403,7 @@ Extensive gene  and contrast annotation is available in the object's `rowData` a
 
 ```{r, eval = do_eval}
 organism <- "Mouse"
-orthosDB <-  loadContrastDatabase (organism="Mouse", mode="DEMO")
+orthosDB <- loadContrastDatabase(organism = "Mouse", mode = "DEMO")
 
 orthosDB 
 
@@ -412,23 +415,22 @@ colnames(rowData(orthosDB))
 
 #Retrieve partial annotation for a specific contrast
 #returned as a top-hit in the mouse caMKL1 query above:
-colData(orthosDB)["GSM5021181",c("title","series_id","CNTname")]
+colData(orthosDB)["GSM5021181", c("title", "series_id", "CNTname")]
 
 # Compare context and individual contrast fractions between
 # the mouse caMKL1 contrast under consideration and the "GSM5021181"
 # query hit:
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 queryID <- "GSM5021181"
 for (contrast in names(assays(dec_MKL1_mouse))[c(4, 1, 2, 3)]) {
     unit <- "L2FC"
-    if (contrast=="CONTEXT") {unit <- "L2CPM"}
+    if (contrast == "CONTEXT") {unit <- "L2CPM"}
     plot(assays(dec_MKL1_mouse)[[contrast]][, "caMKL1"],
          assays(orthosDB)[[contrast]][, queryID],
          pch = 16, cex = 0.5, col = "darkslategrey", main = contrast,
          xlab = paste0(unit, " caMKL1"), ylab = paste0("LFC ", queryID))
     abline(0, 1, col = "darkred", lwd = 0.8, lty = 2)
 }     
-
 ```
 
 # Advanced use cases: Accessing the model internals
