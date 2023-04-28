@@ -25,7 +25,8 @@
 #'     assays.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
-#'
+#' @export
+#' 
 #' @examples
 #' \donttest{
 #' 
