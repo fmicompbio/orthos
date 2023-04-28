@@ -21,7 +21,7 @@ Description: `orthos` decomposes RNA-seq contrasts, for example obtained from a
     the results of such a search for similar contrasts.
 License: MIT + file LICENSE
 Depends:
-    R (>= 4.2),
+    R (>= 4.3),
     SummarizedExperiment
 Imports:
     AnnotationHub,
