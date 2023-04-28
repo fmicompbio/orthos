@@ -14,9 +14,7 @@ A list indicating whether keras is available, and the version
 Test conda environment
 }
 \examples{
-\donttest{
 testOrthosEnv()
-}
 
 }
 \author{

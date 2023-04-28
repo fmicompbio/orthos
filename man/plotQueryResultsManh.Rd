@@ -20,7 +20,6 @@ different contrast components against the respective contrast DBs.
 Visualize query results as a composite manhattan/density plot.
 }
 \examples{
-\donttest{
 MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 package = "orthos"))
 
@@ -38,7 +37,6 @@ query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human",
 # plot results for individual contrasts using composite Manhattan/Density plots:
 ManhDensPlots <- plotQueryResultsManh(query.res.human, doPlot = FALSE)
 ManhDensPlots[["caMKL1"]]
-}
 
 
 }

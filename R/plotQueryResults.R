@@ -12,7 +12,6 @@
 #'
 #' 
 #' @examples
-#' \donttest{
 #' MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 #' package = "orthos"))
 #' 
@@ -30,7 +29,6 @@
 #' # plot results for individual contrasts using composite Manhattan/Density plots:
 #' ManhDensPlots <- plotQueryResultsManh(query.res.human, doPlot = FALSE)
 #' ManhDensPlots[["caMKL1"]]
-#' }
 #' 
 #'
 #' @importFrom cowplot plot_grid
@@ -208,7 +206,6 @@ plotQueryResultsManh <- function(queryResults, doPlot = TRUE) {
 #' contrast DBs.
 #'
 #' @examples
-#' \donttest{
 #' MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 #' package = "orthos"))
 #' 
@@ -226,7 +223,6 @@ plotQueryResultsManh <- function(queryResults, doPlot = TRUE) {
 #' # plot results for individual contrasts using violin plots::
 #' ViolinPlots <- plotQueryResultsViolin(query.res.human, doPlot = FALSE)
 #' ViolinPlots[["caMKL1"]]
-#' }
 #'
 #' @importFrom dplyr arrange group_by slice
 #' @importFrom colorspace darken

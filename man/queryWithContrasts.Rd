@@ -69,7 +69,6 @@ A list with three elements called "pearson.rhos", "zscores" and
 Query the contrast database with a set of contrasts
 }
 \examples{
-\donttest{
 MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 package = "orthos"))
 
@@ -83,7 +82,6 @@ params <- BiocParallel::MulticoreParam(workers = 2)
 query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
                                       BPPARAM = params, verbose = FALSE, 
                                       mode = "DEMO")
-}
 
 }
 \author{

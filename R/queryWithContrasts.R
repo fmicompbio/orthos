@@ -124,7 +124,6 @@ loadContrastDatabase <- function(organism = c("Human", "Mouse"),
 #'     hits.
 #'
 #' @examples
-#' \donttest{
 #' MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 #' package = "orthos"))
 #' 
@@ -138,7 +137,6 @@ loadContrastDatabase <- function(organism = c("Human", "Mouse"),
 #' query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
 #'                                       BPPARAM = params, verbose = FALSE, 
 #'                                       mode = "DEMO")
-#' }
 #' 
 #' @importFrom SummarizedExperiment assays colData
 #' @importFrom parallel detectCores

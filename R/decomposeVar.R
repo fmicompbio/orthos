@@ -209,8 +209,6 @@
 #'     as the \code{\link[SummarizedExperiment]{colData}}.
 #'
 #' @examples
-#' \donttest{
-#' 
 #' MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 #' package = "orthos"))
 #' 
@@ -228,8 +226,6 @@
 #' ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
 #' colnames(ContextM) <- colnames(DeltaM) # M and MD need identical dimnames                       
 #' RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
-#' 
-#' }
 #'
 #' @importFrom stats na.omit
 #' @importFrom SummarizedExperiment SummarizedExperiment
