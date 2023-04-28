@@ -398,6 +398,7 @@ decomposeVar <- function(M,
 #' @importFrom keras load_model_hdf5
 #' @importFrom stats predict
 #' @importFrom ExperimentHub ExperimentHub
+#' @importFrom S4Vectors findMatches
 #' @importFrom AnnotationHub query
 #'
 .predictEncoder <- function(gene_input, organism) {
