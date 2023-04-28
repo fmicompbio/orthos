@@ -50,10 +50,7 @@ do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "1"
 ```
 
 
-```{r, echo=FALSE, out.width='50%', fig.align='center'}
-knitr::include_graphics(path = system.file(package = "orthos", "orthos.png",
-                                           mustWork = TRUE))
-```
+![](orthos.png){width=50%}
 
 
 ```{css, echo = FALSE}
@@ -291,6 +288,10 @@ or to check how the input and decomposed contrasts are related to each other.
 For example for the mouse caMKL1 contrast:
 
 ```{r, eval = do_eval}
+suppressPackageStartupMessages({
+    library(ggplot2)
+    library(SummarizedExperiment)
+})
 assays(dec_MKL1_mouse)
 
 #MA plot of for the input contrasts:
@@ -440,7 +441,6 @@ ManhDensPlots_mouse[["caMKL1"]]
 
 #Information on the top hits of the query using the residual mouse caMKL1 contrasts:
 query.res.mouse$TopHits$RESIDUAL_CONTRASTS
-
 ```
 
 
@@ -480,7 +480,7 @@ Extensive gene  and contrast annotation is available in the object's `rowData` a
 
 ```{r, eval = do_eval}
 organism <- "Mouse"
-orthosDB <-  loadContrastDatabase (organism="Mouse", mode="DEMO")
+orthosDB <- loadContrastDatabase(organism = "Mouse", mode = "DEMO")
 
 orthosDB 
 
@@ -492,23 +492,22 @@ colnames(rowData(orthosDB))
 
 #Retrieve partial annotation for a specific contrast
 #returned as a top-hit in the mouse caMKL1 query above:
-colData(orthosDB)["GSM5021181",c("title","series_id","CNTname")]
+colData(orthosDB)["GSM5021181", c("title", "series_id", "CNTname")]
 
 # Compare context and individual contrast fractions between
 # the mouse caMKL1 contrast under consideration and the "GSM5021181"
 # query hit:
-par(mfrow = c(2,2))
+par(mfrow = c(2, 2))
 queryID <- "GSM5021181"
 for (contrast in names(assays(dec_MKL1_mouse))[c(4, 1, 2, 3)]) {
     unit <- "L2FC"
-    if (contrast=="CONTEXT") {unit <- "L2CPM"}
+    if (contrast == "CONTEXT") {unit <- "L2CPM"}
     plot(assays(dec_MKL1_mouse)[[contrast]][, "caMKL1"],
          assays(orthosDB)[[contrast]][, queryID],
          pch = 16, cex = 0.5, col = "darkslategrey", main = contrast,
          xlab = paste0(unit, " caMKL1"), ylab = paste0(unit, " ", queryID))
     abline(0, 1, col = "darkred", lwd = 0.8, lty = 2)
 }     
-
 ```
 
 # Advanced use cases: Accessing the model internals

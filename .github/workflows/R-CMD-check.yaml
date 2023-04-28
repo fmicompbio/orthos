@@ -32,12 +32,12 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
-      ORTHOS_MODEL_EVAL: 0
+      ORTHOS_MODEL_EVAL: 1
 
 
     steps:
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up R and install BiocManager
         uses: grimbough/bioc-actions/setup-bioc@v1

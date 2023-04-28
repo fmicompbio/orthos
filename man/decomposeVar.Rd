@@ -66,8 +66,6 @@ When calling \code{decomposeVar()}, you may see an \code{ImportError}
     \code{testload} argument of \code{\link[basilisk]{basiliskStart}}).
 }
 \examples{
-\donttest{
-
 MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 package = "orthos"))
 
@@ -85,8 +83,6 @@ DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
 ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
 colnames(ContextM) <- colnames(DeltaM) # M and MD need identical dimnames                       
 RES <- decomposeVar(M = ContextM, MD = DeltaM, processInput = FALSE)
-
-}
 
 }
 \author{

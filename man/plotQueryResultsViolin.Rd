@@ -21,7 +21,6 @@ contrast DBs.
 Visualize query results as violin plots
 }
 \examples{
-\donttest{
 MKL1_human <- readRDS(system.file("extdata", "GSE215150_MKL1_Human.rds",
 package = "orthos"))
 
@@ -39,7 +38,6 @@ query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human",
 # plot results for individual contrasts using violin plots::
 ViolinPlots <- plotQueryResultsViolin(query.res.human, doPlot = FALSE)
 ViolinPlots[["caMKL1"]]
-}
 
 }
 \author{
