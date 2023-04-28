@@ -17,9 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        # - { os: macOS-latest, bioc: 'release', curlConfigPath: '/usr/bin/'}
-        # - { os: windows-latest, bioc: 'release'}
-        - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+        # - { os: macOS-latest, bioc: 'devel', curlConfigPath: '/usr/bin/'}
+        # - { os: windows-latest, bioc: 'devel'}
+        # - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+        - { os: macOS-latest, bioc: '3.17', curlConfigPath: '/usr/bin/'}
+        - { os: windows-latest, bioc: '3.17'}
+        - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:RELEASE_3_17", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -74,12 +77,11 @@ jobs:
        #    sudo -s eval "$sysreqs"
        #    sudo apt-get update && sudo apt-get -y install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
 
-      # - name: Install system dependencies (macOS)
-      #   if: runner.os == 'macOS'
-      #   run: |
-      #     brew install harfbuzz
-      #     brew install fribidi
-      #     brew install gcc
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install harfbuzz
+          brew install fribidi
 
       - name: Install dependencies
         run: |
@@ -98,11 +100,27 @@ jobs:
         shell: Rscript {0}
 
       - name: Build, Install, Check
+        id: build-install-check
         uses: grimbough/bioc-actions/build-install-check@v1
 
-      - name: Show testthat output
-        if: always()
-        run: find . -name 'testthat.Rout*' -exec cat '{}' \; || true
+      - name: Upload install log if the build/install/check step fails
+        if: always() && (steps.build-install-check.outcome == 'failure')
+        uses: actions/upload-artifact@v3
+        with: 
+          name: install-log
+          path: |
+            ${{ steps.build-install-check.outputs.install-log }}
+            
+      - name: Show testthat output (windows)
+        if: matrix.config.os == 'windows-latest'
+        run: |
+            type ${{ steps.build-install-check.outputs.check-dir }}\tests\testthat.Rout
+        shell: cmd
+
+      - name: Show testthat output (non-windows)
+        if: matrix.config.os != 'windows-latest'
+        run: |
+            cat ${{ steps.build-install-check.outputs.check-dir }}/tests/testthat.Rout
         shell: bash
 
       - name: Upload check results
@@ -110,7 +128,13 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}-bioc${{ matrix.config.bioc }}-results
-          path: orthos.Rcheck
+          path: ${{ steps.build-install-check.outputs.check-dir }}
+          
+      - name: Run BiocCheck
+        uses: grimbough/bioc-actions/run-BiocCheck@v1
+        with:
+          error-on: 'never'
+          arguments: '--no-check-bioc-views --no-check-bioc-help'
 
       - name: Test coverage
         if: matrix.config.os == 'ubuntu-latest'
@@ -120,7 +144,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.config.os == 'macOS-latest'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.config.os == 'ubuntu-latest'
         run: |
           R CMD INSTALL .
           Rscript -e "remotes::install_dev('pkgdown'); pkgdown::deploy_to_branch(new_process = FALSE)"

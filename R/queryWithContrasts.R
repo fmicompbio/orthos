@@ -12,33 +12,44 @@
 #' @param mustWork Logical scalar. If \code{FALSE} and the contrast database
 #'     is not available, return an empty \code{SummarizedExperiment} object.
 #'     If \code{TRUE} (the default) and the contrast database is
-#'     not available, \code{.loadContrastDatabase} throws an error.
+#'     not available, \code{loadContrastDatabase} throws an error.
 #'
+#' @details Organism-specific databases are compiled in HDF5SummarizedExperiment objects.
+#' The first time `loadContrastDatabase()` is called for 
+#' a database either directly or via `queryWithContrasts()` the required objects 
+#' will be automatically downloaded from `ExperimentHub` and cached in the user
+#' ExperimentHub directory (see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
+#' companion data-package.
+#' 
 #' @return A \code{SummarizedExperiment} with pre-calculated contrasts as
 #'     assays.
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
+#' @examples
+#' \donttest{
+#' 
+#' # !!!Note!!! mode="DEMO" for demonstration purposes only. Default is mode="ANALYSIS"
+#' SE_mouse_demoDB <- loadContrastDatabase (organism="Mouse", mode="DEMO")
+#' SE_mouse_demoDB
+#' 
+#' SE_human_demoDB <- loadContrastDatabase (organism="Human", mode="DEMO")
+#' SE_human_demoDB
+#' 
+#' }
+#'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
 # #' @importFrom digest digest
 #'
-#' @keywords internal
-#' @noRd
-.loadContrastDatabase <- function(organism = c("Human", "Mouse"),
+#'
+loadContrastDatabase <- function(organism = c("Human", "Mouse"),
                                   mode = c("ANALYSIS", "DEMO"),
                                   mustWork = TRUE) {
     organism <- match.arg(organism)
     mode <- match.arg(mode)
 
-    # load SummarizedExperiment
-    # currently, this loads a local file
-    # in the future, this will obtain the database using BiocFileCache or
-    # ExperimentHub
-    
-    # dataDir <- "/tungstenfs/groups/gbioinfo/papapana/DEEP_LEARNING/Autoencoders/ARCHS4/Rdata/DECOMPOSED_CONTRASTS_HDF5"
-
-    dataDir <- orthosData::GetorthosContrastDB(organism=organism, mode=mode)
+    dataDir <- orthosData::GetorthosContrastDB(organism = organism, mode = mode)
     if (identical(mode, "DEMO")) {
         prefix <- paste0(tolower(organism), "_v212_NDF_c100_DEMO")
         seFile <- file.path(dataDir, paste0(prefix, "se.rds"))
@@ -79,27 +90,25 @@
 #'     contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS
 #'     (at least one should be present) and context information in an assay
 #'     named CONTEXT. The latter is only required when use="expressed.in.both".
-#'     This is typically generated using
-#'     \code{decomposeVar}.
+#'     This is typically generated using \code{decomposeVar}.
 #' @param use Determines if all.genes or genes expressed in both query and
 #'     target context will be used. Note that "expressed.in.both", though more
 #'     accurate, is slower.
 #' @param exprThr is the quantile in the provided context that determines the
 #'     expression value above which a gene is considered to be expressed. This
 #'     same value is then used for thresholding the contrast database. Only
-#'     applies when use="expressed.in.both"
-#' @param organism Uses the `orthosData` contrast Database  from this
+#'     applies when use="expressed.in.both".
+#' @param organism Uses the `orthosData` contrast database from this
 #'     species. One of \code{"Human"} or \code{"Mouse"}.
 #' @param plotType Select the type of visualization for the query results
-#'     \code{"violin", "manh"} or \code{"none"} to suppress
-#'     the plotting.
+#'     \code{"violin", "manh"} or \code{"none"} to suppress the plotting.
 #' @param detailTopn specifies the number of top hits for which metadata will
 #'     be returned in the TopHits slot of the results.
 #' @param verbose Logical scalar indicating whether to print messages along
 #'     the way.
 #' @param BPPARAM BiocParallelParam object specifying how parallelization is to
 #'     be performed using e.g. \code{\link[BiocParallel]{MulticoreParam}})
-#'     or \code{\link[BiocParallel]{SnowParam}})
+#'     or \code{\link[BiocParallel]{SnowParam}}).
 #' @param chunk_size Column dimension for the grid used to read blocks from the
 #'     HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
 #'     reduce memory usage.
@@ -109,7 +118,7 @@
 #'     and never for actual analysis purposes.
 #'
 #' @return A list with three elements called "pearson.rhos", "zscores" and
-#'     "TopHitsof", containing raw and z-scored Pearson's rho correlation
+#'     "TopHits", containing raw and z-scored Pearson's rho correlation
 #'     coefficients between the query contrast(s) and the contrasts in the
 #'     database, as well as detailed metadata for the \code{detailTopn} best
 #'     hits.
@@ -121,14 +130,14 @@
 #' 
 #' # Decompose contrasts:
 #' dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
-#'                               organism = "Human", verbose = FALSE)
+#'                                organism = "Human", verbose = FALSE)
 #' 
 #' # Perform query against contrast DB with the decomposed fractions.
 #' # !!!Note!!! mode="DEMO" for demonstration purposes only.                             
 #' params <- BiocParallel::MulticoreParam(workers = 2)                              
 #' query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
-#'                                      BPPARAM = params, verbose = FALSE, 
-#'                                      mode = "DEMO")
+#'                                       BPPARAM = params, verbose = FALSE, 
+#'                                       mode = "DEMO")
 #' }
 #' 
 #' @importFrom SummarizedExperiment assays colData
@@ -173,14 +182,14 @@ queryWithContrasts <- function(contrasts,
     .assertScalar(x = chunk_size, type = "numeric", rngIncl = c(100, Inf))
     .assertScalar(x = BPPARAM, type = "BiocParallelParam")
     
-    ## ------------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
     ## Setup bpprogressbar, initialize cluster
-    ## ------------------------------------------------------------------------
+    ## -------------------------------------------------------------------------
     if (verbose) {
         BiocParallel::bpprogressbar(BPPARAM) <- TRUE
         if (BiocParallel::bpworkers(BPPARAM) < 10) {
-            BiocParallel::bptasks(BPPARAM) <- ifelse(
-                identical(class(BPPARAM)[[1]],"SerialParam"),
+            BiocParallel::bptasks(BPPARAM) <- ifelse (
+                identical(class(BPPARAM)[[1]], "SerialParam"),
                 10, min(2 * BiocParallel::bpworkers(BPPARAM), 10))
         }
     }
@@ -195,7 +204,7 @@ queryWithContrasts <- function(contrasts,
     if (verbose) {
         message("Loading contrast database...")
     }
-    targetContrasts <- .loadContrastDatabase(organism = organism, mode)
+    targetContrasts <- loadContrastDatabase(organism = organism, mode)
 
     stopifnot( "Incompatible rownames in the provided SummarizedExperiment.
 Rownames should be the same as in the contrast database.
@@ -215,7 +224,7 @@ You can make sure by generating your SE generated using `decomposeVar`" =
         }
         thr <- stats::quantile(context, exprThr)
 
-        pearson.rhos <- sapply(presentContrasts, function(x) {
+        pearson.rhos <- lapply(presentContrasts, function(x) {
             if (verbose) {
                 message("Querying contrast database with ", x, "...")
             }
@@ -226,10 +235,11 @@ You can make sure by generating your SE generated using `decomposeVar`" =
                 hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
                 hdf5_ctx = SummarizedExperiment::assays(targetContrasts)[["CONTEXT"]],
                 thr = thr, BPPARAM = BPPARAM, chunk_size = chunk_size)
-        }, simplify = FALSE, USE.NAMES = TRUE
-        )
+        })
+        names(pearson.rhos) <- presentContrasts
+
     } else if (use == "all.genes") {
-        pearson.rhos <- sapply(presentContrasts, function(x) {
+        pearson.rhos <- lapply(presentContrasts, function(x) {
             if (verbose) {
                 message("Querying contrast database with ", x, "...")
             }
@@ -238,8 +248,8 @@ You can make sure by generating your SE generated using `decomposeVar`" =
                 query,
                 hdf5 = SummarizedExperiment::assays(targetContrasts)[[x]],
                 BPPARAM = BPPARAM, chunk_size = chunk_size)
-        }, simplify = FALSE, USE.NAMES = TRUE
-        )
+        })
+        names(pearson.rhos) <- presentContrasts
     }
 
     ## -------------------------------------------------------------------------
@@ -248,29 +258,29 @@ You can make sure by generating your SE generated using `decomposeVar`" =
     if (verbose) {
         message("Compiling query statistics...")
     }
-    zscores <- sapply(presentContrasts, function(x) {
+    zscores <- lapply(presentContrasts, function(x) {
         t(scale(t(pearson.rhos[[x]])))
-    }, simplify = FALSE, USE.NAMES = TRUE
-    )
+    })
+    names(zscores) <- presentContrasts
 
     ## -------------------------------------------------------------------------
     ## Get top hits
     ## -------------------------------------------------------------------------
-    TopHits <- sapply(presentContrasts, function(contr) {
+    TopHits <- lapply(presentContrasts, function(contr) {
         apply(zscores[[contr]], 1, function(x) {
             #N <- names(sort(x, decreasing = TRUE)[seq_len(detailTopn)])
             Zscore <- sort(x, decreasing = TRUE)[seq_len(detailTopn)]
             N <- names(Zscore)
             DBinfo <- SummarizedExperiment::colData(targetContrasts)[N, c(12, 29, 3, 22, 24,
                                                                           33, 31)]
-            colnames(DBinfo)[colnames(DBinfo)=="CNTname"] <- "CNT_geo_accession"
-            colnames(DBinfo)[colnames(DBinfo)=="geo_accession"] <- "TREATM_geo_accession"
-            colnames(DBinfo)[colnames(DBinfo)=="Cor2CNT"] <- "corr_TREATM_CNT"
+            colnames(DBinfo)[colnames(DBinfo) == "CNTname"] <- "CNT_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo) == "geo_accession"] <- "TREATM_geo_accession"
+            colnames(DBinfo)[colnames(DBinfo) == "Cor2CNT"] <- "corr_TREATM_CNT"
             cbind(Zscore, DBinfo)
             
         })
-    }, simplify = FALSE, USE.NAMES = TRUE
-    )
+    })
+    names(TopHits) <- presentContrasts
 
     ## -------------------------------------------------------------------------
     ## Gather results
@@ -287,13 +297,11 @@ You can make sure by generating your SE generated using `decomposeVar`" =
             message("Generating plots...")
         }
 
-        suppressWarnings({
-            if (plotType == "violin") {
-                PLOTS <- plotQueryResultsViolin(RESULTS)
-            } else if (plotType == "manh") {
-                PLOTS <- plotQueryResultsManh(RESULTS)
-            }
-        })
+        if (plotType == "violin") {
+            PLOTS <- plotQueryResultsViolin(RESULTS)
+        } else if (plotType == "manh") {
+            PLOTS <- plotQueryResultsManh(RESULTS)
+        }
     }
 
     if (verbose) {

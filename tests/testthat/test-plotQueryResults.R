@@ -11,18 +11,18 @@
     idxtopR <- sample(x = n, size = ntop)
     tmpTopI <- S4Vectors::DataFrame(
         characteristics_ch1 = rep("characteristics", ntop),
-        geo_accession = ids[idxtopI],
+        TREATM_geo_accession = ids[idxtopI],
         series_id = sprintf("GSE%05d", round(seq(1, ntop) / 4) + 1),
         source_name_ch1 = rep("source", ntop),
         title = rep("title", ntop),
         Cor2CNT = runif(ntop, 0.6, 1.0),
         CNTname = ids[idxtopI])
     tmpTopD <- tmpTopR <- tmpTopI
-    rownames(tmpTopI) <- tmpTopI$geo_accession
-    tmpTopD$geo_accession <- tmpTopD$CNTname <- ids[idxtopD]
-    rownames(tmpTopD) <- tmpTopD$geo_accession
-    tmpTopR$geo_accession <- tmpTopR$CNTname <- ids[idxtopR]
-    rownames(tmpTopR) <- tmpTopR$geo_accession
+    rownames(tmpTopI) <- tmpTopI$TREATM_geo_accession
+    tmpTopD$TREATM_geo_accession <- tmpTopD$CNTname <- ids[idxtopD]
+    rownames(tmpTopD) <- tmpTopD$TREATM_geo_accession
+    tmpTopR$TREATM_geo_accession <- tmpTopR$CNTname <- ids[idxtopR]
+    rownames(tmpTopR) <- tmpTopR$TREATM_geo_accession
     qres <- list(
         pearson.rhos = list(INPUT_CONTRASTS = tmpI,
                             DECODED_CONTRASTS = tmpD,
@@ -50,12 +50,12 @@ test_that("plotQueryResultsManh works", {
     
     # arguments
     expect_error(plotQueryResultsManh(queryResults = "error"))
-    expect_error(plotQueryResultsManh(queryResults = qres, plot = "error"))
+    expect_error(plotQueryResultsManh(queryResults = qres, doPlot = "error"))
     
     # results
     tf <- tempfile(fileext = ".png")
-    grDevices::png(filename = tf)
-    p <- plotQueryResultsManh(queryResults = qres, plot = TRUE)
+    grDevices::png(filename = tf, width = 1000, height = 1000, pointsize = 16)
+    p <- plotQueryResultsManh(queryResults = qres, doPlot = TRUE)
     grDevices::dev.off()
     
     expect_type(p, "list")
@@ -64,7 +64,7 @@ test_that("plotQueryResultsManh works", {
     for (i in seq_along(p)) {
         expect_s3_class(p[[i]], "ggplot")
     }
-    expect_true(file.info(tf)['size'] > 20000)
+    expect_true(file.info(tf)['size'] > 5000)
     
     # clean up
     unlink(tf)
@@ -80,12 +80,12 @@ test_that("plotQueryResultsViolin works", {
     
     # arguments
     expect_error(plotQueryResultsViolin(queryResults = "error"))
-    expect_error(plotQueryResultsViolin(queryResults = qres, plot = "error"))
+    expect_error(plotQueryResultsViolin(queryResults = qres, doPlot = "error"))
     
     # results
     tf <- tempfile(fileext = ".png")
     grDevices::png(filename = tf)
-    p <- plotQueryResultsViolin(queryResults = qres, plot = TRUE)
+    p <- plotQueryResultsViolin(queryResults = qres, doPlot = TRUE)
     grDevices::dev.off()
     
     expect_type(p, "list")

@@ -1,13 +1,13 @@
 ## ------------------------------------------------------------------------- ##
-## Checks, .loadContrastDatabase
+## Checks, loadContrastDatabase
 ## ------------------------------------------------------------------------- ##
-test_that(".loadContrastDatabase works", {
-    expect_error(.loadContrastDatabase(organism = "error"))
-    expect_error(.loadContrastDatabase(organism = "Human", mode = "error"))
+test_that("loadContrastDatabase works", {
+    expect_error(loadContrastDatabase(organism = "error"))
+    expect_error(loadContrastDatabase(organism = "Human", mode = "error"))
     
     useMode <- "DEMO"
-    seHuman <- .loadContrastDatabase("Human", mode = useMode, mustWork = FALSE)
-    seMouse <- .loadContrastDatabase("Mouse", mode = useMode, mustWork = FALSE)
+    seHuman <- loadContrastDatabase("Human", mode = useMode, mustWork = FALSE)
+    seMouse <- loadContrastDatabase("Mouse", mode = useMode, mustWork = FALSE)
     
     expect_s4_class(seHuman, "SummarizedExperiment")
     expect_s4_class(seMouse, "SummarizedExperiment")
@@ -83,6 +83,10 @@ test_that("queryWithContrasts works", {
     # pearson.rhos
     expect_type(resHuman$pearson.rhos, "list")
     expect_identical(names(resHuman$pearson.rhos), anms)
+    expect_identical(dim(resHuman$pearson.rhos$INPUT_CONTRASTS),
+                     dim(resHuman$pearson.rhos$DECODED_CONTRASTS))
+    expect_identical(dim(resHuman$pearson.rhos$INPUT_CONTRASTS),
+                     dim(resHuman$pearson.rhos$RESIDUAL_CONTRASTS))
     expect_equal(rowSums(resHuman$pearson.rhos$INPUT_CONTRASTS),
                  c(MKL1 = 11.8424116074152, caMKL1 = 38.7952653127559), tolerance = 1e-3)
     expect_equal(rowSums(resHuman$pearson.rhos$DECODED_CONTRASTS),

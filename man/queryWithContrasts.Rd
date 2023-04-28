@@ -22,8 +22,7 @@ queryWithContrasts(
 contrasts named INPUT_CONTRASTS, DECODED_CONTRASTS and RESIDUAL_CONTRASTS
 (at least one should be present) and context information in an assay
 named CONTEXT. The latter is only required when use="expressed.in.both".
-This is typically generated using
-\code{decomposeVar}.}
+This is typically generated using \code{decomposeVar}.}
 
 \item{use}{Determines if all.genes or genes expressed in both query and
 target context will be used. Note that "expressed.in.both", though more
@@ -32,14 +31,13 @@ accurate, is slower.}
 \item{exprThr}{is the quantile in the provided context that determines the
 expression value above which a gene is considered to be expressed. This
 same value is then used for thresholding the contrast database. Only
-applies when use="expressed.in.both"}
+applies when use="expressed.in.both".}
 
-\item{organism}{Uses the `orthosData` contrast Database  from this
+\item{organism}{Uses the `orthosData` contrast database from this
 species. One of \code{"Human"} or \code{"Mouse"}.}
 
 \item{plotType}{Select the type of visualization for the query results
-\code{"violin", "manh"} or \code{"none"} to suppress
-the plotting.}
+\code{"violin", "manh"} or \code{"none"} to suppress the plotting.}
 
 \item{detailTopn}{specifies the number of top hits for which metadata will
 be returned in the TopHits slot of the results.}
@@ -49,7 +47,7 @@ the way.}
 
 \item{BPPARAM}{BiocParallelParam object specifying how parallelization is to
 be performed using e.g. \code{\link[BiocParallel]{MulticoreParam}})
-or \code{\link[BiocParallel]{SnowParam}})}
+or \code{\link[BiocParallel]{SnowParam}}).}
 
 \item{chunk_size}{Column dimension for the grid used to read blocks from the
 HDF5 Matrix. Sizes between 250 and 1000 are recommended. Smaller sizes
@@ -62,7 +60,7 @@ and never for actual analysis purposes.}
 }
 \value{
 A list with three elements called "pearson.rhos", "zscores" and
-    "TopHitsof", containing raw and z-scored Pearson's rho correlation
+    "TopHits", containing raw and z-scored Pearson's rho correlation
     coefficients between the query contrast(s) and the contrasts in the
     database, as well as detailed metadata for the \code{detailTopn} best
     hits.
@@ -77,14 +75,14 @@ package = "orthos"))
 
 # Decompose contrasts:
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
-                              organism = "Human", verbose = FALSE)
+                               organism = "Human", verbose = FALSE)
 
 # Perform query against contrast DB with the decomposed fractions.
 # !!!Note!!! mode="DEMO" for demonstration purposes only.                             
 params <- BiocParallel::MulticoreParam(workers = 2)                              
 query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human", 
-                                     BPPARAM = params, verbose = FALSE, 
-                                     mode = "DEMO")
+                                      BPPARAM = params, verbose = FALSE, 
+                                      mode = "DEMO")
 }
 
 }

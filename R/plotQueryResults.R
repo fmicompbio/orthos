@@ -5,7 +5,7 @@
 #'
 #' @param queryResults A list containing the results of a query performed with
 #'     \code{queryWithContrasts}
-#' @param plot Logical scalar specifying if a plot should be generated.
+#' @param doPlot Logical scalar specifying if a plot should be generated.
 #'
 #' @return A composite manhattan/density plot for the scores of queries using
 #' different contrast components against the respective contrast DBs.
@@ -28,18 +28,18 @@
 #'                                      mode = "DEMO")
 #'                                      
 #' # plot results for individual contrasts using composite Manhattan/Density plots:
-#' ManhDensPlots <- plotQueryResultsManh(query.res.human, plot = FALSE)
+#' ManhDensPlots <- plotQueryResultsManh(query.res.human, doPlot = FALSE)
 #' ManhDensPlots[["caMKL1"]]
 #' }
 #' 
 #'
 #' @importFrom cowplot plot_grid
 #'
-plotQueryResultsManh <- function(queryResults, plot = TRUE) {
+plotQueryResultsManh <- function(queryResults, doPlot = TRUE) {
     .assertVector(x = queryResults, type = "list")
     stopifnot("'queryResults' must contain elements 'zscores' and 'TopHits'" = 
                   all(c("zscores", "TopHits") %in% names(queryResults)))
-    .assertScalar(x = plot, type = "logical")
+    .assertScalar(x = doPlot, type = "logical")
     CONTRASTS <- names(queryResults$TopHits)
     DATASETS <-  names(queryResults$TopHits[[1]])
 
@@ -64,7 +64,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
             ncol = 3)
     }
 
-    if (plot) {
+    if (doPlot) {
         if (length(DATASETS) > 3) {
             warning("Too many datasets. Only the first three will be shown. ",
                     "The complete list of plots will however be returned by ",
@@ -74,7 +74,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
                                             label_size = 10,
                                             labels = DATASETS, ncol = 1,
                                             nrow = min(length(DATASETS), 3))
-        print(combined_plot)
+        plot(combined_plot)
     }
 
     return(invisible(PLOTS))
@@ -152,7 +152,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
                                                max(DF$score) * expand_y)) +
         ggpubr::clean_theme() +
         ggplot2::geom_point(
-            data = DF[annot$geo_accession, ],
+            data = DF[annot$TREATM_geo_accession, ],
             aes(x = .data$score, y = 0, color = annot$series_id),
             size = 1.5) +
         ggpubr::rotate() +
@@ -167,13 +167,13 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
         ggplot2::scale_fill_continuous(type = "viridis") +
         ggplot2::theme_bw() +
         ggplot2::geom_point(
-            data = DF[annot$geo_accession, ],
+            data = DF[annot$TREATM_geo_accession, ],
             aes(color = annot$series_id),
             size = 1.5) +
         ggplot2::labs(x = "Contrast index",
                       y = paste0("Similarity (", scoreType, ")")) +
         ggrepel::geom_text_repel(
-            data = DF[DF$ACC %in% annot$geo_accession, ],
+            data = DF[DF$ACC %in% annot$TREATM_geo_accession, ],
             aes(x = .data$idx, y = .data$score, label = .data$ACC),
             size = 3, max.overlaps = 10000) +
         ggplot2::theme(legend.position = "none",
@@ -200,7 +200,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #'
 #' @param queryResults A list containing the results of a query performed with
 #'     \code{queryWithContrasts}
-#' @param plot Logical scalar specifying if a plot should be generated.
+#' @param doPlot Logical scalar specifying if a plot should be generated.
 #'
 #'
 #' @return A list of ggplot violin plots (one for each dataset) for the scores
@@ -224,7 +224,7 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #'                                      mode = "DEMO")
 #'                                      
 #' # plot results for individual contrasts using violin plots::
-#' ViolinPlots <- plotQueryResultsViolin(query.res.human, plot = FALSE)
+#' ViolinPlots <- plotQueryResultsViolin(query.res.human, doPlot = FALSE)
 #' ViolinPlots[["caMKL1"]]
 #' }
 #'
@@ -240,11 +240,11 @@ plotQueryResultsManh <- function(queryResults, plot = TRUE) {
 #' @importFrom plyr desc
 #' @importFrom grDevices colorRampPalette
 #'
-plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
+plotQueryResultsViolin <- function(queryResults, doPlot = TRUE) {
     .assertVector(x = queryResults, type = "list")
     stopifnot("'queryResults' must contain elements 'zscores' and 'TopHits'" = 
                   all(c("zscores", "TopHits") %in% names(queryResults)))
-    .assertScalar(x = plot, type = "logical")
+    .assertScalar(x = doPlot, type = "logical")
     CONTRASTS <- names(queryResults$TopHits)
     DATASETS <-  names(queryResults$TopHits[[1]])
     topn <- nrow(queryResults$TopHits[[1]][[1]])
@@ -302,7 +302,7 @@ plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
             ggplot2::scale_color_manual(values = mycolors)
     }
 
-    if (plot) {
+    if (doPlot) {
         if (length(PLOTS) > 4) {
             warning("Too many datasets. Only the first four will be shown. ",
                     "The complete list of plots will however be returned by ",
@@ -310,7 +310,7 @@ plotQueryResultsViolin <- function(queryResults, plot = TRUE) {
         }
         combined_plot <- cowplot::plot_grid(
             plotlist = PLOTS[seq_len(min(length(PLOTS), 4))])
-        print(combined_plot)
+        plot(combined_plot)
     }
 
     return(invisible(PLOTS))

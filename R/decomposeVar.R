@@ -6,7 +6,7 @@
 #' \code{pseudocount}, and setting of \code{NA} values to 0.
 #' The subset of \code{M} with row names in \code{ids} is returned.
 #'
-#' @param M Numeric matrices with feature counts (features are in rows,
+#' @param M Numeric matrix with feature counts (features are in rows,
 #'     samples in columns).
 #' @param ids Character vector. Only rows of \code{M} with row names in
 #'     \code{ids} will be returned.
@@ -26,18 +26,18 @@
     }
 
     ## Manage NA values
-    NA.idx <- which(is.na(M))
+    indicesNA <- which(is.na(M))
 
-    if (length(NA.idx) > 0) {
+    if (length(indicesNA) > 0) {
         if (verbose) {
-            message("!!!Matrix `M` contains ", length(NA.idx),
-                    " NA values.", " Those will be set to 0")
+            message("Matrix `M` contains ", length(indicesNA),
+                    " NA values. Those will be set to 0.")
         }
-        M[NA.idx] <- 0
+        M[indicesNA] <- 0
     }
     ## Lib normalize and log2 transform input count matrix
     M <- sweep(M[rownames(M) %in% ids, , drop = FALSE], 2,
-               colSums(M), FUN = "/") * 1e+06
+               1e+06 / colSums(M), FUN = "*")
     M <- log2(M + pseudocount)
     return(M)
 }
@@ -45,7 +45,7 @@
 
 #' Load gene annotation table
 #'
-#' @param organism Character scalar, one of \code{"human"} or \code{"mouse"}.
+#' @param organism Character scalar, one of \code{"Human"} or \code{"Mouse"}.
 #' @param mustWork Logical scalar. If \code{FALSE} and the gene information
 #'     data is not available, return an \code{S4Vectors::DFrame} object with
 #'     zero rows. If \code{TRUE} (the default) and the gene information data is
@@ -57,19 +57,21 @@
 #'
 #' @author Panagiotis Papasaikas, Michael Stadler
 #'
-#' @importFrom SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment rowData rowData<-
 #' @importFrom S4Vectors DataFrame
 #' @importFrom orthosData GetorthosContrastDB
 #' 
 #' @keywords internal
 #' @noRd
-.readGeneInformation <- function(organism, mustWork = TRUE, verbose=TRUE) {
+.readGeneInformation <- function(organism, mustWork = TRUE, verbose = TRUE) {
     .assertScalar(x = organism, type = "character",
                   validValues = c("Human", "Mouse"))
     .assertScalar(x = mustWork, type = "logical")
     .assertScalar(x = verbose, type = "logical")
     
-    geneInfoDir <- orthosData::GetorthosContrastDB(organism=organism,mode="DEMO", verbose = verbose)
+    geneInfoDir <- orthosData::GetorthosContrastDB(organism = organism,
+                                                   mode = "DEMO", 
+                                                   verbose = verbose)
     geneInfoFile <- paste0(tolower(organism), "_v212_NDF_c100_DEMOse.rds")
     geneInfoPath <- file.path(geneInfoDir, geneInfoFile)
     
@@ -125,10 +127,10 @@
         }
         IDtypes <- c("ENSEMBL_GENE_ID", "GENE_SYMBOL", "ENTREZ_GENE_ID",
                      "ARCHS4_ID")
-        ID_OLaps <- vapply(IDtypes, function(x) {
+        IDoverlaps <- vapply(IDtypes, function(x) {
             sum(rownames(M) %in% toupper(genes[, x]))
         }, FUN.VALUE = numeric(1))
-        featureType <- IDtypes[which.max(ID_OLaps)]
+        featureType <- IDtypes[which.max(IDoverlaps)]
         if (verbose) {
             message("Feature ids-type detected: ", featureType)
         }
@@ -136,14 +138,14 @@
         if (verbose) {
             message("Feature ids-type specified by user: ", featureType)
         }
-        ID_OLaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
+        IDoverlaps <- sum(rownames(M) %in% toupper(genes[, featureType]))
     }
 
     if (verbose) {
         message(
-            max(ID_OLaps), "/", nrow(M),
+            max(IDoverlaps), "/", nrow(M),
             " provided input features mapped against a total of ",
-            nrow(genes), " model features.\n", nrow(genes) - max(ID_OLaps),
+            nrow(genes), " model features.\n", nrow(genes) - max(IDoverlaps),
             " missing features will be set to 0.\n",
             "--> Missing features corresponding to non/lowly expressed genes ",
             "in your context(s) are of no consequence.\n",
@@ -153,8 +155,8 @@
             "might result in model performance decline.")
     }
 
-    if (nrow(genes) - max(ID_OLaps) > maxMissing) {
-        stop("\n!!!Too many missing features (>", maxMissing, "). ",
+    if (nrow(genes) - max(IDoverlaps) > maxMissing) {
+        stop("\nToo many missing features (>", maxMissing, "). ",
              "Make certain you provided valid\nSymbol, Ensembl or ",
              "Entrez gene identifiers for the specified organism as ",
              "rownames in your input matrix `M`.\n")
@@ -166,7 +168,7 @@
 
 #' Decompose input contrasts to decoded and residual fractions
 #'
-#' Decompose input contrasts (gene expression Deltas) to decoded (generic)
+#' Decompose input contrasts (gene expression deltas) to decoded (generic)
 #' and residual (unique) components according to a contrast encoder-decoder
 #' pre-trained on a large corpus of public RNAseq experiments.
 #'
@@ -196,6 +198,12 @@
 #' @param verbose Logical scalar indicating whether to print messages along
 #'     the way.
 #'
+#' @details When calling \code{decomposeVar()}, you may see an \code{ImportError}
+#'     on the console. This most likely does not have any negative consequences,
+#'     rather it means that R and python may not be library compatible and that
+#'     an automated fallback approach is being used (for more details see
+#'     \code{testload} argument of \code{\link[basilisk]{basiliskStart}}).
+#'
 #' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
 #'     with the decomposed contrasts in the assays and the decomposed variance
 #'     as the \code{\link[SummarizedExperiment]{colData}}.
@@ -214,7 +222,7 @@
 #' # Alternatively by specifying M and MD:
 #' pseudocount <- 4 
 #' M  <- sweep(MKL1_human, 2,
-#'                   colSums(MKL1_human), FUN = "/") * 1e+06
+#'             colSums(MKL1_human), FUN = "/") * 1e+06
 #' M  <- log2(M + pseudocount)
 #' DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
 #' ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
@@ -225,13 +233,13 @@
 #'
 #' @importFrom stats na.omit
 #' @importFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom basilisk basiliskRun
+#' @importFrom basilisk basiliskRun basiliskStart basiliskStop
 #'
 decomposeVar <- function(M,
                          MD = NULL,
                          treatm = NULL, cntr = NULL,
                          processInput = TRUE,
-                         organism = c("Human","Mouse"),
+                         organism = c("Human", "Mouse"),
                          featureType = c("AUTO", "ENSEMBL_GENE_ID",
                                          "GENE_SYMBOL", "ENTREZ_GENE_ID",
                                          "ARCHS4_ID"),
@@ -267,7 +275,7 @@ decomposeVar <- function(M,
     ## -------------------------------------------------------------------------
     ## Read gene information
     ## -------------------------------------------------------------------------
-    genes <- .readGeneInformation(organism, verbose=verbose)
+    genes <- .readGeneInformation(organism, verbose = verbose)
     ngenes <- nrow(genes)
 
     ## -------------------------------------------------------------------------
@@ -315,17 +323,15 @@ decomposeVar <- function(M,
         C[, idx.commonF] <- t(M[idx.commonR, cntr, drop = FALSE])
         D[, idx.commonF] <- t(M[idx.commonR, treatm, drop = FALSE]) -
             t(M[idx.commonR, cntr, drop = FALSE])
-    }
-
-    if (!is.null(MD)) {
+    } else {
         ## Manage NA values
-        NA.idx <- which(is.na(MD))
-        if (length(NA.idx) > 0) {
+        indicesNA <- which(is.na(MD))
+        if (length(indicesNA) > 0) {
             if (verbose) {
-                message("!!!Matrix `MD` contains ", length(NA.idx),
-                        " NA values.", " Those will be set to 0")
+                message("Matrix `MD` contains ", length(indicesNA),
+                        " NA values. Those will be set to 0")
             }
-            MD[NA.idx] <- 0
+            MD[indicesNA] <- 0
         }
 
         C <- matrix(log2(pseudocount), nrow = ncol(M), ncol = nrow(genes),
@@ -338,15 +344,20 @@ decomposeVar <- function(M,
     if (verbose) {
         message("Encoding context...")
     }
-    LATC <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoder,
-                        organism = organism,
-                        gene_input = C)
+    cl <- basiliskStart(orthosenv,
+                        testload = "tensorflow")
+    LATC <- basilisk::basiliskRun(proc = cl,
+                                  fun = .predictEncoder,
+                                  organism = organism,
+                                  gene_input = C)
     if (verbose) {
         message("Encoding and decoding contrasts...")
     }
-    res <- basilisk::basiliskRun(env = orthosenv, fun = .predict_encoderd,
-                       organism = organism,
-                       delta_input = D, context = LATC)
+    res <- basilisk::basiliskRun(proc = cl,
+                                 fun = .predictEncoderD,
+                                 organism = organism,
+                                 delta_input = D, context = LATC)
+    basilisk::basiliskStop(cl)
     LATD <- res$LATD
     DEC <- res$DEC
 
@@ -371,7 +382,7 @@ decomposeVar <- function(M,
     RESULT <- SummarizedExperiment(assays = decomposed.contrasts,
                                    colData = list(ACCOUNTED_VARIANCE = VAR_DEC))
     rownames(RESULT) <- rownames(genes)
-    rowData(RESULT)$User_provided_IDs <- rep(NA,nrow(RESULT))
+    rowData(RESULT)$User_provided_IDs <- rep(NA, nrow(RESULT))
     rowData(RESULT)$User_provided_IDs[idx.commonF1] <- geneIDs[idx.commonR1]
 
     if (verbose) {
@@ -389,15 +400,11 @@ decomposeVar <- function(M,
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom AnnotationHub query
 #'
-.predict_encoder <- function(gene_input, organism) {
+.predictEncoder <- function(gene_input, organism) {
     ## Load context encoder model from ExperimentHub:
-    query_keys <- c( "orthosData", "ContextEncoder_",organism, "ARCHS4" )
-    suppressMessages({
-        suppressWarnings({
+    query_keys <- c("orthosData", "ContextEncoder_", organism, "ARCHS4")
     hub <- ExperimentHub::ExperimentHub()
     encoder <- AnnotationHub::query(hub, query_keys)[[1]]
-        })
-    })
     predict(encoder, list(gene_input = gene_input))
 }
 
@@ -409,23 +416,19 @@ decomposeVar <- function(M,
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom AnnotationHub query
 #'
-.predict_encoderd <- function(delta_input, context, organism) {
+.predictEncoderD <- function(delta_input, context, organism) {
     ## Load contrast encoder and generator models from ExperimentHub:
-    query_keysE <- c( "orthosData", "DeltaEncoder_",organism, "ARCHS4" )
-    query_keysD <- c( "orthosData", "DeltaDecoder_",organism, "ARCHS4" )
+    query_keysE <- c("orthosData", "DeltaEncoder_", organism, "ARCHS4")
+    query_keysD <- c("orthosData", "DeltaDecoder_", organism, "ARCHS4")
     
-    suppressMessages({
-        suppressWarnings({
     hub <- ExperimentHub::ExperimentHub()
     encoderD <- AnnotationHub::query(hub, query_keysE)[[1]]
     generatorD <- AnnotationHub::query(hub, query_keysD)[[1]]
-        })
-    })
     ## Encode and decode deltas:
     LATD <- predict(encoderD, list(delta_input = delta_input,
                                    CONTEXT = context))
     DEC <- t(predict(generatorD, cbind(LATD, context)))
-
+    
     list(LATD = LATD, DEC = DEC)
 }
 

@@ -6,14 +6,17 @@
 #' @author Charlotte Soneson
 #'
 #' @examples
+#' \donttest{
 #' testOrthosEnv()
+#' }
 #'
 #' @export
 #'
 #' @importFrom reticulate import
 #' @importFrom basilisk basiliskStart basiliskRun basiliskStop
 testOrthosEnv <- function() {
-    cl <- basiliskStart(orthosenv)
+    cl <- basiliskStart(orthosenv,
+                        testload = "tensorflow")
     keras_tf_version <- basiliskRun(cl, function() {
         list(keras_available = keras::is_keras_available("2.10.0"),
              tf_version = tensorflow::tf$version$VERSION)

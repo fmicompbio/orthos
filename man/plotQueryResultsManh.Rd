@@ -4,13 +4,13 @@
 \alias{plotQueryResultsManh}
 \title{Visualize query results as a composite manhattan/density plot.}
 \usage{
-plotQueryResultsManh(queryResults, plot = TRUE)
+plotQueryResultsManh(queryResults, doPlot = TRUE)
 }
 \arguments{
 \item{queryResults}{A list containing the results of a query performed with
 \code{queryWithContrasts}}
 
-\item{plot}{Logical scalar specifying if a plot should be generated.}
+\item{doPlot}{Logical scalar specifying if a plot should be generated.}
 }
 \value{
 A composite manhattan/density plot for the scores of queries using
@@ -36,7 +36,7 @@ query.res.human <- queryWithContrasts(dec_MKL1_human, organism = "Human",
                                      mode = "DEMO")
                                      
 # plot results for individual contrasts using composite Manhattan/Density plots:
-ManhDensPlots <- plotQueryResultsManh(query.res.human, plot = FALSE)
+ManhDensPlots <- plotQueryResultsManh(query.res.human, doPlot = FALSE)
 ManhDensPlots[["caMKL1"]]
 }
 

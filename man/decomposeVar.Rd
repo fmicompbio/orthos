@@ -54,9 +54,16 @@ A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
     as the \code{\link[SummarizedExperiment]{colData}}.
 }
 \description{
-Decompose input contrasts (gene expression Deltas) to decoded (generic)
+Decompose input contrasts (gene expression deltas) to decoded (generic)
 and residual (unique) components according to a contrast encoder-decoder
 pre-trained on a large corpus of public RNAseq experiments.
+}
+\details{
+When calling \code{decomposeVar()}, you may see an \code{ImportError}
+    on the console. This most likely does not have any negative consequences,
+    rather it means that R and python may not be library compatible and that
+    an automated fallback approach is being used (for more details see
+    \code{testload} argument of \code{\link[basilisk]{basiliskStart}}).
 }
 \examples{
 \donttest{
@@ -72,7 +79,7 @@ dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1),
 # Alternatively by specifying M and MD:
 pseudocount <- 4 
 M  <- sweep(MKL1_human, 2,
-                  colSums(MKL1_human), FUN = "/") * 1e+06
+            colSums(MKL1_human), FUN = "/") * 1e+06
 M  <- log2(M + pseudocount)
 DeltaM <- M[,c("MKL1","caMKL1")]-M[,"Ctrl"] # Matrix of contrasts
 ContextM <- M[,c("Ctrl","Ctrl")] # Matrix with context for the specified contrasts
