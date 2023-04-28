@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>An introduction to contrast decomposition and querying using orthos • orthos</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -100,7 +100,9 @@ SwitzerlandSIB Swiss Institute of Bioinformatics<br><h4 data-toc-skip class="dat
 
     
     
-<p><img src="../../../_temp/Library/orthos/orthos.png" width="50%" style="display: block; margin: auto;"></p>
+<div class="figure">
+<img src="orthos.png" style="width:50.0%" alt=""><p class="caption">orthos logo</p>
+</div>
 <style type="text/css">
 body {
   margin: 0 auto;
@@ -282,11 +284,29 @@ the first mode would look like this:</p>
 <span><span class="va">dec_MKL1_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_human</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                               organism <span class="op">=</span> <span class="st">"Human"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">dec_MKL1_human</span></span>
+<span><span class="co">#&gt; class: SummarizedExperiment </span></span>
+<span><span class="co">#&gt; dim: 20411 2 </span></span>
+<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="co">#&gt; assays(4): INPUT_CONTRASTS DECODED_CONTRASTS RESIDUAL_CONTRASTS CONTEXT</span></span>
+<span><span class="co">#&gt; rownames(20411): A1BG A1BG-AS1 ... WFDC5 XAGE2</span></span>
+<span><span class="co">#&gt; rowData names(1): User_provided_IDs</span></span>
+<span><span class="co">#&gt; colnames(2): MKL1 caMKL1</span></span>
+<span><span class="co">#&gt; colData names(3): ACCOUNTED_VARIANCE.DECODED</span></span>
+<span><span class="co">#&gt;   ACCOUNTED_VARIANCE.RESIDUAL ACCOUNTED_VARIANCE.COMMON</span></span>
 <span></span>
 <span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:</span></span>
 <span><span class="va">dec_MKL1_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_mouse</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               organism <span class="op">=</span> <span class="st">"Mouse"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">dec_MKL1_mouse</span></span></code></pre></div>
+<span><span class="va">dec_MKL1_mouse</span></span>
+<span><span class="co">#&gt; class: SummarizedExperiment </span></span>
+<span><span class="co">#&gt; dim: 20339 2 </span></span>
+<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="co">#&gt; assays(4): INPUT_CONTRASTS DECODED_CONTRASTS RESIDUAL_CONTRASTS CONTEXT</span></span>
+<span><span class="co">#&gt; rownames(20339): 0610005C13Rik 0610009B22Rik ... n-R5s146 n-R5s149</span></span>
+<span><span class="co">#&gt; rowData names(1): User_provided_IDs</span></span>
+<span><span class="co">#&gt; colnames(2): MKL1 caMKL1</span></span>
+<span><span class="co">#&gt; colData names(3): ACCOUNTED_VARIANCE.DECODED</span></span>
+<span><span class="co">#&gt;   ACCOUNTED_VARIANCE.RESIDUAL ACCOUNTED_VARIANCE.COMMON</span></span></code></pre></div>
 <p>The output of <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> is a
 <code>SummarizedExperiment</code> object with dimensions <code>N</code>
 x <code>M</code>, where <code>N</code> is the number of
@@ -312,21 +332,49 @@ log2-transformed counts per million (log2 CPM).</p>
 <p>The <code>colData</code> of the object summarizes the proportion of
 variance accounted for in each decomposed component:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment" class="external-link">SummarizedExperiment</a></span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of length 4</span></span>
+<span><span class="co">#&gt; names(4): INPUT_CONTRASTS DECODED_CONTRASTS RESIDUAL_CONTRASTS CONTEXT</span></span>
 <span></span>
 <span><span class="co">#MA plot of for the input contrasts:</span></span>
-<span><span class="va">DF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>L2CPM<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span>,<span class="st">"CONTEXT"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,</span>
-<span>                 L2FC<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span>,<span class="st">"INPUT_CONTRASTS"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span>data<span class="op">=</span><span class="va">DF</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">L2CPM</span>, y<span class="op">=</span><span class="va">L2FC</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha<span class="op">=</span><span class="fl">0.4</span>, size<span class="op">=</span><span class="fl">1.8</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">geom_hline</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"darkgray"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Expression (Log2 CPMs)"</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Log2 Fold Change"</span><span class="op">)</span>  </span>
-<span></span>
+<span><span class="va">DF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>L2CPM <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span>, <span class="st">"CONTEXT"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span>
+<span>                 L2FC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span>, <span class="st">"INPUT_CONTRASTS"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">DF</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">L2CPM</span>, y <span class="op">=</span> <span class="va">L2FC</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span>, size <span class="op">=</span> <span class="fl">1.8</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"darkgray"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Expression (Log2 CPMs)"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Log2 Fold Change"</span><span class="op">)</span>  </span></code></pre></div>
+<p><img src="orthosIntro_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; DataFrame with 2 rows and 3 columns</span></span>
+<span><span class="co">#&gt;        ACCOUNTED_VARIANCE.DECODED ACCOUNTED_VARIANCE.RESIDUAL</span></span>
+<span><span class="co">#&gt;                         &lt;numeric&gt;                   &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; MKL1                     0.326622                    0.834041</span></span>
+<span><span class="co">#&gt; caMKL1                   0.323083                    0.776842</span></span>
+<span><span class="co">#&gt;        ACCOUNTED_VARIANCE.COMMON</span></span>
+<span><span class="co">#&gt;                        &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; MKL1                   0.1606626</span></span>
+<span><span class="co">#&gt; caMKL1                 0.0999251</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; List of length 4</span></span>
+<span><span class="co">#&gt; names(4): INPUT_CONTRASTS DECODED_CONTRASTS RESIDUAL_CONTRASTS CONTEXT</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 2 rows and 3 columns</span></span>
+<span><span class="co">#&gt;        ACCOUNTED_VARIANCE.DECODED ACCOUNTED_VARIANCE.RESIDUAL</span></span>
+<span><span class="co">#&gt;                         &lt;numeric&gt;                   &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; MKL1                     0.340694                    0.873229</span></span>
+<span><span class="co">#&gt; caMKL1                   0.294274                    0.791121</span></span>
+<span><span class="co">#&gt;        ACCOUNTED_VARIANCE.COMMON</span></span>
+<span><span class="co">#&gt;                        &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; MKL1                   0.2139228</span></span>
+<span><span class="co">#&gt; caMKL1                 0.0853951</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="querying-the-database-of-gene-contrasts-using-querywithcontrasts">Querying the database of gene contrasts using
@@ -377,24 +425,113 @@ metadata for each of the top <code>detailTopn</code> hits per component
 <code>mode =  "DEMO"</code> in order to keep computations short. For
 actual analyses, the default <code>mode = "ANALYSIS"</code> should be
 used.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># parallelization parameters:</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu">BiocParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/MulticoreParam-class.html" class="external-link">MulticoreParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):</span></span>
 <span><span class="va">query.res.human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/queryWithContrasts.html">queryWithContrasts</a></span><span class="op">(</span><span class="va">dec_MKL1_human</span>, organism <span class="op">=</span> <span class="st">"Human"</span>, </span>
 <span>                                      BPPARAM <span class="op">=</span> <span class="va">params</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, </span>
-<span>                                      mode <span class="op">=</span> <span class="st">"DEMO"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">query.res.human</span><span class="op">)</span></span>
+<span>                                      mode <span class="op">=</span> <span class="st">"DEMO"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="orthosIntro_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">query.res.human</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "pearson.rhos" "zscores"      "TopHits"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">query.res.human</span><span class="op">$</span><span class="va">zscores</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "INPUT_CONTRASTS"    "DECODED_CONTRASTS"  "RESIDUAL_CONTRASTS"</span></span>
 <span></span>
 <span><span class="co"># query contrasts in rows, `orthosData` entries in columns:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">query.res.human</span><span class="op">$</span><span class="va">zscores</span><span class="op">$</span><span class="va">RESIDUAL_CONTRASTS</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; [1]    2 1000</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">query.res.human</span><span class="op">$</span><span class="va">zscores</span><span class="op">$</span><span class="va">RESIDUAL_CONTRASTS</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       MKL1              caMKL1        </span></span>
+<span><span class="co">#&gt;  Min.   :-3.17999   Min.   :-2.47869  </span></span>
+<span><span class="co">#&gt;  1st Qu.:-0.53837   1st Qu.:-0.44872  </span></span>
+<span><span class="co">#&gt;  Median :-0.09769   Median :-0.09039  </span></span>
+<span><span class="co">#&gt;  Mean   : 0.00000   Mean   : 0.00000  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 0.36729   3rd Qu.: 0.30576  </span></span>
+<span><span class="co">#&gt;  Max.   : 7.38595   Max.   :13.90709</span></span>
 <span></span>
 <span><span class="co">#Information on the top hits of the query using the residual human MKL1/caMKL1 contrasts:</span></span>
 <span><span class="va">query.res.human</span><span class="op">$</span><span class="va">TopHits</span><span class="op">$</span><span class="va">RESIDUAL_CONTRASTS</span></span>
+<span><span class="co">#&gt; $MKL1</span></span>
+<span><span class="co">#&gt; DataFrame with 10 rows and 8 columns</span></span>
+<span><span class="co">#&gt;               Zscore TREATM_geo_accession                  title</span></span>
+<span><span class="co">#&gt;            &lt;numeric&gt;          &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531   7.38595           GSM2044531                MYOCD-1</span></span>
+<span><span class="co">#&gt; GSM2044532   7.31258           GSM2044532                MYOCD-2</span></span>
+<span><span class="co">#&gt; GSM3066023   6.63946           GSM3066023 HEL-iMKL1 Dox treate..</span></span>
+<span><span class="co">#&gt; GSM3544074   6.21459           GSM3544074        MEL270.SF3B1_WT</span></span>
+<span><span class="co">#&gt; GSM4869874   5.46485           GSM4869874 U2OS cells - DMSO - ..</span></span>
+<span><span class="co">#&gt; GSM3544069   5.23304           GSM3544069     MEL270.SF3B1_K700E</span></span>
+<span><span class="co">#&gt; GSM5013969   4.91198           GSM5013969 chase_4sU_merged.EtO..</span></span>
+<span><span class="co">#&gt; GSM4718649   4.79887           GSM4718649 F508delCFBE41o, siCT..</span></span>
+<span><span class="co">#&gt; GSM5013974   4.79434           GSM5013974 nochase_spiked_4sU_4..</span></span>
+<span><span class="co">#&gt; GSM5709388   4.73799           GSM5709388   EFM192A-LAP-DTP1_S11</span></span>
+<span><span class="co">#&gt;               characteristics_ch1           series_id        source_name_ch1</span></span>
+<span><span class="co">#&gt;                       &lt;character&gt;         &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531 transduction: ad-MYOCD            GSE77120 vascular smooth musc..</span></span>
+<span><span class="co">#&gt; GSM2044532 transduction: ad-MYOCD            GSE77120 vascular smooth musc..</span></span>
+<span><span class="co">#&gt; GSM3066023 treatment: Treated w.. GSE112277,GSE112279        HEL-iMKL1 cells</span></span>
+<span><span class="co">#&gt; GSM3544074 cell line: MEL270,le..           GSE124720                 MEL270</span></span>
+<span><span class="co">#&gt; GSM4869874 cell type: U2OS,trea.. GSE160253,GSE160254             U2OS cells</span></span>
+<span><span class="co">#&gt; GSM3544069 cell line: MEL270,le..           GSE124720                 MEL270</span></span>
+<span><span class="co">#&gt; GSM5013969 treatment (etoh or 4.. GSE164555,GSE164569 SH-EP-MYCNER shEXOSC10</span></span>
+<span><span class="co">#&gt; GSM4718649 cell type: Immortali..           GSE155987 Parental CFBE41o- Ce..</span></span>
+<span><span class="co">#&gt; GSM5013974 treatment (etoh or 4.. GSE164555,GSE164569 SH-EP-MYCNER shEXOSC10</span></span>
+<span><span class="co">#&gt; GSM5709388 treatment: 14 day la..           GSE156246                EFM192A</span></span>
+<span><span class="co">#&gt;            CNT_geo_accession corr_TREATM_CNT</span></span>
+<span><span class="co">#&gt;                  &lt;character&gt;       &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531        GSM2044530        0.963492</span></span>
+<span><span class="co">#&gt; GSM2044532        GSM2044530        0.963938</span></span>
+<span><span class="co">#&gt; GSM3066023        GSM3066021        0.995455</span></span>
+<span><span class="co">#&gt; GSM3544074        GSM3544065        0.995561</span></span>
+<span><span class="co">#&gt; GSM4869874        GSM4869870        0.993011</span></span>
+<span><span class="co">#&gt; GSM3544069        GSM3544065        0.994787</span></span>
+<span><span class="co">#&gt; GSM5013969        GSM5013971        0.994540</span></span>
+<span><span class="co">#&gt; GSM4718649        GSM4718652        0.993717</span></span>
+<span><span class="co">#&gt; GSM5013974        GSM5013976        0.992348</span></span>
+<span><span class="co">#&gt; GSM5709388        GSM5709390        0.959956</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $caMKL1</span></span>
+<span><span class="co">#&gt; DataFrame with 10 rows and 8 columns</span></span>
+<span><span class="co">#&gt;               Zscore TREATM_geo_accession                  title</span></span>
+<span><span class="co">#&gt;            &lt;numeric&gt;          &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531  13.90709           GSM2044531                MYOCD-1</span></span>
+<span><span class="co">#&gt; GSM2044532  13.85102           GSM2044532                MYOCD-2</span></span>
+<span><span class="co">#&gt; GSM4189923   6.84975           GSM4189923      HT11_iSM_old_rep3</span></span>
+<span><span class="co">#&gt; GSM4189922   6.83691           GSM4189922      HT15_iSM_old_rep2</span></span>
+<span><span class="co">#&gt; GSM3976594   4.62126           GSM3976594         FSK_IL-1beta_2</span></span>
+<span><span class="co">#&gt; GSM3066023   4.62013           GSM3066023 HEL-iMKL1 Dox treate..</span></span>
+<span><span class="co">#&gt; GSM3976593   4.52470           GSM3976593         FSK_IL-1beta_1</span></span>
+<span><span class="co">#&gt; GSM3976595   4.38356           GSM3976595         FSK_IL-1beta_3</span></span>
+<span><span class="co">#&gt; GSM4189918   3.97301           GSM4189918    RS17_iSM_young_rep1</span></span>
+<span><span class="co">#&gt; GSM4189920   3.89561           GSM4189920    RS14_iSM_young_rep3</span></span>
+<span><span class="co">#&gt;               characteristics_ch1           series_id        source_name_ch1</span></span>
+<span><span class="co">#&gt;                       &lt;character&gt;         &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531 transduction: ad-MYOCD            GSE77120 vascular smooth musc..</span></span>
+<span><span class="co">#&gt; GSM2044532 transduction: ad-MYOCD            GSE77120 vascular smooth musc..</span></span>
+<span><span class="co">#&gt; GSM4189923 treatment: induced c..           GSE140898 human induced smooth..</span></span>
+<span><span class="co">#&gt; GSM4189922 treatment: induced c..           GSE140898 human induced smooth..</span></span>
+<span><span class="co">#&gt; GSM3976594 cell type: hTERT-HM^..           GSE134896             myometrium</span></span>
+<span><span class="co">#&gt; GSM3066023 treatment: Treated w.. GSE112277,GSE112279        HEL-iMKL1 cells</span></span>
+<span><span class="co">#&gt; GSM3976593 cell type: hTERT-HM^..           GSE134896             myometrium</span></span>
+<span><span class="co">#&gt; GSM3976595 cell type: hTERT-HM^..           GSE134896             myometrium</span></span>
+<span><span class="co">#&gt; GSM4189918 treatment: induced c..           GSE140898 human induced smooth..</span></span>
+<span><span class="co">#&gt; GSM4189920 treatment: induced c..           GSE140898 human induced smooth..</span></span>
+<span><span class="co">#&gt;            CNT_geo_accession corr_TREATM_CNT</span></span>
+<span><span class="co">#&gt;                  &lt;character&gt;       &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; GSM2044531        GSM2044530        0.963492</span></span>
+<span><span class="co">#&gt; GSM2044532        GSM2044530        0.963938</span></span>
+<span><span class="co">#&gt; GSM4189923        GSM4189934        0.975019</span></span>
+<span><span class="co">#&gt; GSM4189922        GSM4189934        0.978935</span></span>
+<span><span class="co">#&gt; GSM3976594        GSM3976579        0.985832</span></span>
+<span><span class="co">#&gt; GSM3066023        GSM3066021        0.995455</span></span>
+<span><span class="co">#&gt; GSM3976593        GSM3976579        0.987186</span></span>
+<span><span class="co">#&gt; GSM3976595        GSM3976579        0.987181</span></span>
+<span><span class="co">#&gt; GSM4189918        GSM4189933        0.983446</span></span>
+<span><span class="co">#&gt; GSM4189920        GSM4189934        0.979353</span></span>
 <span></span>
 <span><span class="co"># query the database using only the "caMKL1" mouse contrast, suppress plotting:</span></span>
 <span><span class="co"># for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):</span></span>
@@ -404,15 +541,57 @@ used.</p>
 <span></span>
 <span><span class="co"># plot results for individual contrasts using violin plots:</span></span>
 <span><span class="va">ViolinPlots_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotQueryResultsViolin.html">plotQueryResultsViolin</a></span><span class="op">(</span><span class="va">query.res.mouse</span>, doPlot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">ViolinPlots_mouse</span><span class="op">[[</span><span class="st">"caMKL1"</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
+<span><span class="va">ViolinPlots_mouse</span><span class="op">[[</span><span class="st">"caMKL1"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<p><img src="orthosIntro_files/figure-html/unnamed-chunk-5-2.png" width="1152"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># plot results for individual contrasts using composite Manhattan/Density plots:</span></span>
 <span><span class="va">ManhDensPlots_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotQueryResultsManh.html">plotQueryResultsManh</a></span><span class="op">(</span><span class="va">query.res.mouse</span>, doPlot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">ManhDensPlots_mouse</span><span class="op">[[</span><span class="st">"caMKL1"</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
+<span><span class="va">ManhDensPlots_mouse</span><span class="op">[[</span><span class="st">"caMKL1"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<p><img src="orthosIntro_files/figure-html/unnamed-chunk-5-3.png" width="1152"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span></span>
 <span><span class="co">#Information on the top hits of the query using the residual mouse caMKL1 contrasts:</span></span>
-<span><span class="va">query.res.mouse</span><span class="op">$</span><span class="va">TopHits</span><span class="op">$</span><span class="va">RESIDUAL_CONTRASTS</span></span></code></pre></div>
+<span><span class="va">query.res.mouse</span><span class="op">$</span><span class="va">TopHits</span><span class="op">$</span><span class="va">RESIDUAL_CONTRASTS</span></span>
+<span><span class="co">#&gt; $caMKL1</span></span>
+<span><span class="co">#&gt; DataFrame with 10 rows and 8 columns</span></span>
+<span><span class="co">#&gt;               Zscore TREATM_geo_accession                  title</span></span>
+<span><span class="co">#&gt;            &lt;numeric&gt;          &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM5021181  14.91050           GSM5021181 E0771_pRetrox_MRTFA_..</span></span>
+<span><span class="co">#&gt; GSM5021173   9.44599           GSM5021173 B16F10_pRetrox_MRTFA..</span></span>
+<span><span class="co">#&gt; GSM5021171   7.65648           GSM5021171 B16F10_pRetrox_MRTFA..</span></span>
+<span><span class="co">#&gt; GSM5021172   5.90237           GSM5021172 B16F10_pRetrox_MRTFA..</span></span>
+<span><span class="co">#&gt; GSM5396603   5.09239           GSM5396603                    NA4</span></span>
+<span><span class="co">#&gt; GSM5396607   5.05168           GSM5396607                    NA8</span></span>
+<span><span class="co">#&gt; GSM5396602   5.01185           GSM5396602                    NA3</span></span>
+<span><span class="co">#&gt; GSM5396606   4.93570           GSM5396606                    NA7</span></span>
+<span><span class="co">#&gt; GSM4928843   4.68661           GSM4928843 Î²-actin knockout Mo..</span></span>
+<span><span class="co">#&gt; GSM3176949   4.61862           GSM3176949    11D_mmu-miR-1199-5p</span></span>
+<span><span class="co">#&gt;               characteristics_ch1           series_id        source_name_ch1</span></span>
+<span><span class="co">#&gt;                       &lt;character&gt;         &lt;character&gt;            &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM5021181 strain: C57BL6,cell ..           GSE164860            E0771 cells</span></span>
+<span><span class="co">#&gt; GSM5021173 strain: C57BL6,cell ..           GSE164860           B16F10 cells</span></span>
+<span><span class="co">#&gt; GSM5021171 strain: C57BL6,cell ..           GSE164860           B16F10 cells</span></span>
+<span><span class="co">#&gt; GSM5021172 strain: C57BL6,cell ..           GSE164860           B16F10 cells</span></span>
+<span><span class="co">#&gt; GSM5396603 strain: C57BL/6,tiss..           GSE178725 Mouse embryonic fibr..</span></span>
+<span><span class="co">#&gt; GSM5396607 strain: C57BL/6,tiss..           GSE178725 Mouse embryonic fibr..</span></span>
+<span><span class="co">#&gt; GSM5396602 strain: C57BL/6,tiss..           GSE178725 Mouse embryonic fibr..</span></span>
+<span><span class="co">#&gt; GSM5396606 strain: C57BL/6,tiss..           GSE178725 Mouse embryonic fibr..</span></span>
+<span><span class="co">#&gt; GSM4928843 cell type: fibroblas..           GSE161964 Mouse Embronic Fibro..</span></span>
+<span><span class="co">#&gt; GSM3176949 cell line: NMUMG,sub.. GSE115375,GSE115376  NMUMG cells, clone E9</span></span>
+<span><span class="co">#&gt;            CNT_geo_accession corr_TREATM_CNT</span></span>
+<span><span class="co">#&gt;                  &lt;character&gt;       &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; GSM5021181        GSM5021179        0.974858</span></span>
+<span><span class="co">#&gt; GSM5021173        GSM5021170        0.995724</span></span>
+<span><span class="co">#&gt; GSM5021171        GSM5021168        0.994685</span></span>
+<span><span class="co">#&gt; GSM5021172        GSM5021169        0.994397</span></span>
+<span><span class="co">#&gt; GSM5396603        GSM5396601        0.993751</span></span>
+<span><span class="co">#&gt; GSM5396607        GSM5396601        0.992054</span></span>
+<span><span class="co">#&gt; GSM5396602        GSM5396600        0.993440</span></span>
+<span><span class="co">#&gt; GSM5396606        GSM5396600        0.991412</span></span>
+<span><span class="co">#&gt; GSM4928843        GSM4928841        0.975952</span></span>
+<span><span class="co">#&gt; GSM3176949        GSM3176958        0.977919</span></span></code></pre></div>
 <p>The top hits obtained for the residual (specific) fractions of either
 MKL1 or caMKL1 contrasts both in human and mouse are more clearly
 separated from the background compared to those obtained from the input
@@ -456,36 +635,69 @@ corresponding expression CONTEXT in log2 CPM representation for all the
 datasets in <code>orthosData</code>.</p>
 <p>Extensive gene and contrast annotation is available in the object’s
 <code>rowData</code> and <code>colData</code> respectively.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">organism</span> <span class="op">&lt;-</span> <span class="st">"Mouse"</span></span>
-<span><span class="va">orthosDB</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/loadContrastDatabase.html">loadContrastDatabase</a></span> <span class="op">(</span>organism<span class="op">=</span><span class="st">"Mouse"</span>, mode<span class="op">=</span><span class="st">"DEMO"</span><span class="op">)</span></span>
+<span><span class="va">orthosDB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadContrastDatabase.html">loadContrastDatabase</a></span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"Mouse"</span>, mode <span class="op">=</span> <span class="st">"DEMO"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">orthosDB</span> </span>
+<span><span class="co">#&gt; class: SummarizedExperiment </span></span>
+<span><span class="co">#&gt; dim: 20339 988 </span></span>
+<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="co">#&gt; assays(4): INPUT_CONTRASTS DECODED_CONTRASTS RESIDUAL_CONTRASTS CONTEXT</span></span>
+<span><span class="co">#&gt; rownames(20339): 0610005C13Rik 0610009B22Rik ... n-R5s146 n-R5s149</span></span>
+<span><span class="co">#&gt; rowData names(15): seqnames start ... ENTREZ_GENE_ID ARCHS4_ID</span></span>
+<span><span class="co">#&gt; colnames(988): GSM1053282 GSM1061179 ... GSM970471 GSM984548</span></span>
+<span><span class="co">#&gt; colData names(33): aligned_reads channel_count ... HasAssignedCNT</span></span>
+<span><span class="co">#&gt;   CNTname</span></span>
 <span></span>
 <span><span class="co">#Available contrast annotations:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">orthosDB</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "aligned_reads"         "channel_count"         "characteristics_ch1"  </span></span>
+<span><span class="co">#&gt;  [4] "contact_address"       "contact_city"          "contact_country"      </span></span>
+<span><span class="co">#&gt;  [7] "contact_institute"     "contact_name"          "contact_zip"          </span></span>
+<span><span class="co">#&gt; [10] "data_processing"       "extract_protocol_ch1"  "geo_accession"        </span></span>
+<span><span class="co">#&gt; [13] "instrument_model"      "last_update_date"      "library_selection"    </span></span>
+<span><span class="co">#&gt; [16] "library_source"        "library_strategy"      "molecule_ch1"         </span></span>
+<span><span class="co">#&gt; [19] "organism_ch1"          "platform_id"           "relation"             </span></span>
+<span><span class="co">#&gt; [22] "series_id"             "singlecellprobability" "source_name_ch1"      </span></span>
+<span><span class="co">#&gt; [25] "sra_id"                "status"                "submission_date"      </span></span>
+<span><span class="co">#&gt; [28] "taxid_ch1"             "title"                 "type"                 </span></span>
+<span><span class="co">#&gt; [31] "Cor2CNT"               "HasAssignedCNT"        "CNTname"</span></span>
 <span></span>
 <span><span class="co">#Available gene annotations:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">orthosDB</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "seqnames"                     "start"                       </span></span>
+<span><span class="co">#&gt;  [3] "end"                          "width"                       </span></span>
+<span><span class="co">#&gt;  [5] "strand"                       "ENSEMBL_GENE_ID"             </span></span>
+<span><span class="co">#&gt;  [7] "gene_name"                    "gene_biotype"                </span></span>
+<span><span class="co">#&gt;  [9] "seq_coord_system"             "description"                 </span></span>
+<span><span class="co">#&gt; [11] "ENSEMBL_GENE_ID_VERSION"      "ENSEMBL_CANONICAL_TRANSCRIPT"</span></span>
+<span><span class="co">#&gt; [13] "GENE_SYMBOL"                  "ENTREZ_GENE_ID"              </span></span>
+<span><span class="co">#&gt; [15] "ARCHS4_ID"</span></span>
 <span></span>
 <span><span class="co">#Retrieve partial annotation for a specific contrast</span></span>
 <span><span class="co">#returned as a top-hit in the mouse caMKL1 query above:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">orthosDB</span><span class="op">)</span><span class="op">[</span><span class="st">"GSM5021181"</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"title"</span>,<span class="st">"series_id"</span>,<span class="st">"CNTname"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">orthosDB</span><span class="op">)</span><span class="op">[</span><span class="st">"GSM5021181"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"title"</span>, <span class="st">"series_id"</span>, <span class="st">"CNTname"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; DataFrame with 1 row and 3 columns</span></span>
+<span><span class="co">#&gt;                             title   series_id     CNTname</span></span>
+<span><span class="co">#&gt;                       &lt;character&gt; &lt;character&gt; &lt;character&gt;</span></span>
+<span><span class="co">#&gt; GSM5021181 E0771_pRetrox_MRTFA_..   GSE164860  GSM5021179</span></span>
 <span></span>
 <span><span class="co"># Compare context and individual contrast fractions between</span></span>
 <span><span class="co"># the mouse caMKL1 contrast under consideration and the "GSM5021181"</span></span>
 <span><span class="co"># query hit:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">queryID</span> <span class="op">&lt;-</span> <span class="st">"GSM5021181"</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">contrast</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">unit</span> <span class="op">&lt;-</span> <span class="st">"L2FC"</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">contrast</span><span class="op">==</span><span class="st">"CONTEXT"</span><span class="op">)</span> <span class="op">{</span><span class="va">unit</span> <span class="op">&lt;-</span> <span class="st">"L2CPM"</span><span class="op">}</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">contrast</span> <span class="op">==</span> <span class="st">"CONTEXT"</span><span class="op">)</span> <span class="op">{</span><span class="va">unit</span> <span class="op">&lt;-</span> <span class="st">"L2CPM"</span><span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span><span class="op">)</span><span class="op">[[</span><span class="va">contrast</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>, <span class="st">"caMKL1"</span><span class="op">]</span>,</span>
 <span>         <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></span><span class="op">(</span><span class="va">orthosDB</span><span class="op">)</span><span class="op">[[</span><span class="va">contrast</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>, <span class="va">queryID</span><span class="op">]</span>,</span>
 <span>         pch <span class="op">=</span> <span class="fl">16</span>, cex <span class="op">=</span> <span class="fl">0.5</span>, col <span class="op">=</span> <span class="st">"darkslategrey"</span>, main <span class="op">=</span> <span class="va">contrast</span>,</span>
 <span>         xlab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">unit</span>, <span class="st">" caMKL1"</span><span class="op">)</span>, ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"LFC "</span>, <span class="va">queryID</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"darkred"</span>, lwd <span class="op">=</span> <span class="fl">0.8</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">}</span>     </span></code></pre></div>
+<p><img src="orthosIntro_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="advanced-use-cases-accessing-the-model-internals">Advanced use cases: Accessing the model internals<a class="anchor" aria-label="anchor" href="#advanced-use-cases-accessing-the-model-internals"></a>
@@ -497,7 +709,7 @@ Fine-tuning the model to custom contrast datasets</p>
 <div class="section level2">
 <h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-apple-darwin20 (64-bit)</span></span>
@@ -517,74 +729,77 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt; [1] stats    graphics utils    stats4   methods  base    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] orthos_0.99.0               SummarizedExperiment_1.30.0</span></span>
-<span><span class="co">#&gt;  [3] Biobase_2.60.0              GenomicRanges_1.52.0       </span></span>
-<span><span class="co">#&gt;  [5] GenomeInfoDb_1.36.0         IRanges_2.34.0             </span></span>
-<span><span class="co">#&gt;  [7] S4Vectors_0.38.0            BiocGenerics_0.46.0        </span></span>
-<span><span class="co">#&gt;  [9] MatrixGenerics_1.12.0       matrixStats_0.63.0         </span></span>
-<span><span class="co">#&gt; [11] knitr_1.42                  BiocStyle_2.28.0           </span></span>
+<span><span class="co">#&gt;  [1] ggplot2_3.4.2               keras_2.11.1               </span></span>
+<span><span class="co">#&gt;  [3] orthosData_0.1.0            orthos_0.99.0              </span></span>
+<span><span class="co">#&gt;  [5] SummarizedExperiment_1.30.0 Biobase_2.60.0             </span></span>
+<span><span class="co">#&gt;  [7] GenomicRanges_1.52.0        GenomeInfoDb_1.36.0        </span></span>
+<span><span class="co">#&gt;  [9] IRanges_2.34.0              S4Vectors_0.38.0           </span></span>
+<span><span class="co">#&gt; [11] BiocGenerics_0.46.0         MatrixGenerics_1.12.0      </span></span>
+<span><span class="co">#&gt; [13] matrixStats_0.63.0          knitr_1.42                 </span></span>
+<span><span class="co">#&gt; [15] BiocStyle_2.28.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] DBI_1.1.3                     bitops_1.0-7                 </span></span>
-<span><span class="co">#&gt;   [3] rlang_1.1.0                   magrittr_2.0.3               </span></span>
-<span><span class="co">#&gt;   [5] compiler_4.3.0                RSQLite_2.3.1                </span></span>
-<span><span class="co">#&gt;   [7] dir.expiry_1.8.0              png_0.1-8                    </span></span>
-<span><span class="co">#&gt;   [9] systemfonts_1.0.4             vctrs_0.6.2                  </span></span>
-<span><span class="co">#&gt;  [11] stringr_1.5.0                 pkgconfig_2.0.3              </span></span>
-<span><span class="co">#&gt;  [13] crayon_1.5.2                  fastmap_1.1.1                </span></span>
-<span><span class="co">#&gt;  [15] backports_1.4.1               dbplyr_2.3.2                 </span></span>
-<span><span class="co">#&gt;  [17] XVector_0.40.0                ellipsis_0.3.2               </span></span>
-<span><span class="co">#&gt;  [19] fontawesome_0.5.1             utf8_1.2.3                   </span></span>
-<span><span class="co">#&gt;  [21] promises_1.2.0.1              rmarkdown_2.21               </span></span>
-<span><span class="co">#&gt;  [23] grDevices_4.3.0               ragg_1.2.5                   </span></span>
-<span><span class="co">#&gt;  [25] purrr_1.0.1                   bit_4.0.5                    </span></span>
-<span><span class="co">#&gt;  [27] xfun_0.39                     zlibbioc_1.46.0              </span></span>
-<span><span class="co">#&gt;  [29] cachem_1.0.7                  jsonlite_1.8.4               </span></span>
-<span><span class="co">#&gt;  [31] blob_1.2.4                    orthosData_0.1.0             </span></span>
-<span><span class="co">#&gt;  [33] highr_0.10                    later_1.3.0                  </span></span>
-<span><span class="co">#&gt;  [35] keras_2.11.1                  rhdf5filters_1.12.0          </span></span>
-<span><span class="co">#&gt;  [37] DelayedArray_0.25.0           Rhdf5lib_1.22.0              </span></span>
-<span><span class="co">#&gt;  [39] BiocParallel_1.34.0           interactiveDisplayBase_1.38.0</span></span>
-<span><span class="co">#&gt;  [41] tensorflow_2.11.0             broom_1.0.4                  </span></span>
-<span><span class="co">#&gt;  [43] parallel_4.3.0                R6_2.5.1                     </span></span>
-<span><span class="co">#&gt;  [45] bslib_0.4.2                   stringi_1.7.12               </span></span>
-<span><span class="co">#&gt;  [47] reticulate_1.28               car_3.1-2                    </span></span>
-<span><span class="co">#&gt;  [49] jquerylib_0.1.4               Rcpp_1.0.10                  </span></span>
-<span><span class="co">#&gt;  [51] bookdown_0.33                 base64enc_0.1-3              </span></span>
-<span><span class="co">#&gt;  [53] httpuv_1.6.9                  Matrix_1.5-4                 </span></span>
-<span><span class="co">#&gt;  [55] tidyselect_1.2.0              abind_1.4-5                  </span></span>
-<span><span class="co">#&gt;  [57] yaml_2.3.7                    codetools_0.2-19             </span></span>
-<span><span class="co">#&gt;  [59] curl_5.0.0                    plyr_1.8.8                   </span></span>
-<span><span class="co">#&gt;  [61] lattice_0.21-8                tibble_3.2.1                 </span></span>
-<span><span class="co">#&gt;  [63] shiny_1.7.4                   basilisk.utils_1.12.0        </span></span>
-<span><span class="co">#&gt;  [65] KEGGREST_1.40.0               evaluate_0.20                </span></span>
-<span><span class="co">#&gt;  [67] desc_1.4.2                    BiocFileCache_2.8.0          </span></span>
-<span><span class="co">#&gt;  [69] ExperimentHub_2.8.0           Biostrings_2.68.0            </span></span>
-<span><span class="co">#&gt;  [71] ggpubr_0.6.0                  pillar_1.9.0                 </span></span>
-<span><span class="co">#&gt;  [73] BiocManager_1.30.20           filelock_1.0.2               </span></span>
-<span><span class="co">#&gt;  [75] carData_3.0-5                 whisker_0.4.1                </span></span>
-<span><span class="co">#&gt;  [77] generics_0.1.3                rprojroot_2.0.3              </span></span>
-<span><span class="co">#&gt;  [79] RCurl_1.98-1.12               ggplot2_3.4.2                </span></span>
-<span><span class="co">#&gt;  [81] BiocVersion_3.17.1            munsell_0.5.0                </span></span>
-<span><span class="co">#&gt;  [83] scales_1.2.1                  xtable_1.8-4                 </span></span>
-<span><span class="co">#&gt;  [85] glue_1.6.2                    tools_4.3.0                  </span></span>
-<span><span class="co">#&gt;  [87] datasets_4.3.0                AnnotationHub_3.8.0          </span></span>
-<span><span class="co">#&gt;  [89] ggsignif_0.6.4                fs_1.6.2                     </span></span>
-<span><span class="co">#&gt;  [91] cowplot_1.1.1                 rhdf5_2.44.0                 </span></span>
-<span><span class="co">#&gt;  [93] grid_4.3.0                    tidyr_1.3.0                  </span></span>
-<span><span class="co">#&gt;  [95] AnnotationDbi_1.62.0          colorspace_2.1-0             </span></span>
-<span><span class="co">#&gt;  [97] GenomeInfoDbData_1.2.10       basilisk_1.12.0              </span></span>
-<span><span class="co">#&gt;  [99] HDF5Array_1.28.0              cli_3.6.1                    </span></span>
-<span><span class="co">#&gt; [101] rappdirs_0.3.3                tfruns_1.5.1                 </span></span>
-<span><span class="co">#&gt; [103] textshaping_0.3.6             fansi_1.0.4                  </span></span>
-<span><span class="co">#&gt; [105] dplyr_1.1.2                   gtable_0.3.3                 </span></span>
-<span><span class="co">#&gt; [107] ggsci_3.0.0                   rstatix_0.7.2                </span></span>
-<span><span class="co">#&gt; [109] zeallot_0.1.0                 sass_0.4.5                   </span></span>
-<span><span class="co">#&gt; [111] digest_0.6.31                 ggrepel_0.9.3                </span></span>
-<span><span class="co">#&gt; [113] memoise_2.0.1                 htmltools_0.5.5              </span></span>
-<span><span class="co">#&gt; [115] pkgdown_2.0.7                 lifecycle_1.0.3              </span></span>
-<span><span class="co">#&gt; [117] httr_1.4.5                    mime_0.12                    </span></span>
-<span><span class="co">#&gt; [119] bit64_4.0.5</span></span></code></pre></div>
+<span><span class="co">#&gt;   [1] jsonlite_1.8.4                magrittr_2.0.3               </span></span>
+<span><span class="co">#&gt;   [3] farver_2.1.1                  rmarkdown_2.21               </span></span>
+<span><span class="co">#&gt;   [5] fs_1.6.2                      zlibbioc_1.46.0              </span></span>
+<span><span class="co">#&gt;   [7] ragg_1.2.5                    vctrs_0.6.2                  </span></span>
+<span><span class="co">#&gt;   [9] memoise_2.0.1                 RCurl_1.98-1.12              </span></span>
+<span><span class="co">#&gt;  [11] base64enc_0.1-3               rstatix_0.7.2                </span></span>
+<span><span class="co">#&gt;  [13] htmltools_0.5.5               AnnotationHub_3.8.0          </span></span>
+<span><span class="co">#&gt;  [15] curl_5.0.0                    broom_1.0.4                  </span></span>
+<span><span class="co">#&gt;  [17] Rhdf5lib_1.22.0               rhdf5_2.44.0                 </span></span>
+<span><span class="co">#&gt;  [19] sass_0.4.5                    bslib_0.4.2                  </span></span>
+<span><span class="co">#&gt;  [21] basilisk_1.12.0               desc_1.4.2                   </span></span>
+<span><span class="co">#&gt;  [23] fontawesome_0.5.1             plyr_1.8.8                   </span></span>
+<span><span class="co">#&gt;  [25] cachem_1.0.7                  whisker_0.4.1                </span></span>
+<span><span class="co">#&gt;  [27] mime_0.12                     lifecycle_1.0.3              </span></span>
+<span><span class="co">#&gt;  [29] pkgconfig_2.0.3               Matrix_1.5-4                 </span></span>
+<span><span class="co">#&gt;  [31] R6_2.5.1                      fastmap_1.1.1                </span></span>
+<span><span class="co">#&gt;  [33] GenomeInfoDbData_1.2.10       shiny_1.7.4                  </span></span>
+<span><span class="co">#&gt;  [35] digest_0.6.31                 colorspace_2.1-0             </span></span>
+<span><span class="co">#&gt;  [37] AnnotationDbi_1.62.0          rprojroot_2.0.3              </span></span>
+<span><span class="co">#&gt;  [39] ExperimentHub_2.8.0           textshaping_0.3.6            </span></span>
+<span><span class="co">#&gt;  [41] RSQLite_2.3.1                 ggpubr_0.6.0                 </span></span>
+<span><span class="co">#&gt;  [43] labeling_0.4.2                filelock_1.0.2               </span></span>
+<span><span class="co">#&gt;  [45] fansi_1.0.4                   tfruns_1.5.1                 </span></span>
+<span><span class="co">#&gt;  [47] httr_1.4.5                    abind_1.4-5                  </span></span>
+<span><span class="co">#&gt;  [49] compiler_4.3.0                here_1.0.1                   </span></span>
+<span><span class="co">#&gt;  [51] bit64_4.0.5                   withr_2.5.0                  </span></span>
+<span><span class="co">#&gt;  [53] backports_1.4.1               BiocParallel_1.34.0          </span></span>
+<span><span class="co">#&gt;  [55] carData_3.0-5                 DBI_1.1.3                    </span></span>
+<span><span class="co">#&gt;  [57] highr_0.10                    HDF5Array_1.28.0             </span></span>
+<span><span class="co">#&gt;  [59] tensorflow_2.11.0             ggsignif_0.6.4               </span></span>
+<span><span class="co">#&gt;  [61] rappdirs_0.3.3                DelayedArray_0.25.0          </span></span>
+<span><span class="co">#&gt;  [63] ggsci_3.0.0                   tools_4.3.0                  </span></span>
+<span><span class="co">#&gt;  [65] interactiveDisplayBase_1.38.0 httpuv_1.6.9                 </span></span>
+<span><span class="co">#&gt;  [67] glue_1.6.2                    rhdf5filters_1.12.0          </span></span>
+<span><span class="co">#&gt;  [69] promises_1.2.0.1              grid_4.3.0                   </span></span>
+<span><span class="co">#&gt;  [71] generics_0.1.3                gtable_0.3.3                 </span></span>
+<span><span class="co">#&gt;  [73] tidyr_1.3.0                   car_3.1-2                    </span></span>
+<span><span class="co">#&gt;  [75] utf8_1.2.3                    XVector_0.40.0               </span></span>
+<span><span class="co">#&gt;  [77] ggrepel_0.9.3                 BiocVersion_3.17.1           </span></span>
+<span><span class="co">#&gt;  [79] pillar_1.9.0                  stringr_1.5.0                </span></span>
+<span><span class="co">#&gt;  [81] later_1.3.0                   dplyr_1.1.2                  </span></span>
+<span><span class="co">#&gt;  [83] BiocFileCache_2.8.0           lattice_0.21-8               </span></span>
+<span><span class="co">#&gt;  [85] bit_4.0.5                     tidyselect_1.2.0             </span></span>
+<span><span class="co">#&gt;  [87] Biostrings_2.68.0             bookdown_0.33                </span></span>
+<span><span class="co">#&gt;  [89] xfun_0.39                     datasets_4.3.0               </span></span>
+<span><span class="co">#&gt;  [91] stringi_1.7.12                yaml_2.3.7                   </span></span>
+<span><span class="co">#&gt;  [93] evaluate_0.20                 codetools_0.2-19             </span></span>
+<span><span class="co">#&gt;  [95] tibble_3.2.1                  BiocManager_1.30.20          </span></span>
+<span><span class="co">#&gt;  [97] cli_3.6.1                     xtable_1.8-4                 </span></span>
+<span><span class="co">#&gt;  [99] reticulate_1.28               systemfonts_1.0.4            </span></span>
+<span><span class="co">#&gt; [101] munsell_0.5.0                 jquerylib_0.1.4              </span></span>
+<span><span class="co">#&gt; [103] Rcpp_1.0.10                   dir.expiry_1.8.0             </span></span>
+<span><span class="co">#&gt; [105] zeallot_0.1.0                 dbplyr_2.3.2                 </span></span>
+<span><span class="co">#&gt; [107] png_0.1-8                     parallel_4.3.0               </span></span>
+<span><span class="co">#&gt; [109] ellipsis_0.3.2                pkgdown_2.0.7                </span></span>
+<span><span class="co">#&gt; [111] blob_1.2.4                    basilisk.utils_1.12.0        </span></span>
+<span><span class="co">#&gt; [113] bitops_1.0-7                  viridisLite_0.4.1            </span></span>
+<span><span class="co">#&gt; [115] scales_1.2.1                  grDevices_4.3.0              </span></span>
+<span><span class="co">#&gt; [117] purrr_1.0.1                   crayon_1.5.2                 </span></span>
+<span><span class="co">#&gt; [119] rlang_1.1.0                   cowplot_1.1.1                </span></span>
+<span><span class="co">#&gt; [121] KEGGREST_1.40.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -619,7 +834,7 @@ Human and Mouse.”</span> <em>Nature Communications</em> 9 (1): 1366.
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Panagiotis Papasaikas, Charlotte Soneson, Michael Stadler.</p>
+<p>Developed by Panagiotis Papasaikas, <a href="https://csoneson.github.io" class="external-link">Charlotte Soneson</a>, <a href="https://www.fmi.ch/platforms/platform.html?plt=115" class="external-link">Michael Stadler</a>.</p>
 </div>
 
 <div class="pkgdown">

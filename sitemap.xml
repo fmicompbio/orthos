@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/orthosIntro.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/articles/orthosIntro.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/decomposeVar.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/decomposeVar.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/loadContrastDatabase.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/loadContrastDatabase.html</loc>
   </url>
   <url>
-    <loc>/reference/plotQueryResultsManh.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/orthos-package.html</loc>
   </url>
   <url>
-    <loc>/reference/plotQueryResultsViolin.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsManh.html</loc>
   </url>
   <url>
-    <loc>/reference/queryWithContrasts.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsViolin.html</loc>
   </url>
   <url>
-    <loc>/reference/testOrthosEnv.html</loc>
+    <loc>http://fmicompbio.github.io/orthos/reference/queryWithContrasts.html</loc>
+  </url>
+  <url>
+    <loc>http://fmicompbio.github.io/orthos/reference/testOrthosEnv.html</loc>
   </url>
 </urlset>

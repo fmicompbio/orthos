@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>`orthos` is an R package for variance decomposition using
     conditional variational auto-encoders • orthos</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -17,8 +17,8 @@
 <meta property="og:description" content="`orthos` decomposes RNA-seq contrasts, for example obtained from a
     gene knock-out or compound treatment experiment, into unspecific and
     experiment-specific components. Original and decomposed contrasts can
-    be efficiently queried against a large database of publicly available
-    contrasts (ARCHS4, https://maayanlab.cloud/archs4/) to identify similar
+    be efficiently queried against a large database of contrasts
+    (derived from ARCHS4, https://maayanlab.cloud/archs4/) to identify similar
     experiments. `orthos` furthermore provides plotting functions to visualize
     the results of such a search for similar contrasts.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -79,7 +79,7 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><img src="inst/orthos.png" alt="orthos" width="160"></p>
+<p><img src="articles/orthos.png" alt="orthos" width="160"></p>
 <div class="section level1">
 <div class="page-header"><h1 id="orthos---mechanistic-insights-from-differential-gene-expression-experiments-with-deep-generative-networks">
 <em>orthos</em> - Mechanistic insights from differential gene expression experiments with Deep Generative Networks<a class="anchor" aria-label="anchor" href="#orthos---mechanistic-insights-from-differential-gene-expression-experiments-with-deep-generative-networks"></a>
@@ -157,8 +157,10 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Panagiotis Papasaikas <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1640-7636" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Charlotte Soneson <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3833-2169" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Michael Stadler <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2269-4934" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="https://csoneson.github.io" class="external-link">Charlotte Soneson</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3833-2169" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="https://www.fmi.ch/platforms/platform.html?plt=115" class="external-link">Michael Stadler</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2269-4934" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -171,7 +173,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Panagiotis Papasaikas, Charlotte Soneson, Michael Stadler.</p>
+<p>Developed by Panagiotis Papasaikas, <a href="https://csoneson.github.io" class="external-link">Charlotte Soneson</a>, <a href="https://www.fmi.ch/platforms/platform.html?plt=115" class="external-link">Michael Stadler</a>.</p>
 </div>
 
 <div class="pkgdown">
