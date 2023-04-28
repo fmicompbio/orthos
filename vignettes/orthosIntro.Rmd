@@ -119,7 +119,7 @@ BiocManager::install("orthos", dependencies = TRUE)
 After installation, the package can be loaded with:
 
 ```{r library}
-#library(orthos)
+library(orthos)
 ```
 
 A typical analysis involves two steps:
