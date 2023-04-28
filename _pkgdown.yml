@@ -1,0 +1,30 @@
+authors:
+  Charlotte Soneson:
+    href: https://csoneson.github.io
+  Michael Stadler:
+    href: https://www.fmi.ch/platforms/platform.html?plt=115
+
+url: http://fmicompbio.github.io/orthos
+
+template:
+  params:
+    bootswatch: yeti
+
+reference:
+- title: Decomposing contrasts
+  desc: "Function for decomposing one or several observed contrasts (comparisons between conditions)."
+  contents:
+    - '`decomposeVar`'
+- title: Identifying similar contrasts
+  desc: "Search a large human or mouse database (derived from ARCHS4) for contrasts similar to your own one(s)."
+  contents:
+    - '`loadContrastDatabase`'
+    - '`queryWithContrasts`'
+    - '`plotQueryResultsManh`'
+    - '`plotQueryResultsViolin`'
+- title: Misc functions
+  contents:
+    - '`testOrthosEnv`'
+- title: General package information
+  contents:
+    - '`orthos-package`'
