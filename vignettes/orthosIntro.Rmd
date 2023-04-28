@@ -50,10 +50,7 @@ do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "1"
 ```
 
 
-```{r, echo=FALSE, out.width='50%', fig.align='center'}
-knitr::include_graphics(path = system.file(package = "orthos", "orthos.png",
-                                           mustWork = TRUE))
-```
+![orthos logo](orthos.png){width=50%}
 
 
 ```{css, echo = FALSE}

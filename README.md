@@ -1,4 +1,4 @@
-<img src="inst/orthos.png" alt="orthos" width="160"/>
+<img src="vignettes/orthos.png" alt="orthos" width="160"/>
 
 # _orthos_ - Mechanistic insights from differential gene expression experiments with Deep Generative Networks
 
