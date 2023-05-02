@@ -78,25 +78,29 @@ Papasaikas</h4>
             <address class="author_afil">
       Friedrich Miescher Institute for Biomedical Research, Basel,
 SwitzerlandSIB Swiss Institute of
-Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:panp80@gmail.com" class="email">panp80@gmail.com</a>
+Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:panagiotis.papasaikas@fmi.ch" class="email">panagiotis.papasaikas@fmi.ch</a>
       </address>
                               <h4 data-toc-skip class="author">Charlotte
 Soneson</h4>
             <address class="author_afil">
       Friedrich Miescher Institute for Biomedical Research, Basel,
 SwitzerlandSIB Swiss Institute of
-Bioinformatics<br><h4 data-toc-skip class="author">Michael
+Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:charlotte.soneson@fmi.ch" class="email">charlotte.soneson@fmi.ch</a>
+      </address>
+                              <h4 data-toc-skip class="author">Michael
 Stadler</h4>
             <address class="author_afil">
       Friedrich Miescher Institute for Biomedical Research, Basel,
-SwitzerlandSIB Swiss Institute of Bioinformatics<br><h4 data-toc-skip class="date">28 April 2023</h4>
+SwitzerlandSIB Swiss Institute of
+Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:michael.stadler@fmi.ch" class="email">michael.stadler@fmi.ch</a>
+      </address>
+                  
+            <h4 data-toc-skip class="date">2 May 2023</h4>
       
       
       <div class="hidden name"><code>orthosIntro.Rmd</code></div>
 
-    </address>
-</address>
-</div>
+    </div>
 
     
     
@@ -251,8 +255,8 @@ specification of the contrasted conditions.</p>
 <p>Given these inputs, the model maps the contrast to a concise latent
 representation (z<sub>D</sub>) which retains its recurring -and
 therefore compressible- traits. The compressed latent representation is
-then used to reconstruct a decoded version of the contrast.</p>
-<p>This <strong>decoded</strong> contrast corresponds directly to the
+then used to reconstruct a decoded version of the contrast<span style="color:blue">*</span>.</p>
+<p>The <strong>decoded</strong> contrast corresponds directly to the
 <strong>non-specific</strong> component of the observed effects; it
 subsumes regularities i.e gene variance that the model can account for
 because it has been repeatedly encountered, in some form, during
@@ -264,9 +268,26 @@ account for (experiment-specific biological effects + random noise).</p>
 <p>From now on the terms decoded and non-specific will be used in
 conjunction or interchangeably. Ditto for the terms residual and
 specific.</p>
-<div class="figure">
-<img src="orthos_arch.png" style="width:100.0%" alt=""><p class="caption">orthos architecture</p>
-</div>
+<p><img src="orthos_arch.png" style="width:100.0%" alt="orthos architecture"><span style="color:blue">*</span><font size='2"'><em> Notice that both the
+latent encoding and the decoded output are conditioned on context (i.e
+they are context-specific). This means that decomposing a contrast on a
+different context will produce a different output. An interesting
+ancillary application of this conditioning is that one can “morph”
+decoded contrasts to <strong>in-silico evaluate non-specific effects in
+new contexts</strong>.</em></font></p>
+<p>In essence, we can infer what the non-specific effects would look
+like had the experiment been performed in e.g different cell-lines,
+tissues, batches, patients or using different library-preparation
+protocols. The inferred decodings will reflect the new context in
+multiple ways. For example, genes that were non-detected/non-expressed
+in the original contrast (and therefore had neutral LFCs ) will produce
+new (possibly non-neutral) decoded LFCs if present in the new context
+and vice versa. This <strong>“out-of-context”</strong> type of inference
+is limited to the decoded contrast, as by definition, the residual is
+not part of the model’s generative capacity. Mechanically,
+out-of-context inference of non-specific effects is a simple as
+evaluating the same contrast using multiple contexts when calling
+<code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> (see section below). </p>
 </div>
 <div class="section level3">
 <h3 id="contrast-decomposition-with-decomposevar-">Contrast decomposition with <code>decomposeVar()</code>.<a class="anchor" aria-label="anchor" href="#contrast-decomposition-with-decomposevar-"></a>
@@ -285,10 +306,16 @@ multiple times in these vectors, for example in the case where multiple
 treatments are paired to the same control.</p></li>
 <li><p>In the second mode the user passes the matrix <code>M</code> of
 raw counts and a second matrix <code>MD</code> that contains
-precalculated log2 fold-changes for the contrasts to be analyzed. In
-this case, <code>M</code> specifies the context for the corresponding
+pre-calculated log2 fold-changes for the contrasts to be analyzed. In
+this mode, <code>M</code> specifies the contexts for the corresponding
 columns of <code>MD</code>, and thus the two matrices need to have the
-same dimensionality and identical row- and column-names.</p></li>
+same dimensionality and identical row- and column-names. This would be
+the mode of choice if e.g one wishes to produce the LFCs independently
+or if one wants to evaluate the decoding of the same contrast(s) in
+multiple contexts (e.g for “out-of-context” inference of non-specific
+effects described above). In the latter case, copies of the same
+contrast in columns of <code>MD</code> will be paired with columns of
+<code>M</code> specifying the different contexts.</p></li>
 </ul>
 <p>In both modes the rownames of <code>M</code> (and <code>MD</code> if
 specified) need to correspond to valid gene identifiers (currently
@@ -336,8 +363,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <p>The output of <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> is a
 <code>SummarizedExperiment</code> object with dimensions <code>N</code>
 x <code>M</code>, where <code>N</code> is the number of
-<code>orthos</code> genes for that organism and <code>M</code> is the
-number of contrasts specified during input.</p>
+<code>orthos</code> genes<span style="color:blue">*</span> for that
+organism and <code>M</code> is the number of contrasts specified during
+input.</p>
 <p>The <code>SummarizedExperiment</code> output also has 4 assay slots
 corresponding to the input contrasts, decoded (non-specific), and
 residual (specific) components, as well as the gene context. Contrasts
@@ -416,9 +444,10 @@ variance accounted for in each decomposed component:</p>
 <span><span class="co">#&gt;                        &lt;numeric&gt;</span></span>
 <span><span class="co">#&gt; MKL1                   0.2139228</span></span>
 <span><span class="co">#&gt; caMKL1                 0.0853951</span></span></code></pre></div>
-<p>Notice that, of the total gene features present in the input (over
-55,000), only ~20,000 genes are part of the <code>orthos</code> model ()
-and the <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> output.</p>
+<p><span style="color:blue">*</span><font size='2"'><em> Notice that, of
+the total gene features present in the input (over 55,000), only ~20,000
+genes are part of the <code>orthos</code> model () and the
+<code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> output.</em></font></p>
 <p>These ~20,000 <code>orthos</code> genes are “sanctioned” according to
 several criteria (located on canonical chromosomes, no pseudogenes, no
 ribosomal protein genes, detected in at least a small fraction of the
@@ -427,7 +456,8 @@ ARCHS4 database).</p>
 genes not being part of the user input, even if those genes are
 expressed in the context under consideration. That being noted, it is
 safer to feed-in inputs that are as comprehensive as possible, i.e
-<strong>not filtered in any way</strong>, in terms of gene features.</p>
+<strong>not filtered in any way</strong>, in terms of gene features.
+</p>
 </div>
 </div>
 <div class="section level2">
@@ -760,6 +790,8 @@ datasets in <code>orthosData</code>.</p>
 <div class="section level2">
 <h2 id="advanced-use-cases-accessing-the-model-internals">Advanced use cases: Accessing the model internals<a class="anchor" aria-label="anchor" href="#advanced-use-cases-accessing-the-model-internals"></a>
 </h2>
+<p>In this section we describe how to access directly the
+<code>orthos</code> models</p>
 <p>Producing latent encodings of contrasts Producing latent encodings of
 contexts Morphing decoded contrasts according to a different context
 Fine-tuning the model to custom contrast datasets</p>
@@ -830,7 +862,7 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt;  [61] rappdirs_0.3.3                DelayedArray_0.25.0          </span></span>
 <span><span class="co">#&gt;  [63] ggsci_3.0.0                   tools_4.3.0                  </span></span>
 <span><span class="co">#&gt;  [65] interactiveDisplayBase_1.38.0 httpuv_1.6.9                 </span></span>
-<span><span class="co">#&gt;  [67] glue_1.6.2                    rhdf5filters_1.12.0          </span></span>
+<span><span class="co">#&gt;  [67] glue_1.6.2                    rhdf5filters_1.12.1          </span></span>
 <span><span class="co">#&gt;  [69] promises_1.2.0.1              grid_4.3.0                   </span></span>
 <span><span class="co">#&gt;  [71] generics_0.1.3                gtable_0.3.3                 </span></span>
 <span><span class="co">#&gt;  [73] tidyr_1.3.0                   car_3.1-2                    </span></span>
@@ -856,7 +888,7 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt; [113] bitops_1.0-7                  viridisLite_0.4.1            </span></span>
 <span><span class="co">#&gt; [115] scales_1.2.1                  grDevices_4.3.0              </span></span>
 <span><span class="co">#&gt; [117] purrr_1.0.1                   crayon_1.5.2                 </span></span>
-<span><span class="co">#&gt; [119] rlang_1.1.0                   cowplot_1.1.1                </span></span>
+<span><span class="co">#&gt; [119] rlang_1.1.1                   cowplot_1.1.1                </span></span>
 <span><span class="co">#&gt; [121] KEGGREST_1.40.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
