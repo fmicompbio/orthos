@@ -583,6 +583,7 @@ CONTEXT  <- t(assay(dec_MKL1_mouse,"CONTEXT")[,1])
 CONTRAST <- t(assay(dec_MKL1_mouse,"INPUT_CONTRASTS")[,1])
 
 # Activate the `basilisk` environment:
+library(basilisk)
 cl <- basiliskStart(orthosenv,
                     testload = "tensorflow")
 
