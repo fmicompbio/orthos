@@ -182,7 +182,7 @@ dim(MKL1_mouse)
 # Decomposition of differential gene expression variance into specific and non-specific components using `decomposeVar()`
 
 
-## Prelude: A short overview of the `orthos` models. 
+## Prelude: A short overview of the `orthos` models
 
 
 The workhorse behind `orthos` are organism-specific conditional variational
@@ -238,7 +238,7 @@ calling `decomposeVar()` (see section below).
 
 
 
-## Contrast decomposition with `decomposeVar()`. 
+## Contrast decomposition with `decomposeVar()`
 
 
 The function that performs this contrast decomposition into the non-specific and
@@ -324,12 +324,14 @@ DF <- data.frame(L2CPM= assay(dec_MKL1_mouse,"CONTEXT")[,2],
                  L2FC_RESIDUAL=assay(dec_MKL1_mouse,"RESIDUAL_CONTRASTS")[,2]
                  )
 
+#MA plot of for the input contrast
 P1 <- ggplot(data=DF, aes(x=L2CPM, y=L2FC_INPUT)) + 
   geom_point(alpha=0.4, size=1.8) + 
   geom_hline(aes(yintercept = 0), colour = "darkgray", linewidth = 0.5) +
   xlab("Expression (Log2 CPMs)") + 
   ylab("Log2 Fold Change")  
 
+#Delta-delta plots for the input and decomposed contrast fractions
 P2 <- ggplot(data=DF, aes(x=L2FC_INPUT, y=L2FC_DECODED)) + 
   geom_point(alpha=0.4, size=1.8) + 
   geom_hline(aes(yintercept = 0), colour = "darkgray", linewidth = 0.5) +
@@ -385,7 +387,9 @@ features.  </em></font>
 Typically, the next step of the analysis involves querying the contrasts
 database (`orthosData`) to identify public experiments similar to the one(s)
 under investigation, either in terms of the original or decomposed decoded (non-specific)
-and residual (specific) contrasts.
+and residual (specific) contrasts. As we will see in the following examples the results'
+of these queries can guide the interpretation of of the different contrast fractions. 
+
 
 `orthosData` contains over 100,000 differential gene expression experiments
 compiled from the ARCHS4 database of publicly available expression data (@lachmann2018massive). 
@@ -475,7 +479,7 @@ Of note, these treatments were performed in various cell contexts, different fro
 
 In general, as in this example, the residual specific fraction of a DGE profile will be a better query proxy for **molecularly and mechanistically related** treatments as it is largely stripped of nuisance variance present in the original contrast.
 
-On the other hand the decoded non-specific fraction and its corresponding query hits can also be of interest in some applications as they inform on **downstream/secondary or lateral** treatment effects. 
+On the other hand the decoded non-specific fraction and its corresponding query hits can also be of interest in some applications as they provide information on the extent and type of **downstream/secondary or lateral** treatment effects. 
 
 
 
@@ -488,7 +492,7 @@ The `orthos` package provides functionality for direct access to contrast databa
 
 This can be used to retrieve contrast values for all or subsets of genes or metadata for specific datasets, e.g for hits identified with `queryWithContrasts()`. 
 
-The organism-specific databases are compiled HDF5SummarizedExperiment objects. 
+The organism-specific databases are compiled as HDF5SummarizedExperiment objects. 
 As was the case  for the `orthos` models, a database will be automatically downloaded from 
 `ExperimentHub` and cached in the user ExperimentHub directory 
 (see `ExperimentHub::getExperimentHubOption("CACHE")`) using the `orthosData` 
@@ -533,14 +537,77 @@ for (contrast in names(assays(dec_MKL1_mouse))[c(4, 1, 2, 3)]) {
 }     
 ```
 
-# Advanced use cases: Accessing the model internals
 
-In this section we describe how to access directly the `orthos` models
+# Advanced use cases: Directly accessing the orthos models
 
-Producing latent encodings of contrasts
-Producing latent encodings of contexts
-Morphing decoded contrasts according to a different context
-Fine-tuning the model to custom contrast datasets
+As (1) typical `orthos` use cases do not require direct access to the models and
+(2) use of the models requires loading of a conda environment via `basilisk` this functionality
+is by default not exposed to the user and is carried out transparently 
+by the non-exported functions `.predictEncoder()` and `.predictEncoderD()`. 
+
+However, as we envision cases where directly accessing the models might be of interest we provide here a brief overview and examples
+for direct calls to these functions.
+
+The `orthos` models are implemented in `Keras`. For each organism there are two types of models:
+
+- A **context encoder** that produces a latent embedding for a specific input context (represented as L2CPMs) and
+- A **contrast conditional variational autoencoder** that first produces latent embeddings of input contrasts
+(represented as LFCs) conditioned on context embeddings and then generates decoded versions of those
+contrasts, again conditioned on the context embeddings (see also figure in [Prelude: A short overview of the `orthos` models]).
+
+As noted previously the first time these models are requested either by `decomposeVar` or directly
+by `.predictEncoder()` and `.predictEncoderD()` they are downloaded and
+cached in the user ExperimentHub directory (see `ExperimentHub::getExperimentHubOption("CACHE")`)
+using the `orthosData` companion package.
+
+When calling the `.predictEncoder()` and `.predictEncoderD()` methods directly be attentive to the following:
+
+- Before the call a predefined conda environment needs to be activated using `basilisk::basiliskStart()`
+- The inputs passed to the models need to have appropriate size and value representation (see examples below).
+- After the calls it's good practice to deactivate the environment with `basilisk::basiliskStop()`.
+
+We now demonstrate calls to the context encoder for generating a latent embedding of a specific context and to the
+contrast conditional variational autoencoder for producing a contrast latent embedding and decoding. 
+
+
+```{r, eval = do_eval}
+# mouse MKL1 context and contrast with the appropriate shape and representation.
+#
+# Shape of models input is M x N,  
+# where M is the number of conditions,
+# N the number of features -i.e orthos Genes
+#
+# Representation is L2CPMs for contexts and L2FCs for contrasts.
+#
+CONTEXT  <- t(assay(dec_MKL1_mouse,"CONTEXT")[,1])
+CONTRAST <- t(assay(dec_MKL1_mouse,"INPUT_CONTRASTS")[,1])
+
+# Activate the `basilisk` environment:
+cl <- basiliskStart(orthosenv,
+                    testload = "tensorflow")
+
+# Produce a latent embedding for the context with .predictEncoder:
+LATC <- basilisk::basiliskRun(proc = cl,
+                              fun = orthos:::.predictEncoder,
+                              organism = "Mouse",
+                              gene_input = CONTEXT)
+
+# Produce a latent embedding and decoding for the contrast with .predictEncoderD:
+res <- basilisk::basiliskRun(proc = cl,
+                             fun = orthos:::.predictEncoderD,
+                             organism = "Mouse",
+                             delta_input = CONTRAST, context = LATC)
+
+# Deactivate the `basilisk` environment:
+basilisk::basiliskStop(cl)
+
+# Access the contrast latent embedding and decoding from the .predictEncoderD returned result:
+LATD <- res$LATD
+DEC <- res$DEC
+```
+
+Calls similar to the ones above are carried out under the hood when 
+`decomposeVar()` is called. 
 
 
 # Session information {-}
