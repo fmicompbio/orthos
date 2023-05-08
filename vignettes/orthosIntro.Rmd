@@ -562,7 +562,7 @@ using the `orthosData` companion package.
 
 When calling the `.predictEncoder()` and `.predictEncoderD()` methods directly be attentive to the following:
 
-- Before the call a predefined conda environment needs to be activated using `basilisk::basiliskStart()`
+- Before the call the predefined conda environment `orthos:::orthosenv` needs to be activated using `basilisk::basiliskStart()`
 - The inputs passed to the models need to have appropriate size and value representation (see examples below).
 - After the calls it's good practice to deactivate the environment with `basilisk::basiliskStop()`.
 
@@ -584,7 +584,7 @@ CONTRAST <- t(assay(dec_MKL1_mouse,"INPUT_CONTRASTS")[,1])
 
 # Activate the `basilisk` environment:
 library(basilisk)
-cl <- basiliskStart(orthosenv,
+cl <- basiliskStart(orthos:::orthosenv,
                     testload = "tensorflow")
 
 # Produce a latent embedding for the context with .predictEncoder:
