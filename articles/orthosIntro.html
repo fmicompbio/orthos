@@ -95,7 +95,7 @@ SwitzerlandSIB Swiss Institute of
 Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:michael.stadler@fmi.ch" class="email">michael.stadler@fmi.ch</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2 May 2023</h4>
+            <h4 data-toc-skip class="date">8 May 2023</h4>
       
       
       <div class="hidden name"><code>orthosIntro.Rmd</code></div>
@@ -235,7 +235,7 @@ MKL1 OE (caMKL1).</p>
 and non-specific components using <code>decomposeVar()</code><a class="anchor" aria-label="anchor" href="#decomposition-of-differential-gene-expression-variance-into-specific-and-non-specific-components-using-decomposevar"></a>
 </h2>
 <div class="section level3">
-<h3 id="prelude-a-short-overview-of-the-orthos-models-">Prelude: A short overview of the <code>orthos</code> models.<a class="anchor" aria-label="anchor" href="#prelude-a-short-overview-of-the-orthos-models-"></a>
+<h3 id="prelude-a-short-overview-of-the-orthos-models">Prelude: A short overview of the <code>orthos</code> models<a class="anchor" aria-label="anchor" href="#prelude-a-short-overview-of-the-orthos-models"></a>
 </h3>
 <p>The workhorse behind <code>orthos</code> are organism-specific
 conditional variational autoencoder (cVAE) models that break down the
@@ -290,7 +290,7 @@ evaluating the same contrast using multiple contexts when calling
 <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> (see section below). </p>
 </div>
 <div class="section level3">
-<h3 id="contrast-decomposition-with-decomposevar-">Contrast decomposition with <code>decomposeVar()</code>.<a class="anchor" aria-label="anchor" href="#contrast-decomposition-with-decomposevar-"></a>
+<h3 id="contrast-decomposition-with-decomposevar">Contrast decomposition with <code>decomposeVar()</code><a class="anchor" aria-label="anchor" href="#contrast-decomposition-with-decomposevar"></a>
 </h3>
 <p>The function that performs this contrast decomposition into the
 non-specific and specific components is <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>.
@@ -391,12 +391,14 @@ to each other.</p>
 <span>                 L2FC_RESIDUAL<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span>,<span class="st">"RESIDUAL_CONTRASTS"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
 <span>                 <span class="op">)</span></span>
 <span></span>
+<span><span class="co">#MA plot of for the input contrast</span></span>
 <span><span class="va">P1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">DF</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">L2CPM</span>, y<span class="op">=</span><span class="va">L2FC_INPUT</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha<span class="op">=</span><span class="fl">0.4</span>, size<span class="op">=</span><span class="fl">1.8</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"darkgray"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Expression (Log2 CPMs)"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Log2 Fold Change"</span><span class="op">)</span>  </span>
 <span></span>
+<span><span class="co">#Delta-delta plots for the input and decomposed contrast fractions</span></span>
 <span><span class="va">P2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">DF</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">L2FC_INPUT</span>, y<span class="op">=</span><span class="va">L2FC_DECODED</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>alpha<span class="op">=</span><span class="fl">0.4</span>, size<span class="op">=</span><span class="fl">1.8</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"darkgray"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
@@ -468,7 +470,9 @@ safer to feed-in inputs that are as comprehensive as possible, i.e
 contrasts database (<code>orthosData</code>) to identify public
 experiments similar to the one(s) under investigation, either in terms
 of the original or decomposed decoded (non-specific) and residual
-(specific) contrasts.</p>
+(specific) contrasts. As we will see in the following examples the
+results’ of these queries can guide the interpretation of of the
+different contrast fractions.</p>
 <p><code>orthosData</code> contains over 100,000 differential gene
 expression experiments compiled from the ARCHS4 database of publicly
 available expression data (<span class="citation">Lachmann et al.
@@ -697,8 +701,8 @@ mechanistically related</strong> treatments as it is largely stripped of
 nuisance variance present in the original contrast.</p>
 <p>On the other hand the decoded non-specific fraction and its
 corresponding query hits can also be of interest in some applications as
-they inform on <strong>downstream/secondary or lateral</strong>
-treatment effects.</p>
+they provide information on the extent and type of
+<strong>downstream/secondary or lateral</strong> treatment effects.</p>
 </div>
 <div class="section level2">
 <h2 id="accessing-the-contrast-database">Accessing the contrast database<a class="anchor" aria-label="anchor" href="#accessing-the-contrast-database"></a>
@@ -709,10 +713,11 @@ access to contrast databases of <code>orthosData</code> with the
 <p>This can be used to retrieve contrast values for all or subsets of
 genes or metadata for specific datasets, e.g for hits identified with
 <code><a href="../reference/queryWithContrasts.html">queryWithContrasts()</a></code>.</p>
-<p>The organism-specific databases are compiled HDF5SummarizedExperiment
-objects. As was the case for the <code>orthos</code> models, a database
-will be automatically downloaded from <code>ExperimentHub</code> and
-cached in the user ExperimentHub directory (see
+<p>The organism-specific databases are compiled as
+HDF5SummarizedExperiment objects. As was the case for the
+<code>orthos</code> models, a database will be automatically downloaded
+from <code>ExperimentHub</code> and cached in the user ExperimentHub
+directory (see
 <code>ExperimentHub::getExperimentHubOption("CACHE")</code>) using the
 <code>orthosData</code> companion package, the first time
 <code><a href="../reference/loadContrastDatabase.html">loadContrastDatabase()</a></code> is called for that database either
@@ -788,18 +793,94 @@ datasets in <code>orthosData</code>.</p>
 <p><img src="orthosIntro_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
-<h2 id="advanced-use-cases-accessing-the-model-internals">Advanced use cases: Accessing the model internals<a class="anchor" aria-label="anchor" href="#advanced-use-cases-accessing-the-model-internals"></a>
+<h2 id="advanced-use-cases-directly-accessing-the-orthos-models">Advanced use cases: Directly accessing the orthos models<a class="anchor" aria-label="anchor" href="#advanced-use-cases-directly-accessing-the-orthos-models"></a>
 </h2>
-<p>In this section we describe how to access directly the
-<code>orthos</code> models</p>
-<p>Producing latent encodings of contrasts Producing latent encodings of
-contexts Morphing decoded contrasts according to a different context
-Fine-tuning the model to custom contrast datasets</p>
+<p>As (1) typical <code>orthos</code> use cases do not require direct
+access to the models and (2) use of the models requires loading of a
+conda environment via <code>basilisk</code> this functionality is by
+default not exposed to the user and is carried out transparently by the
+non-exported functions <code>.predictEncoder()</code> and
+<code>.predictEncoderD()</code>.</p>
+<p>However, as we envision cases where directly accessing the models
+might be of interest we provide here a brief overview and examples for
+direct calls to these functions.</p>
+<p>The <code>orthos</code> models are implemented in <code>Keras</code>.
+For each organism there are two types of models:</p>
+<ul>
+<li>A <strong>context encoder</strong> that produces a latent embedding
+for a specific input context (represented as L2CPMs) and</li>
+<li>A <strong>contrast conditional variational autoencoder</strong> that
+first produces latent embeddings of input contrasts (represented as
+LFCs) conditioned on context embeddings and then generates decoded
+versions of those contrasts, again conditioned on the context embeddings
+(see also figure in <a href="#prelude-a-short-overview-of-the-orthos-models">Prelude: A short
+overview of the <code>orthos</code> models</a>).</li>
+</ul>
+<p>As noted previously the first time these models are requested either
+by <code>decomposeVar</code> or directly by
+<code>.predictEncoder()</code> and <code>.predictEncoderD()</code> they
+are downloaded and cached in the user ExperimentHub directory (see
+<code>ExperimentHub::getExperimentHubOption("CACHE")</code>) using the
+<code>orthosData</code> companion package.</p>
+<p>When calling the <code>.predictEncoder()</code> and
+<code>.predictEncoderD()</code> methods directly be attentive to the
+following:</p>
+<ul>
+<li>Before the call the predefined conda environment
+<code>orthos:::orthosenv</code> needs to be activated using
+<code><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basilisk::basiliskStart()</a></code>
+</li>
+<li>The inputs passed to the models need to have appropriate size and
+value representation (see examples below).</li>
+<li>After the calls it’s good practice to deactivate the environment
+with <code><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basilisk::basiliskStop()</a></code>.</li>
+</ul>
+<p>We now demonstrate calls to the context encoder for generating a
+latent embedding of a specific context and to the contrast conditional
+variational autoencoder for producing a contrast latent embedding and
+decoding.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># mouse MKL1 context and contrast with the appropriate shape and representation.</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># Shape of models input is M x N,  </span></span>
+<span><span class="co"># where M is the number of conditions,</span></span>
+<span><span class="co"># N the number of features -i.e orthos Genes</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># Representation is L2CPMs for contexts and L2FCs for contrasts.</span></span>
+<span><span class="co">#</span></span>
+<span><span class="va">CONTEXT</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span>,<span class="st">"CONTEXT"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">CONTRAST</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">dec_MKL1_mouse</span>,<span class="st">"INPUT_CONTRASTS"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Activate the `basilisk` environment:</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">basilisk</span><span class="op">)</span></span>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskStart</a></span><span class="op">(</span><span class="fu">orthos</span><span class="fu">:::</span><span class="va">orthosenv</span>,</span>
+<span>                    testload <span class="op">=</span> <span class="st">"tensorflow"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Produce a latent embedding for the context with .predictEncoder:</span></span>
+<span><span class="va">LATC</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
+<span>                              fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoder</span>,</span>
+<span>                              organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
+<span>                              gene_input <span class="op">=</span> <span class="va">CONTEXT</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Produce a latent embedding and decoding for the contrast with .predictEncoderD:</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
+<span>                             fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoderD</span>,</span>
+<span>                             organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
+<span>                             delta_input <span class="op">=</span> <span class="va">CONTRAST</span>, context <span class="op">=</span> <span class="va">LATC</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Deactivate the `basilisk` environment:</span></span>
+<span><span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskStop</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Access the contrast latent embedding and decoding from the .predictEncoderD returned result:</span></span>
+<span><span class="va">LATD</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">LATD</span></span>
+<span><span class="va">DEC</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">$</span><span class="va">DEC</span></span></code></pre></div>
+<p>Calls similar to the ones above are carried out under the hood when
+<code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> is called.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-apple-darwin20 (64-bit)</span></span>
@@ -819,14 +900,14 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt; [1] stats    graphics utils    stats4   methods  base    </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] ggplot2_3.4.2               keras_2.11.1               </span></span>
-<span><span class="co">#&gt;  [3] orthosData_0.1.0            orthos_0.99.0              </span></span>
-<span><span class="co">#&gt;  [5] SummarizedExperiment_1.30.0 Biobase_2.60.0             </span></span>
-<span><span class="co">#&gt;  [7] GenomicRanges_1.52.0        GenomeInfoDb_1.36.0        </span></span>
-<span><span class="co">#&gt;  [9] IRanges_2.34.0              S4Vectors_0.38.0           </span></span>
-<span><span class="co">#&gt; [11] BiocGenerics_0.46.0         MatrixGenerics_1.12.0      </span></span>
-<span><span class="co">#&gt; [13] matrixStats_0.63.0          knitr_1.42                 </span></span>
-<span><span class="co">#&gt; [15] BiocStyle_2.28.0           </span></span>
+<span><span class="co">#&gt;  [1] basilisk_1.12.0             ggplot2_3.4.2              </span></span>
+<span><span class="co">#&gt;  [3] keras_2.11.1                orthosData_0.1.0           </span></span>
+<span><span class="co">#&gt;  [5] orthos_0.99.0               SummarizedExperiment_1.30.1</span></span>
+<span><span class="co">#&gt;  [7] Biobase_2.60.0              GenomicRanges_1.52.0       </span></span>
+<span><span class="co">#&gt;  [9] GenomeInfoDb_1.36.0         IRanges_2.34.0             </span></span>
+<span><span class="co">#&gt; [11] S4Vectors_0.38.1            BiocGenerics_0.46.0        </span></span>
+<span><span class="co">#&gt; [13] MatrixGenerics_1.12.0       matrixStats_0.63.0         </span></span>
+<span><span class="co">#&gt; [15] knitr_1.42                  BiocStyle_2.28.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] jsonlite_1.8.4                magrittr_2.0.3               </span></span>
@@ -835,31 +916,31 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt;   [7] ragg_1.2.5                    vctrs_0.6.2                  </span></span>
 <span><span class="co">#&gt;   [9] memoise_2.0.1                 RCurl_1.98-1.12              </span></span>
 <span><span class="co">#&gt;  [11] base64enc_0.1-3               rstatix_0.7.2                </span></span>
-<span><span class="co">#&gt;  [13] htmltools_0.5.5               AnnotationHub_3.8.0          </span></span>
-<span><span class="co">#&gt;  [15] curl_5.0.0                    broom_1.0.4                  </span></span>
-<span><span class="co">#&gt;  [17] Rhdf5lib_1.22.0               rhdf5_2.44.0                 </span></span>
-<span><span class="co">#&gt;  [19] sass_0.4.5                    bslib_0.4.2                  </span></span>
-<span><span class="co">#&gt;  [21] basilisk_1.12.0               desc_1.4.2                   </span></span>
+<span><span class="co">#&gt;  [13] htmltools_0.5.5               S4Arrays_1.0.1               </span></span>
+<span><span class="co">#&gt;  [15] AnnotationHub_3.8.0           curl_5.0.0                   </span></span>
+<span><span class="co">#&gt;  [17] broom_1.0.4                   Rhdf5lib_1.22.0              </span></span>
+<span><span class="co">#&gt;  [19] rhdf5_2.44.0                  sass_0.4.6                   </span></span>
+<span><span class="co">#&gt;  [21] bslib_0.4.2                   desc_1.4.2                   </span></span>
 <span><span class="co">#&gt;  [23] fontawesome_0.5.1             plyr_1.8.8                   </span></span>
-<span><span class="co">#&gt;  [25] cachem_1.0.7                  whisker_0.4.1                </span></span>
+<span><span class="co">#&gt;  [25] cachem_1.0.8                  whisker_0.4.1                </span></span>
 <span><span class="co">#&gt;  [27] mime_0.12                     lifecycle_1.0.3              </span></span>
 <span><span class="co">#&gt;  [29] pkgconfig_2.0.3               Matrix_1.5-4                 </span></span>
 <span><span class="co">#&gt;  [31] R6_2.5.1                      fastmap_1.1.1                </span></span>
 <span><span class="co">#&gt;  [33] GenomeInfoDbData_1.2.10       shiny_1.7.4                  </span></span>
 <span><span class="co">#&gt;  [35] digest_0.6.31                 colorspace_2.1-0             </span></span>
-<span><span class="co">#&gt;  [37] AnnotationDbi_1.62.0          rprojroot_2.0.3              </span></span>
+<span><span class="co">#&gt;  [37] AnnotationDbi_1.62.1          rprojroot_2.0.3              </span></span>
 <span><span class="co">#&gt;  [39] ExperimentHub_2.8.0           textshaping_0.3.6            </span></span>
 <span><span class="co">#&gt;  [41] RSQLite_2.3.1                 ggpubr_0.6.0                 </span></span>
 <span><span class="co">#&gt;  [43] labeling_0.4.2                filelock_1.0.2               </span></span>
 <span><span class="co">#&gt;  [45] fansi_1.0.4                   tfruns_1.5.1                 </span></span>
 <span><span class="co">#&gt;  [47] httr_1.4.5                    abind_1.4-5                  </span></span>
 <span><span class="co">#&gt;  [49] compiler_4.3.0                here_1.0.1                   </span></span>
-<span><span class="co">#&gt;  [51] bit64_4.0.5                   withr_2.5.0                  </span></span>
-<span><span class="co">#&gt;  [53] backports_1.4.1               BiocParallel_1.34.0          </span></span>
+<span><span class="co">#&gt;  [51] withr_2.5.0                   bit64_4.0.5                  </span></span>
+<span><span class="co">#&gt;  [53] backports_1.4.1               BiocParallel_1.34.1          </span></span>
 <span><span class="co">#&gt;  [55] carData_3.0-5                 DBI_1.1.3                    </span></span>
-<span><span class="co">#&gt;  [57] highr_0.10                    HDF5Array_1.28.0             </span></span>
+<span><span class="co">#&gt;  [57] highr_0.10                    HDF5Array_1.28.1             </span></span>
 <span><span class="co">#&gt;  [59] tensorflow_2.11.0             ggsignif_0.6.4               </span></span>
-<span><span class="co">#&gt;  [61] rappdirs_0.3.3                DelayedArray_0.25.0          </span></span>
+<span><span class="co">#&gt;  [61] rappdirs_0.3.3                DelayedArray_0.26.2          </span></span>
 <span><span class="co">#&gt;  [63] ggsci_3.0.0                   tools_4.3.0                  </span></span>
 <span><span class="co">#&gt;  [65] interactiveDisplayBase_1.38.0 httpuv_1.6.9                 </span></span>
 <span><span class="co">#&gt;  [67] glue_1.6.2                    rhdf5filters_1.12.1          </span></span>
@@ -869,13 +950,13 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt;  [75] utf8_1.2.3                    XVector_0.40.0               </span></span>
 <span><span class="co">#&gt;  [77] ggrepel_0.9.3                 BiocVersion_3.17.1           </span></span>
 <span><span class="co">#&gt;  [79] pillar_1.9.0                  stringr_1.5.0                </span></span>
-<span><span class="co">#&gt;  [81] later_1.3.0                   dplyr_1.1.2                  </span></span>
+<span><span class="co">#&gt;  [81] later_1.3.1                   dplyr_1.1.2                  </span></span>
 <span><span class="co">#&gt;  [83] BiocFileCache_2.8.0           lattice_0.21-8               </span></span>
 <span><span class="co">#&gt;  [85] bit_4.0.5                     tidyselect_1.2.0             </span></span>
 <span><span class="co">#&gt;  [87] Biostrings_2.68.0             bookdown_0.33                </span></span>
 <span><span class="co">#&gt;  [89] xfun_0.39                     datasets_4.3.0               </span></span>
 <span><span class="co">#&gt;  [91] stringi_1.7.12                yaml_2.3.7                   </span></span>
-<span><span class="co">#&gt;  [93] evaluate_0.20                 codetools_0.2-19             </span></span>
+<span><span class="co">#&gt;  [93] evaluate_0.21                 codetools_0.2-19             </span></span>
 <span><span class="co">#&gt;  [95] tibble_3.2.1                  BiocManager_1.30.20          </span></span>
 <span><span class="co">#&gt;  [97] cli_3.6.1                     xtable_1.8-4                 </span></span>
 <span><span class="co">#&gt;  [99] reticulate_1.28               systemfonts_1.0.4            </span></span>
@@ -885,7 +966,7 @@ Fine-tuning the model to custom contrast datasets</p>
 <span><span class="co">#&gt; [107] png_0.1-8                     parallel_4.3.0               </span></span>
 <span><span class="co">#&gt; [109] ellipsis_0.3.2                pkgdown_2.0.7                </span></span>
 <span><span class="co">#&gt; [111] blob_1.2.4                    basilisk.utils_1.12.0        </span></span>
-<span><span class="co">#&gt; [113] bitops_1.0-7                  viridisLite_0.4.1            </span></span>
+<span><span class="co">#&gt; [113] bitops_1.0-7                  viridisLite_0.4.2            </span></span>
 <span><span class="co">#&gt; [115] scales_1.2.1                  grDevices_4.3.0              </span></span>
 <span><span class="co">#&gt; [117] purrr_1.0.1                   crayon_1.5.2                 </span></span>
 <span><span class="co">#&gt; [119] rlang_1.1.1                   cowplot_1.1.1                </span></span>
