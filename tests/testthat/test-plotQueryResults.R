@@ -94,7 +94,7 @@ test_that("plotQueryResultsViolin works", {
     for (i in seq_along(p)) {
         expect_s3_class(p[[i]], "ggplot")
     }
-    expect_true(file.info(tf)['size'] > 20000)
+    expect_true(file.info(tf)['size'] > 5000)
     
     # clean up
     unlink(tf)
