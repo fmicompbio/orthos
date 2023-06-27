@@ -1,3 +1,8 @@
+# orthos 0.99.1
+
+- make all function examples runnable
+- added scheduled cron runs on R-CMD-check.yaml
+
 # orthos 0.99.0
 
 - prepare package for submission to Bioconductor.
