@@ -28,7 +28,6 @@
 #' @export
 #' 
 #' @examples
-#' \donttest{
 #' 
 #' # !!!Note!!! mode="DEMO" for demonstration purposes only. Default is mode="ANALYSIS"
 #' SE_mouse_demoDB <- loadContrastDatabase (organism="Mouse", mode="DEMO")
@@ -37,7 +36,6 @@
 #' SE_human_demoDB <- loadContrastDatabase (organism="Human", mode="DEMO")
 #' SE_human_demoDB
 #' 
-#' }
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom HDF5Array loadHDF5SummarizedExperiment
@@ -51,6 +49,7 @@ loadContrastDatabase <- function(organism = c("Human", "Mouse"),
     mode <- match.arg(mode)
 
     dataDir <- orthosData::GetorthosContrastDB(organism = organism, mode = mode)
+    #dataDir <- ExperimentHub::getExperimentHubOption("CACHE")
     if (identical(mode, "DEMO")) {
         prefix <- paste0(tolower(organism), "_v212_NDF_c100_DEMO")
         seFile <- file.path(dataDir, paste0(prefix, "se.rds"))
