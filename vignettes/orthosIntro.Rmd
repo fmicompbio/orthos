@@ -48,7 +48,6 @@ knitr::opts_chunk$set(
 stopifnot(requireNamespace("htmltools"))
 htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
-do_eval <- Sys.getenv("ORTHOS_MODEL_EVAL", unset = "1") == "1"
 ```
 
 
@@ -279,7 +278,7 @@ For the MKL1 data, which are stored as raw counts, it is more natural to
 call  `decomposeVar()` using the first mode.
 
 Decomposing the human contrasts:
-```{r, warning = FALSE, message = FALSE, eval = do_eval}
+```{r, warning = FALSE, message = FALSE}
 #Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for human:
 dec_MKL1_human <- decomposeVar(M = MKL1_human, treatm = c(2, 3), cntr = c(1, 1), 
                                organism = "Human", verbose = FALSE)
@@ -287,7 +286,7 @@ dec_MKL1_human
 ```
 
 Decomposing the mouse contrasts:
-```{r, warning = FALSE, message = FALSE, eval = do_eval}
+```{r, warning = FALSE, message = FALSE}
 #Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:
 dec_MKL1_mouse <- decomposeVar(M = MKL1_mouse, treatm = c(2, 3), cntr = c(1, 1),
                                organism = "Mouse", verbose = FALSE)
@@ -310,7 +309,7 @@ or to check how the input and decomposed contrasts are related to each other.
 
 For example for the mouse caMKL1 contrast:
 
-```{r, eval = do_eval}
+```{r}
 suppressPackageStartupMessages({
     library(ggplot2)
     library(SummarizedExperiment)
@@ -359,7 +358,7 @@ However, the residual and decoded components are largely uncorrelated.
 The `colData` of the object summarizes the proportion of variance accounted for
 in each decomposed component:
 
-```{r, eval = do_eval}
+```{r}
 colData(dec_MKL1_human)
 
 colData(dec_MKL1_mouse)
@@ -428,7 +427,7 @@ In the following examples, please note that the queries are run using
 the default `mode = "ANALYSIS"` should be used.
 
 Examples queries using the decomposed human MKL1 data:
-```{r, fig.width = 12, eval = do_eval}
+```{r, fig.width = 12}
 # parallelization parameters:
 params <- BiocParallel::MulticoreParam(workers = 2)
 
@@ -450,7 +449,7 @@ query.res.human$TopHits$RESIDUAL_CONTRASTS
 
 
 Example queries using the decomposed mouse MKL1 data:
-```{r, fig.width = 12, eval = do_eval}
+```{r, fig.width = 12}
 # query the database using only the "caMKL1" mouse contrast, suppress plotting:
 # for demonstration purposes (for actual analyses, use 'mode = "ANALYSIS"'):
 query.res.mouse <- queryWithContrasts(dec_MKL1_mouse[, "caMKL1"], organism = "Mouse", 
@@ -505,7 +504,7 @@ the corresponding expression CONTEXT in log2 CPM representation for all the data
 Extensive gene  and contrast annotation is available in the object's `rowData` and `colData` respectively.
 
 
-```{r, eval = do_eval}
+```{r}
 organism <- "Mouse"
 orthosDB <- loadContrastDatabase(organism = "Mouse", mode = "DEMO")
 
@@ -570,7 +569,7 @@ We now demonstrate calls to the context encoder for generating a latent embeddin
 contrast conditional variational autoencoder for producing a contrast latent embedding and decoding. 
 
 
-```{r, eval = do_eval}
+```{r}
 # mouse MKL1 context and contrast with the appropriate shape and representation.
 #
 # Shape of models input is M x N,  
