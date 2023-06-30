@@ -2,6 +2,7 @@
 
 - make all function examples runnable
 - added scheduled cron runs on R-CMD-check.yaml
+- added inst/scripts to describe extdata generation
 
 # orthos 0.99.0
 
