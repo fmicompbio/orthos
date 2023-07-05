@@ -7,12 +7,12 @@
 \title{orthos - variance decomposition using conditional variational auto-encoders}
 \description{
 \pkg{orthos} decomposes RNA-seq contrasts, for example obtained from a
-gene knock-out or compound treatment experiment, into unspecific and
+genetic or compound treatment experiments, into non-specific and
 experiment-specific components. Original and decomposed contrasts can
-be efficiently queried against a large database of publiclycontrasts
+be efficiently queried against a large database of public contrasts
 (derived from ARCHS4, https://maayanlab.cloud/archs4/) to identify similar
 experiments. \pkg{orthos} furthermore provides plotting functions to
-visualize the results of such a search for similar contrasts.
+visualize the results of such queries for similar contrasts.
 }
 \author{
 \strong{Maintainer}: Panagiotis Papasaikas \email{panagiotis.papasaikas@fmi.ch} (\href{https://orcid.org/0000-0002-1640-7636}{ORCID})
