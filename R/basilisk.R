@@ -171,27 +171,27 @@ if (basilisk.utils::isLinux()) {
         "gtk2==2.24.33",
         "libtool==2.4.7",
         "libev==4.33",
-        "libedit==3.1.20191231",
+        "libedit==3.1.20191231"
         ## different versions installed for different operating systems if 
         ## versions not pinned
-        "atk-1.0==2.38.0",
-        "flatbuffers==2.0.8",
-        "gdk-pixbuf==2.42.10",
-        "graphite2==1.3.13",
-        "graphviz==7.1.0",
-        "grpc-cpp==1.47.1",
-        "grpcio==1.47.1",
-        "harfbuzz==6.0.0",
-        "icu==70.1",
-        "libcurl==7.87.0",
-        "libprotobuf==3.21.12",
-        "librsvg==2.54.4",
-        "libwebp==1.2.4",
-        "libwebp-base==1.2.4",
-        "numexpr==2.8.4",
-        "pango==1.50.14",
-        "pixman==0.40.0",
-        "protobuf==4.21.12"
+        # "atk-1.0==2.38.0",
+        # "flatbuffers==2.0.8",
+        # "gdk-pixbuf==2.42.10",
+        # "graphite2==1.3.13",
+        # "graphviz==7.1.0",
+        # "grpc-cpp==1.47.1",
+        # "grpcio==1.47.1",
+        # "harfbuzz==6.0.0",
+        # "icu==70.1",
+        # "libcurl==7.87.0",
+        # "libprotobuf==3.21.12",
+        # "librsvg==2.54.4",
+        # "libwebp==1.2.4",
+        # "libwebp-base==1.2.4",
+        # "numexpr==2.8.4",
+        # "pango==1.50.14",
+        # "pixman==0.40.0",
+        # "protobuf==4.21.12"
     )
 }
 
