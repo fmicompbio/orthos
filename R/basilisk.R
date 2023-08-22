@@ -156,8 +156,11 @@ if (basilisk.utils::isLinux()) {
         "libgfortran-ng==13.1.0",
         "libgomp==13.1.0",
         "libstdcxx-ng==13.1.0",
-        "cudatoolkit==11.8.0",
-        "cudnn==8.4.1.50",
+        ## not sure whether the cuda packages need to be compatible with the 
+        ## system libraries, so it may be safer to let this be automatically 
+        ## decided
+        #"cudatoolkit==11.8.0",
+        #"cudnn==8.4.1.50",
         "keyutils==1.6.1",
         "libnsl==2.0.0",
         "_libgcc_mutex==0.1",
