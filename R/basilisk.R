@@ -195,6 +195,78 @@ if (basilisk.utils::isLinux()) {
         "pixman==0.40.0",
         "protobuf==4.21.12"
     )
+} else if (basilisk.utils::isWindows()) {
+    .orthos_dependencies <- c(
+        .orthos_dependencies, 
+        "_tflow_select==2.3.0",
+        "colorama==0.4.6",
+        "flatbuffers==23.5.26",
+        "getopt-win32==0.1",
+        "glib==2.76.2",
+        "glib-tools==2.76.2",
+        "graphite2==1.3.14",
+        "graphviz==4.0.0",
+        "grpc-cpp==1.48.1",
+        "grpcio==1.48.1",
+        "harfbuzz==4.3.0",
+        "icu==58.2",
+        "libcurl==8.1.2",
+        "libflang==5.0.0",
+        "libprotobuf==3.20.3",
+        "libwebp==1.2.4",
+        "libwebp-base==1.2.4",
+        "llvm-meta==5.0.0",
+        "m2w64-gcc-libgfortran==5.3.0",
+        "m2w64-gcc-libs==5.3.0",
+        "m2w64-gcc-libs-core==5.3.0",
+        "m2w64-gmp==6.1.0",
+        "m2w64-libwinpthread-git==5.0.0.4634.697f757",
+        "msys2-conda-epoch==20160418",
+        "numexpr==2.8.4",
+        "openmp==5.0.0",
+        "pango==1.50.7",
+        "pixman==0.38.0",
+        "protobuf==3.20.3",
+        "ucrt==10.0.22621.0",
+        "vc==14.3",
+        "vc14_runtime==14.36.32532",
+        "vs2015_runtime==14.36.32532",
+        "win_inet_pton==1.1.0"
+    )
+} else if (basilisk.utils::isMacOSX()) {
+    ## tested on both intel and arm
+    .orthos_dependencies <- c(
+        .orthos_dependencies, 
+        "atk-1.0==2.38.0",
+        "flatbuffers==2.0.8",
+        "gdk-pixbuf==2.42.10",
+        "graphite2==1.3.13",
+        "graphviz==7.1.0",
+        "grpc-cpp==1.47.1",
+        "grpcio==1.47.1",
+        "gtk2==2.24.33",
+        "harfbuzz==6.0.0",
+        "icu==70.1",
+        "libcurl==7.87.0",
+        "libcxx==16.0.6",
+        "libedit==3.1.20191231",
+        "libev==4.33",
+        "libgfortran==5.0.0",
+        "libgfortran5==13.2.0",
+        "libnghttp2==1.51.0",
+        "libprotobuf==3.21.12",
+        "librsvg==2.54.4",
+        "libtool==2.4.7",
+        "libwebp==1.2.4",
+        "libwebp-base==1.2.4",
+        "llvm-openmp==16.0.6",
+        "ncurses==6.4",
+        "numexpr==2.8.4",
+        "pango==1.50.14",
+        "pixman==0.40.0",
+        "protobuf==4.21.12",
+        "readline==8.2"
+    )
 }
 
 #' @author Charlotte Soneson
