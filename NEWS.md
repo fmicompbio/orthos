@@ -1,3 +1,8 @@
+# orthos 0.99.2
+
+- Pinning more packages
+- updated stick with Bioconductor url
+
 # orthos 0.99.1
 
 - make all function examples runnable
