@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">orthos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.3</span>
       </span>
     </div>
 
@@ -274,20 +274,20 @@ they are context-specific). This means that decomposing a contrast on a
 different context will produce a different output. An interesting
 ancillary application of this conditioning is that one can “morph”
 decoded contrasts to <strong>in-silico evaluate non-specific effects in
-new contexts</strong>.</em></font></p>
-<p>In essence, we can infer what the non-specific effects would look
-like had the experiment been performed in e.g different cell-lines,
-tissues, batches, patients or using different library-preparation
-protocols. The inferred decodings will reflect the new context in
-multiple ways. For example, genes that were non-detected/non-expressed
-in the original contrast (and therefore had neutral LFCs ) will produce
-new (possibly non-neutral) decoded LFCs if present in the new context
-and vice versa. This <strong>“out-of-context”</strong> type of inference
-is limited to the decoded contrast, as by definition, the residual is
-not part of the model’s generative capacity. Mechanically,
-out-of-context inference of non-specific effects is a simple as
-evaluating the same contrast using multiple contexts when calling
-<code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> (see section below). </p>
+new contexts</strong>. In essence, we can infer what the non-specific
+effects would look like had the experiment been performed in e.g
+different cell-lines, tissues, batches, patients or using different
+library-preparation protocols. The inferred decodings will reflect the
+new context in multiple ways. For example, genes that were
+non-detected/non-expressed in the original contrast (and therefore had
+neutral LFCs ) will produce new (possibly non-neutral) decoded LFCs if
+present in the new context and vice versa. This
+<strong>“out-of-context”</strong> type of inference is limited to the
+decoded contrast, as by definition, the residual is not part of the
+model’s generative capacity. Mechanically, out-of-context inference of
+non-specific effects is a simple as evaluating the same contrast using
+multiple contexts when calling <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code> (see section
+below). </em></font></p>
 </div>
 <div class="section level3">
 <h3 id="contrast-decomposition-with-decomposevar">Contrast decomposition with <code>decomposeVar()</code><a class="anchor" aria-label="anchor" href="#contrast-decomposition-with-decomposevar"></a>
@@ -335,9 +335,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for human:</span></span>
 <span><span class="va">dec_MKL1_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_human</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                               organism <span class="op">=</span> <span class="st">"Human"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 118ms/epoch - 118ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 80ms/epoch - 80ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 75ms/epoch - 75ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 117ms/epoch - 117ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 86ms/epoch - 86ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 84ms/epoch - 84ms/step</span></span>
 <span><span class="va">dec_MKL1_human</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20411 2 </span></span>
@@ -353,9 +353,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:</span></span>
 <span><span class="va">dec_MKL1_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_mouse</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               organism <span class="op">=</span> <span class="st">"Mouse"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 65ms/epoch - 65ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 76ms/epoch - 76ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 74ms/epoch - 74ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 71ms/epoch - 71ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 85ms/epoch - 85ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 80ms/epoch - 80ms/step</span></span>
 <span><span class="va">dec_MKL1_mouse</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20339 2 </span></span>
@@ -867,15 +867,15 @@ decoding.</p>
 <span>                              fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoder</span>,</span>
 <span>                              organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                              gene_input <span class="op">=</span> <span class="va">CONTEXT</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 66ms/epoch - 66ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 64ms/epoch - 64ms/step</span></span>
 <span></span>
 <span><span class="co"># Produce a latent embedding and decoding for the contrast with .predictEncoderD:</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
 <span>                             fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoderD</span>,</span>
 <span>                             organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                             delta_input <span class="op">=</span> <span class="va">CONTRAST</span>, context <span class="op">=</span> <span class="va">LATC</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 72ms/epoch - 72ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 72ms/epoch - 72ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 78ms/epoch - 78ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 74ms/epoch - 74ms/step</span></span>
 <span></span>
 <span><span class="co"># Deactivate the `basilisk` environment:</span></span>
 <span><span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskStop</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
@@ -911,7 +911,7 @@ decoding.</p>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] basilisk_1.13.4             ggplot2_3.4.4              </span></span>
 <span><span class="co">#&gt;  [3] keras_2.13.0                orthosData_0.99.4          </span></span>
-<span><span class="co">#&gt;  [5] orthos_0.99.2               SummarizedExperiment_1.31.1</span></span>
+<span><span class="co">#&gt;  [5] orthos_0.99.3               SummarizedExperiment_1.31.1</span></span>
 <span><span class="co">#&gt;  [7] Biobase_2.61.0              GenomicRanges_1.53.2       </span></span>
 <span><span class="co">#&gt;  [9] GenomeInfoDb_1.37.6         IRanges_2.35.3             </span></span>
 <span><span class="co">#&gt; [11] S4Vectors_0.39.3            BiocGenerics_0.47.0        </span></span>
