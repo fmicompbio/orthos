@@ -41,7 +41,6 @@ ExperimentHub directory (see `ExperimentHub::getExperimentHubOption("CACHE")`) u
 companion data-package.
 }
 \examples{
-\donttest{
 
 # !!!Note!!! mode="DEMO" for demonstration purposes only. Default is mode="ANALYSIS"
 SE_mouse_demoDB <- loadContrastDatabase (organism="Mouse", mode="DEMO")
@@ -50,7 +49,6 @@ SE_mouse_demoDB
 SE_human_demoDB <- loadContrastDatabase (organism="Human", mode="DEMO")
 SE_human_demoDB
 
-}
 
 }
 \author{
