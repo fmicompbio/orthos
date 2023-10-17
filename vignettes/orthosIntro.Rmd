@@ -222,7 +222,6 @@ Ditto for the terms residual and specific.
 (i.e they are context-specific). This means that decomposing a contrast on a different context
 will produce a different output. An interesting ancillary application of this conditioning is that 
 one can "morph" decoded contrasts to **in-silico evaluate non-specific effects in new contexts**. 
-
 In essence, we can infer what the non-specific effects would look like had the experiment been performed in
 e.g different cell-lines, tissues, batches, patients or using different library-preparation protocols.
 The inferred decodings will reflect the new context in multiple ways. For example, genes that
