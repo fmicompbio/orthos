@@ -1,3 +1,7 @@
+# orthos 0.99.3
+
+- Pinning more packages
+
 # orthos 0.99.2
 
 - Pinning more packages
