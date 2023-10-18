@@ -1,3 +1,7 @@
+# orthos 0.99.4
+
+- Temporary inactivate failing Windows tests
+
 # orthos 0.99.3
 
 - Pinning more packages
