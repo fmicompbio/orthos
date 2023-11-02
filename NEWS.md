@@ -1,3 +1,7 @@
+# orthos 1.1.1
+
+- Upgrade libwebp to address security concerns
+
 # orthos 0.99.4
 
 - Temporary inactivate failing Windows tests
