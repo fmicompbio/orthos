@@ -19,9 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        # - { os: macOS-latest, bioc: 'devel', curlConfigPath: '/usr/bin/'}
-        # - { os: windows-latest, bioc: 'devel'}
-        # - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
         - { os: macOS-latest, bioc: 'devel', curlConfigPath: '/usr/bin/'}
         - { os: windows-latest, bioc: 'devel'}
         - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
@@ -70,8 +67,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-bioc-${{ matrix.config.bioc }}-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ runner.os }}-bioc-${{ matrix.config.bioc }}-
+          key: ${{ matrix.config.os }}-bioc-${{ matrix.config.bioc }}-${{ hashFiles('depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}-bioc-${{ matrix.config.bioc }}-
 
        # - name: Install system dependencies (Linux)
        #  if: runner.os == 'Linux'
