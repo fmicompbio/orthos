@@ -34,7 +34,6 @@ jobs:
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
       ORTHOS_MODEL_EVAL: 1
 
-
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
