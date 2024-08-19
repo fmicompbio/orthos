@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - { os: macOS-latest, bioc: 'devel', miniconda: 'py39_22.11.1-1', curlConfigPath: '/usr/bin/'}
-        - { os: windows-latest, bioc: 'devel', miniconda: 'py39_4.12.0'}
-        - { os: ubuntu-latest, miniconda: 'py39_4.12.0', image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+        - { os: macOS-latest, bioc: 'devel', curlConfigPath: '/usr/bin/'}
+        - { os: windows-latest, bioc: 'devel'}
+        - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -29,7 +29,7 @@ jobs:
       CRAN: ${{ matrix.config.cran }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      BASILISK_MINICONDA_VERSION: ${{ matrix.config.miniconda }}
+      # BASILISK_MINICONDA_VERSION: ${{ matrix.config.miniconda }}
       # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
       ORTHOS_MODEL_EVAL: 1
