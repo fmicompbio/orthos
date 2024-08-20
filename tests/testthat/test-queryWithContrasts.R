@@ -87,13 +87,13 @@ test_that("queryWithContrasts works", {
                      dim(resHuman$pearson.rhos$DECODED_CONTRASTS))
     expect_identical(dim(resHuman$pearson.rhos$INPUT_CONTRASTS),
                      dim(resHuman$pearson.rhos$RESIDUAL_CONTRASTS))
-    # expect_equal(rowSums(resHuman$pearson.rhos$INPUT_CONTRASTS),
-    #              c(MKL1 = 11.8424116074152, caMKL1 = 38.7952653127559), tolerance = 1e-3)
-    # expect_equal(rowSums(resHuman$pearson.rhos$DECODED_CONTRASTS),
-    #              c(MKL1 = 20.7882406720692, caMKL1 = 103.779724182865), tolerance = 1e-3)
-    # expect_equal(rowSums(resHuman$pearson.rhos$RESIDUAL_CONTRASTS),
-    #              c(MKL1 = 4.64374405966305, caMKL1 = 4.33762865756607), tolerance = 1e-3)
-    # 
+    expect_equal(rowSums(resHuman$pearson.rhos$INPUT_CONTRASTS),
+                 c(MKL1 = 11.8424116074152, caMKL1 = 38.7952653127559), tolerance = 1e-3)
+    expect_equal(rowSums(resHuman$pearson.rhos$DECODED_CONTRASTS),
+                 c(MKL1 = 20.7882406720692, caMKL1 = 103.779724182865), tolerance = 1e-3)
+    expect_equal(rowSums(resHuman$pearson.rhos$RESIDUAL_CONTRASTS),
+                 c(MKL1 = 4.64374405966305, caMKL1 = 4.33762865756607), tolerance = 1e-3)
+
     # zscores
     expect_type(resHuman$zscores, "list")
     expect_identical(lapply(resHuman$pearson.rhos, dimnames),
