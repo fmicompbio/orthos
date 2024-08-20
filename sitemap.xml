@@ -1,51 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/404.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/articles/orthosIntro.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/index.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/decomposeVar.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/loadContrastDatabase.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/orthos-package.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsManh.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsViolin.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/queryWithContrasts.html</loc>
-  </url>
-  <url>
-    <loc>http://fmicompbio.github.io/orthos/reference/testOrthosEnv.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://fmicompbio.github.io/orthos/404.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/LICENSE-text.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/LICENSE.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/articles/index.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/articles/orthosIntro.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/authors.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/index.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/news/index.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/decomposeVar.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/index.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/loadContrastDatabase.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/orthos-package.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsManh.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/plotQueryResultsViolin.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/queryWithContrasts.html</loc></url>
+<url><loc>http://fmicompbio.github.io/orthos/reference/testOrthosEnv.html</loc></url>
 </urlset>
+
