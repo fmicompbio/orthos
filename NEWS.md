@@ -1,6 +1,14 @@
-# orthos 1.1.2
+# orthos 1.3.1
 
 - Environment installation addresses Anaconda licencing changes
+
+# orthos 1.3.0
+
+- Bioconductor Release update
+
+# orthos 1.2.0
+
+- Bioconductor Release update
 
 # orthos 1.1.1
 
