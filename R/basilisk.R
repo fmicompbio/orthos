@@ -179,7 +179,7 @@ if (basilisk.utils::isLinux()) {
         "zstandard==0.23.0",
         "zstd==1.5.6"
     )
-    .pip_dependencies <- NULL
+    .pip_dependencies <- ""
 } else if (basilisk.utils::isMacOSXArm()) {
     .orthos_dependencies <- c(
         "absl-py==2.1.0",
@@ -341,7 +341,7 @@ if (basilisk.utils::isLinux()) {
         "zstandard==0.23.0",
         "zstd==1.5.6"
     )
-    .pip_dependencies <- NULL
+    .pip_dependencies <- ""
 } else if (basilisk.utils::isMacOSX()) {
     .orthos_dependencies <- c(
         "absl-py==2.1.0",
@@ -503,7 +503,7 @@ if (basilisk.utils::isLinux()) {
         "zstandard==0.23.0",
         "zstd==1.5.6"
     )
-    .pip_dependencies <- NULL
+    .pip_dependencies <- ""
 } else if (basilisk.utils::isWindows()) {
     .orthos_dependencies <- c(
         "brotli-python==1.1.0",
