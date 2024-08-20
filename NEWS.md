@@ -1,3 +1,7 @@
+# orthos 1.1.2
+
+- Environment installation addresses Anaconda licencing changes
+
 # orthos 1.1.1
 
 - Upgrade libwebp to address security concerns
