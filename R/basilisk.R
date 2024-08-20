@@ -179,7 +179,7 @@ if (basilisk.utils::isLinux()) {
         "zstandard==0.23.0",
         "zstd==1.5.6"
     )
-    .pip_dependencies <- ""
+    .pip_dependencies <- character(0)
 } else if (basilisk.utils::isMacOSXArm()) {
     .orthos_dependencies <- c(
         "absl-py==2.1.0",
