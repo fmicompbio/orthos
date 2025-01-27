@@ -41,6 +41,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up tinytex
+        if: runner.os == 'Linux' && matrix.config.image == null
         uses: r-lib/actions/setup-tinytex@v2
         env:
           TINYTEX_INSTALLER: TinyTeX
@@ -87,6 +88,15 @@ jobs:
        #    sudo -s eval "$sysreqs"
        #    sudo apt-get update && sudo apt-get -y install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
 
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux' && matrix.config.image == null
+        #env:
+        #  RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          pak-version: devel
+          
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
