@@ -22,6 +22,7 @@ jobs:
         config:
         - { os: macOS-latest, bioc: 'devel', curlConfigPath: '/usr/bin/'}
         - { os: windows-latest, bioc: 'devel'}
+        - { os: ubuntu-24.04-arm, bioc: 'devel'}
         - { os: ubuntu-latest, image: "bioconductor/bioconductor_docker:devel", cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
 
     env:
@@ -39,6 +40,12 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
 
+      - name: Set up tinytex
+        if: runner.os == 'Linux' && matrix.config.image == null
+        uses: r-lib/actions/setup-tinytex@v2
+        env:
+          TINYTEX_INSTALLER: TinyTeX
+          
       - name: Set up R and install BiocManager
         uses: grimbough/bioc-actions/setup-bioc@v1
         if: matrix.config.image == null
@@ -81,6 +88,15 @@ jobs:
        #    sudo -s eval "$sysreqs"
        #    sudo apt-get update && sudo apt-get -y install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
 
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux' && matrix.config.image == null
+        #env:
+        #  RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          pak-version: devel
+          
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -109,7 +125,7 @@ jobs:
 
       - name: Upload install log if the build/install/check step fails
         if: always() && (steps.build-install-check.outcome == 'failure')
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with: 
           name: install-log
           path: |
