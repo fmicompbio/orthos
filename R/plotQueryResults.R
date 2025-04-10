@@ -278,7 +278,7 @@ plotQueryResultsViolin <- function(queryResults, doPlot = TRUE) {
         PLOTS[[dset]] <-
             ggplot2::ggplot(plot_df, aes(.data$COMPONENT, .data$score,
                                          fill = .data$COMPONENT)) +
-            ggplot2::geom_violin(trim = FALSE, size = 0.6) +
+            ggplot2::geom_violin(trim = FALSE, linewidth = 0.6) +
             ggplot2::scale_fill_manual(values = c("#8B451366", "#10701044",
                                                              "#FF550077")) +
             ggplot2::theme_minimal() +
