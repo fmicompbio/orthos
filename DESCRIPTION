@@ -32,7 +32,7 @@ Imports:
     DelayedArray,
     dplyr,
     ExperimentHub,
-    ggplot2,
+    ggplot2 (>= 3.4.0),
     ggpubr,
     ggrepel,
     ggsci,
