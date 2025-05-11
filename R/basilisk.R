@@ -126,7 +126,7 @@ if (basilisk::isLinuxAarch64()) {
     .pip_dependencies <- character(0)
 } else if (basilisk::isWindows()) {
     .orthos_dependencies <- c(
-        "python==3.8.19",
+        "python==3.8.10",
         "numpy==1.22.4",
         "keras==2.10.0",
         "tensorflow==2.10.0",
