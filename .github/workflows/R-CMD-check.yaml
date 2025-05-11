@@ -36,6 +36,7 @@ jobs:
       # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
       ORTHOS_MODEL_EVAL: 1
+      R_USER_CACHE_DIR: ${{ runner.temp }}/${{ matrix.config.os }}
 
     steps:
       - name: Check out repo
