@@ -36,11 +36,13 @@ jobs:
       # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       # CURL_CONFIG: ${{ matrix.config.curlConfigPath }}curl-config
       ORTHOS_MODEL_EVAL: 1
-      R_USER_CACHE_DIR: ${{ runner.temp }}/${{ matrix.config.os }}
 
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
+
+      - name: Set cache environment variable
+        run: echo "R_USER_CACHE_DIR=${RUNNER_TEMP}/${{ matrix.config.os }}" >> $GITHUB_ENV
 
       - name: Set up tinytex
         if: runner.os == 'Linux' && matrix.config.image == null
