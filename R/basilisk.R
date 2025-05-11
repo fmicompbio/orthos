@@ -7,7 +7,7 @@ if (basilisk::isLinuxAarch64()) {
         "python==3.10.14",
         "numpy==1.26.4",
         "keras==2.15.0",
-        "tensorflow==2.16.1",
+        "tensorflow==2.15.0",
         "pandas==2.2.2"
     )
     .pip_dependencies <- character(0)
@@ -171,7 +171,7 @@ if (basilisk::isLinuxAarch64()) {
         "python==3.11.11",
         "numpy==1.26.4",
         "keras==2.15.0",
-        "tensorflow==2.16.1",
+        "tensorflow==2.15.0",
         "pandas==2.2.3"
     )
     .pip_dependencies <- character(0)
@@ -535,7 +535,7 @@ if (basilisk::isLinuxAarch64()) {
         "python==3.11.11",
         "numpy==1.26.4",
         "keras==2.15.0",
-        "tensorflow==2.16.1",
+        "tensorflow==2.15.0",
         "pandas==2.2.3"
     )
     .pip_dependencies <- character(0)
