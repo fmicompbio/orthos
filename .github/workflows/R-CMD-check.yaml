@@ -116,7 +116,7 @@ jobs:
       - name: Install development version of basilisk and basilisk.utils
         run: |
           BiocManager::install("Bioconductor/basilisk", ref = "devel")
-          BiocManager::install("Bioconductor/basilisk.utils", ref = "overhaul")
+          BiocManager::install("Bioconductor/basilisk.utils", ref = "devel")
         shell: Rscript {0}
 
       - name: Session info
