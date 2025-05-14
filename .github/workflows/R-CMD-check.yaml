@@ -42,9 +42,6 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
 
-      # - name: Set cache environment variable
-      #   run: echo "R_USER_CACHE_DIR=${RUNNER_TEMP}/${{ matrix.config.os }}" >> $GITHUB_ENV
-
       - name: Install OpenSSL
         if: matrix.config.os == 'macos-latest'
         run: brew install openssl@3
@@ -80,10 +77,6 @@ jobs:
       - name: Set up pandoc
         uses: r-lib/actions/setup-pandoc@v2
         if: matrix.config.image == null
-
-      # - name: Unset DYLD_FALLBACK_LIBRARY_PATH
-      #   if: runner.os == 'macOS'
-      #   run: unset DYLD_FALLBACK_LIBRARY_PATH
 
       - name: Install remotes
         run: |
@@ -124,12 +117,6 @@ jobs:
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(local_deps[local_deps %in% deps$package[deps$diff != 0]], Ncpu = 2L)
           remotes::install_cran('rcmdcheck', Ncpu = 2L)
-        shell: Rscript {0}
-
-      - name: Install development version of basilisk and basilisk.utils
-        run: |
-          BiocManager::install("Bioconductor/basilisk", ref = "devel")
-          BiocManager::install("Bioconductor/basilisk.utils", ref = "devel")
         shell: Rscript {0}
 
       - name: Session info
