@@ -38,6 +38,7 @@ testOrthosEnv <- function() {
         
         list(
             keras_available = keras_ok,
+            build_info = build_info, 
             tf_version = tf_version,
             cuda_version = build_info$cuda_version,
             cudnn_version = build_info$cudnn_version,
