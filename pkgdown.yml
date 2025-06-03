@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   orthosIntro: orthosIntro.html
-last_built: 2025-06-03T14:15Z
+last_built: 2025-06-03T14:59Z
 urls:
   reference: http://fmicompbio.github.io/orthos/reference
   article: http://fmicompbio.github.io/orthos/articles
