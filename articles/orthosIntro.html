@@ -94,7 +94,7 @@ SwitzerlandSIB Swiss Institute of
 Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:michael.stadler@fmi.ch" class="email">michael.stadler@fmi.ch</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2 June 2025</h4>
+            <h4 data-toc-skip class="date">3 June 2025</h4>
       
 
       <div class="hidden name"><code>orthosIntro.Rmd</code></div>
@@ -334,9 +334,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for human:</span></span>
 <span><span class="va">dec_MKL1_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_human</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                               organism <span class="op">=</span> <span class="st">"Human"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 48ms/epoch - 48ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 120ms/epoch - 120ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 58ms/epoch - 58ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 251ms/epoch - 251ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 418ms/epoch - 418ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 67ms/epoch - 67ms/step</span></span>
 <span><span class="va">dec_MKL1_human</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20411 2 </span></span>
@@ -352,9 +352,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:</span></span>
 <span><span class="va">dec_MKL1_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_mouse</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               organism <span class="op">=</span> <span class="st">"Mouse"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 33ms/epoch - 33ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 63ms/epoch - 63ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 34ms/epoch - 34ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 55ms/epoch - 55ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 341ms/epoch - 341ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 69ms/epoch - 69ms/step</span></span>
 <span><span class="va">dec_MKL1_mouse</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20339 2 </span></span>
@@ -866,15 +866,15 @@ decoding.</p>
 <span>                              fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoder</span>,</span>
 <span>                              organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                              gene_input <span class="op">=</span> <span class="va">CONTEXT</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 50ms/epoch - 50ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 108ms/epoch - 108ms/step</span></span>
 <span></span>
 <span><span class="co"># Produce a latent embedding and decoding for the contrast with .predictEncoderD:</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
 <span>                             fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoderD</span>,</span>
 <span>                             organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                             delta_input <span class="op">=</span> <span class="va">CONTRAST</span>, context <span class="op">=</span> <span class="va">LATC</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 34ms/epoch - 34ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 22ms/epoch - 22ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 53ms/epoch - 53ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 31ms/epoch - 31ms/step</span></span>
 <span></span>
 <span><span class="co"># Deactivate the `basilisk` environment:</span></span>
 <span><span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskStop</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
