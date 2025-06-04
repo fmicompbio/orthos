@@ -17,6 +17,11 @@ testOrthosEnv <- function() {
                         testload = "tensorflow")
     keras_tf_version <- basiliskRun(cl, function() {
         
+        # Set up env variable for explicit report of libload and debugging
+        Sys.setenv(
+            LD_DEBUG = "libs",         # prints every dlopen() to stderr
+            TF_CPP_MIN_LOG_LEVEL = "0" # show all TF log messages
+        )
         
         # Collect diagnostics
         tf_version <- tensorflow::tf$version$VERSION
