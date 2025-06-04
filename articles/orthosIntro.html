@@ -94,7 +94,7 @@ SwitzerlandSIB Swiss Institute of
 Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:michael.stadler@fmi.ch" class="email">michael.stadler@fmi.ch</a>
       </address>
                   
-            <h4 data-toc-skip class="date">3 June 2025</h4>
+            <h4 data-toc-skip class="date">4 June 2025</h4>
       
 
       <div class="hidden name"><code>orthosIntro.Rmd</code></div>
@@ -335,8 +335,8 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <span><span class="va">dec_MKL1_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_human</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                               organism <span class="op">=</span> <span class="st">"Human"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 1/1 - 0s - 31ms/epoch - 31ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 56ms/epoch - 56ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 28ms/epoch - 28ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 55ms/epoch - 55ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 29ms/epoch - 29ms/step</span></span>
 <span><span class="va">dec_MKL1_human</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20411 2 </span></span>
@@ -353,8 +353,8 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <span><span class="va">dec_MKL1_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_mouse</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               organism <span class="op">=</span> <span class="st">"Mouse"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 1/1 - 0s - 19ms/epoch - 19ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 55ms/epoch - 55ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 28ms/epoch - 28ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 53ms/epoch - 53ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 25ms/epoch - 25ms/step</span></span>
 <span><span class="va">dec_MKL1_mouse</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20339 2 </span></span>
@@ -866,7 +866,7 @@ decoding.</p>
 <span>                              fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoder</span>,</span>
 <span>                              organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                              gene_input <span class="op">=</span> <span class="va">CONTEXT</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 88ms/epoch - 88ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 51ms/epoch - 51ms/step</span></span>
 <span></span>
 <span><span class="co"># Produce a latent embedding and decoding for the contrast with .predictEncoderD:</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
