@@ -94,7 +94,7 @@ SwitzerlandSIB Swiss Institute of
 Bioinformatics<br><a class="author_email" href="mailto:#"></a><a href="mailto:michael.stadler@fmi.ch" class="email">michael.stadler@fmi.ch</a>
       </address>
                   
-            <h4 data-toc-skip class="date">4 June 2025</h4>
+            <h4 data-toc-skip class="date">20 June 2025</h4>
       
 
       <div class="hidden name"><code>orthosIntro.Rmd</code></div>
@@ -334,9 +334,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for human:</span></span>
 <span><span class="va">dec_MKL1_human</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_human</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                               organism <span class="op">=</span> <span class="st">"Human"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 31ms/epoch - 31ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 55ms/epoch - 55ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 29ms/epoch - 29ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 43ms/epoch - 43ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 165ms/epoch - 165ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 37ms/epoch - 37ms/step</span></span>
 <span><span class="va">dec_MKL1_human</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20411 2 </span></span>
@@ -352,9 +352,9 @@ to call <code><a href="../reference/decomposeVar.html">decomposeVar()</a></code>
 <code class="sourceCode R"><span><span class="co">#Decompose MKL1-vs-Cntrl and caMKL1-vs-Cntrl contrasts for mouse:</span></span>
 <span><span class="va">dec_MKL1_mouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decomposeVar.html">decomposeVar</a></span><span class="op">(</span>M <span class="op">=</span> <span class="va">MKL1_mouse</span>, treatm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, cntr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               organism <span class="op">=</span> <span class="st">"Mouse"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 19ms/epoch - 19ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 53ms/epoch - 53ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 25ms/epoch - 25ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 36ms/epoch - 36ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 163ms/epoch - 163ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 75ms/epoch - 75ms/step</span></span>
 <span><span class="va">dec_MKL1_mouse</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 20339 2 </span></span>
@@ -866,15 +866,15 @@ decoding.</p>
 <span>                              fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoder</span>,</span>
 <span>                              organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                              gene_input <span class="op">=</span> <span class="va">CONTEXT</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 51ms/epoch - 51ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 38ms/epoch - 38ms/step</span></span>
 <span></span>
 <span><span class="co"># Produce a latent embedding and decoding for the contrast with .predictEncoderD:</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskRun</a></span><span class="op">(</span>proc <span class="op">=</span> <span class="va">cl</span>,</span>
 <span>                             fun <span class="op">=</span> <span class="fu">orthos</span><span class="fu">:::</span><span class="va">.predictEncoderD</span>,</span>
 <span>                             organism <span class="op">=</span> <span class="st">"Mouse"</span>,</span>
 <span>                             delta_input <span class="op">=</span> <span class="va">CONTRAST</span>, context <span class="op">=</span> <span class="va">LATC</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 29ms/epoch - 29ms/step</span></span>
-<span><span class="co">#&gt; 1/1 - 0s - 21ms/epoch - 21ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 71ms/epoch - 71ms/step</span></span>
+<span><span class="co">#&gt; 1/1 - 0s - 63ms/epoch - 63ms/step</span></span>
 <span></span>
 <span><span class="co"># Deactivate the `basilisk` environment:</span></span>
 <span><span class="fu">basilisk</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/basilisk/man/basiliskStart.html" class="external-link">basiliskStop</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
@@ -890,7 +890,7 @@ decoding.</p>
 </h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.0 (2025-04-11)</span></span>
+<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sonoma 14.7.6</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -921,7 +921,7 @@ decoding.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] DBI_1.2.3            httr2_1.1.2          rlang_1.1.6         </span></span>
-<span><span class="co">#&gt;   [4] magrittr_2.0.3       compiler_4.5.0       RSQLite_2.4.0       </span></span>
+<span><span class="co">#&gt;   [4] magrittr_2.0.3       compiler_4.5.1       RSQLite_2.4.1       </span></span>
 <span><span class="co">#&gt;   [7] dir.expiry_1.17.0    png_0.1-8            systemfonts_1.2.3   </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.5          stringr_1.5.1        pkgconfig_2.0.3     </span></span>
 <span><span class="co">#&gt;  [13] crayon_1.5.3         fastmap_1.2.0        backports_1.5.0     </span></span>
@@ -929,23 +929,23 @@ decoding.</p>
 <span><span class="co">#&gt;  [19] fontawesome_0.5.3    rmarkdown_2.29       UCSC.utils_1.5.0    </span></span>
 <span><span class="co">#&gt;  [22] ragg_1.4.0           purrr_1.0.4          bit_4.6.0           </span></span>
 <span><span class="co">#&gt;  [25] xfun_0.52            cachem_1.1.0         jsonlite_2.0.0      </span></span>
-<span><span class="co">#&gt;  [28] blob_1.2.4           rhdf5filters_1.21.0  DelayedArray_0.35.1 </span></span>
-<span><span class="co">#&gt;  [31] Rhdf5lib_1.31.0      BiocParallel_1.43.3  tensorflow_2.16.0   </span></span>
-<span><span class="co">#&gt;  [34] broom_1.0.8          parallel_4.5.0       R6_2.6.1            </span></span>
+<span><span class="co">#&gt;  [28] blob_1.2.4           rhdf5filters_1.21.0  DelayedArray_0.35.2 </span></span>
+<span><span class="co">#&gt;  [31] Rhdf5lib_1.31.0      BiocParallel_1.43.4  tensorflow_2.16.0   </span></span>
+<span><span class="co">#&gt;  [34] broom_1.0.8          parallel_4.5.1       R6_2.6.1            </span></span>
 <span><span class="co">#&gt;  [37] stringi_1.8.7        bslib_0.9.0          RColorBrewer_1.1-3  </span></span>
 <span><span class="co">#&gt;  [40] car_3.1-3            jquerylib_0.1.4      Rcpp_1.0.14         </span></span>
 <span><span class="co">#&gt;  [43] bookdown_0.43        base64enc_0.1-3      Matrix_1.7-3        </span></span>
 <span><span class="co">#&gt;  [46] tidyselect_1.2.1     abind_1.4-8          yaml_2.3.10         </span></span>
-<span><span class="co">#&gt;  [49] codetools_0.2-20     curl_6.2.3           plyr_1.8.9          </span></span>
-<span><span class="co">#&gt;  [52] lattice_0.22-7       tibble_3.2.1         withr_3.0.2         </span></span>
-<span><span class="co">#&gt;  [55] KEGGREST_1.49.0      evaluate_1.0.3       desc_1.4.3          </span></span>
+<span><span class="co">#&gt;  [49] codetools_0.2-20     curl_6.3.0           plyr_1.8.9          </span></span>
+<span><span class="co">#&gt;  [52] lattice_0.22-7       tibble_3.3.0         withr_3.0.2         </span></span>
+<span><span class="co">#&gt;  [55] KEGGREST_1.49.1      evaluate_1.0.4       desc_1.4.3          </span></span>
 <span><span class="co">#&gt;  [58] BiocFileCache_2.99.5 ExperimentHub_2.99.5 Biostrings_2.77.1   </span></span>
-<span><span class="co">#&gt;  [61] pillar_1.10.2        BiocManager_1.30.25  ggpubr_0.6.0        </span></span>
+<span><span class="co">#&gt;  [61] pillar_1.10.2        BiocManager_1.30.26  ggpubr_0.6.0        </span></span>
 <span><span class="co">#&gt;  [64] filelock_1.0.3       carData_3.0-5        whisker_0.4.1       </span></span>
 <span><span class="co">#&gt;  [67] BiocVersion_3.22.0   scales_1.4.0         glue_1.8.0          </span></span>
-<span><span class="co">#&gt;  [70] tools_4.5.0          AnnotationHub_3.99.5 ggsignif_0.6.4      </span></span>
-<span><span class="co">#&gt;  [73] fs_1.6.6             cowplot_1.1.3        rhdf5_2.53.0        </span></span>
-<span><span class="co">#&gt;  [76] grid_4.5.0           tidyr_1.3.1          AnnotationDbi_1.71.0</span></span>
+<span><span class="co">#&gt;  [70] tools_4.5.1          AnnotationHub_3.99.5 ggsignif_0.6.4      </span></span>
+<span><span class="co">#&gt;  [73] fs_1.6.6             cowplot_1.1.3        rhdf5_2.53.1        </span></span>
+<span><span class="co">#&gt;  [76] grid_4.5.1           tidyr_1.3.1          AnnotationDbi_1.71.0</span></span>
 <span><span class="co">#&gt;  [79] colorspace_2.1-1     HDF5Array_1.37.0     Formula_1.2-5       </span></span>
 <span><span class="co">#&gt;  [82] cli_3.6.5            rappdirs_0.3.3       tfruns_1.5.3        </span></span>
 <span><span class="co">#&gt;  [85] textshaping_1.0.1    viridisLite_0.4.2    S4Arrays_1.9.1      </span></span>
