@@ -2,6 +2,11 @@
 # variable to avoid errors related to pybind11 and GIL starting with 
 # reticulate 1.42.0
 
+# keras uses two environment variables controlling the support for legacy 
+# models: TF_USE_LEGACY_KERAS and PY_REQUIRE_LEGACY_KERAS.
+# If we run into issues loading the models, consider setting one (or both) of 
+# these to "1".
+
 .orthos_pkg_env <- new.env(parent = emptyenv())
 
 .onLoad <- function(libname, pkgname) {
