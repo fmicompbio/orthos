@@ -1,3 +1,7 @@
+# orthos 1.7.3
+
+- Update environment definitions
+
 # orthos 1.3.1
 
 - Environment installation addresses Anaconda licencing changes
