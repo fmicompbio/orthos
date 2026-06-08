@@ -20,6 +20,9 @@ Description: `orthos` decomposes RNA-seq contrasts, for example obtained from a
     experiments. `orthos` furthermore provides plotting functions to visualize
     the results of such a search for similar contrasts.
 License: MIT + file LICENSE
+URL: https://github.com/fmicompbio/orthos,
+    https://fmicompbio.github.io/orthos
+BugReports: https://github.com/fmicompbio/orthos/issues
 Depends:
     R (>= 4.3),
     SummarizedExperiment
